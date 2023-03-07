@@ -1,7 +1,7 @@
 <template>
   <div id="app">
      <!-- <MyDashboard/> -->
-     <MyLoginPage/>
+     <router-view><MyLoginPage/></router-view>
   </div>
 </template>
 

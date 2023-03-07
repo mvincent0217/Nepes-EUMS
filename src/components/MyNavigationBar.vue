@@ -22,6 +22,12 @@
           this.$router.push("/login");
         }
       },
+      logout() {
+      if (this.$router.currentRoute.path !== '/login') {
+        this.$router.push('/login');
+      }
+    },
+      
     },
   };
   </script>
@@ -30,7 +36,7 @@
     <div>
       <div id="mySidenav" class="ClassSideNavigationBar1">
         <div class="alignNavbarBtn">
-          <button class="LogoutBtn" @click="navigateToAbout">Logout</button>
+          <button class="LogoutBtn" @click="logout">Logout</button>
         </div>
         <a href="#">Services</a>
         <a href="#">Clients</a>

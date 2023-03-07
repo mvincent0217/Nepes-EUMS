@@ -14,11 +14,11 @@ export default {
     }
   },
   methods: {
-      login() {
-        if (this.$route.path !== '/dashboard') {
-          this.$router.push('/dashboard')
-        }
-      },
+    login() {
+      if (this.$router.currentRoute.path !== '/dashboard') {
+        this.$router.push('/dashboard');
+      }
+    },
 
       async AuthenticateUser() {
       this.AuthenticateUserResult = await RestAPI.AuthenticateUser(this.userID, this.password);
