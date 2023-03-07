@@ -9,7 +9,7 @@
 // import MyLoginPage from './components/MyLoginPage.vue'
 import MyDashboard from './components/MyDashboard.vue'
 import "./Styles/MainCSS.css"
-import "./Styles/Style.css";
+import "./Styles/style.css";
 export default {
   name: 'App',
   components: {
