@@ -6,6 +6,7 @@
 
 <script>
 import MyDashboard from './components/MyDashboard.vue'
+import "./Styles/Style.css";
 
 export default {
   name: 'App',

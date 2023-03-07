@@ -1,6 +1,4 @@
 <script>
-import  Navbar from './MyNavigationBar.vue';
-import CardStatus from './MyCardStatus.vue';
 import * as RestAPI from '@/JS/RestAPI.js';
 import MyGroupEquipmentComponent from './MyGroupEquipmentComponent.vue';
 export default {
@@ -19,8 +17,6 @@ export default {
         }
     },
     components:{
-        Navbar,
-        CardStatus,
         MyGroupEquipmentComponent,
     },
     methods:{
@@ -62,16 +58,6 @@ export default {
 <template>
     <div>
         <div>
-            <Navbar/>
-            <br>            
-            <div id="parent">
-               
-                <table class="child" v-for="(ProductiveState,index) in GetProductivityStateResult" :key="index" >
-                    <div class="child">
-                        <CardStatus :CardTitle="ProductiveState"/>
-                    </div>
-                </table>
-            </div>
             <br>
                 <MyGroupEquipmentComponent v-on="$listeners"
                     :MyModalId="this.myTempModalTrigger"
