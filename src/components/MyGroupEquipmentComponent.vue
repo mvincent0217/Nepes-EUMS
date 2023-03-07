@@ -16,7 +16,7 @@ export default {
             MyEquipmentComponentChildrenEquipmentUsage: {},
             MyEquipmentComponentModalID: '',
             oTempChildEquipments: {},
-            oChildEquipments: {},    
+            oChildEquipments: {},
         };
     },
     components: { 
@@ -115,6 +115,7 @@ export default {
     },
     methods:{
         ReSummarizeEquipmentObject(object) {
+            console.log('qwe')
             //loop through the object and get each child equipment
             for (var key in object.ChildrenEquipment) {
                 var iChildCount = 0;
@@ -133,15 +134,9 @@ export default {
                 }
                 object.ChildrenEquipment[key]["LastEquipment"] = bLastEquipment;
                 //call itself to check the next children equipment
-                ReSummarizeEquipmentObject(object.ChildrenEquipment[key]);
+                this.ReSummarizeEquipmentObject(object.ChildrenEquipment[key]);
             }
                 return object;
-        },
-            
-        GetEquipmentTree(){
-            var temp = this.GetChildrenEquipment(this.MyEquipmentComponentChildrenEquipmentConfig,this.MyEquipmentComponentChildrenEquipment);
-            var temp2 = this.getPath(temp, 'ChildrenEquipment')
-            console.log(temp2);
         },
         GetChildrenEquipment(EquipmentConfig,ChildrenEquipment){
             //console.log(this.MyEquipmentComponentChildrenEquipmentConfig)
@@ -175,13 +170,18 @@ export default {
             return this.oChildEquipments;
         },
     },
+    mounted(){
+        
+    },
     updated(){
-        //this.GetChildrenEquipment();
-        this.GetEquipmentTree();
+        this.GetChildrenEquipment();
+        var temp = this.ReSummarizeEquipmentObject(this.EquipmentResult);
+        console.log(temp)
     },
     created(){        
         //For calling the function, use async await if it pass through.
-        object = ReSummarizeEquipmentObject(this.EquipmentResult)
+        // var object = this.ReSummarizeEquipmentObject(this.EquipmentResult)
+        
     }
 }
 </script>
