@@ -1,0 +1,332 @@
+/* Side bar Design 1 BLACK ------------------ */
+.ClassSideNavigationBar1 {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 1;
+    left: 0;
+    background-color: orange;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+  }
+  
+  .ClassSideNavigationBar1 a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: black;
+    display: block;
+    transition: 0.3s;
+  }
+  
+  .ClassSideNavigationBar1 a:hover {
+    color: #f1f1f1;
+  }
+  
+  .ClassSideNavigationBar1 .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+  }
+  
+  #main1 {
+    transition: margin-left .5s;
+    padding: 16px;
+  }
+  
+  @media screen and (max-height: 450px) {
+    .ClassSideNavigationBar1 {padding-top: 15px;}
+    .ClassSideNavigationBar1 a {font-size: 18px;}
+  }
+
+/* Side bar Design 1 ------------------ */
+
+
+/* NavbarColor ------------------------------- */
+.ClassNavbarcolor1 {background-color: orange;}
+/* NavbarColor ------------------------------- */
+
+
+/* NavButton----------------------------------- */
+.ClassNavbutton{
+    font-size: 30px;
+    cursor:pointer;
+    color: white;
+  }
+/* NavButton----------------------------------- */
+
+/* Card Status -------------------------------- */
+.card {
+  width: 150px;
+  height: 70px;
+  border-radius: 20px;
+  background: whitesmoke;
+  position: relative;
+  padding: 1.8rem;
+  border: 2px solid var(--bgcolorCard);
+  transition: 0.5s ease-out;
+  overflow: visible;
+  margin-left: 50px;
+  
+ }
+ 
+ .card-details {
+  color: black;
+  height: 100%;
+  gap: .5em;
+  display: grid;
+  place-content: center;
+ }
+ 
+ .card-button {
+  height: 130px;
+  width: 210px;
+  margin-bottom: 63px;
+  transform: translate(-50%, 10%);
+  border-radius: 9px;
+  border: none;
+  background-color: #008bf8;
+  color: #fff;
+  font-size: 12PX;
+  padding: 20px;
+  position: absolute;
+  bottom: 0;
+  opacity: 0;
+  transition: 0.3s ease-out;
+ }
+ 
+ .text-body {
+  color: rgb(0, 0, 0);
+  font-size: 100%;
+ 
+ }
+ 
+ /*Text*/
+ .text-title {
+  font-size: auto;
+  font-weight: bold;
+ }
+ 
+ /*Hover*/
+ .card:hover {
+  border-color: #008bf8;
+  box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
+ }
+ 
+ .card:hover .card-button {
+  transform: translate(-50%, 50%);
+  opacity: 1;
+ }
+
+ #parent {
+  width: auto;
+  height: auto;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+ .child {
+  display: inline-block;
+  text-align: center;
+
+  height: auto;
+  /* margin-left: 50px; */
+  margin-top: 20px;
+
+}
+/* Card Status -------------------------------- */
+
+
+/* Table -------------------------------------- */
+table {
+  border-collapse: collapse;
+  width: 50%;
+  margin-left: auto; 
+  margin-right: auto;
+}
+
+th, td {
+  padding: 8px;
+  text-align: center;
+  border-bottom: 1px solid #DDD;
+}
+
+tr:hover {background-color: #D6EEEE;}
+
+.TitleFont{
+  text-align: center;
+}
+
+/* .ToprowFont{
+  font-size: 20px;
+  font-weight: 300;
+} */
+/* Table -------------------------------------- */
+
+
+/* Center-------------------------------------- */
+.Center{
+  align-items: center;
+}
+/* Center-------------------------------------- */
+
+
+/* LoginPage-------------------------------------- */
+.login-card {
+  width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #e8e8e8;
+  box-shadow: 2px 2px 10px #ccc;
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 20px
+}
+
+.card-header .log {
+  margin: 0;
+  font-size: 24px;
+  color: black;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+input[type="text"], input[type="password"] {
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition: 0.5s;
+}
+
+input[type="submit"] {
+  width: 100%;
+  background-color: #333;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover {
+  background-color: #ccc;
+  color: black;
+}
+
+.nepeslogo{
+  width: 300px; 
+  height: "auto"
+}
+
+.formfont{
+  font-style: normal;
+  font-weight: 300;
+  font-size: 28px;
+}
+
+.loginBtn{
+  width: 300px;
+  height: 50px;
+  background-color: #494343;
+  border-color: transparent;
+  color: white;
+  font-style: normal;
+}
+/* LoginPage-------------------------------------- */
+
+/* View Equipment ID Button-------------------------------------- */
+.ViewEquipIDBtn {
+  --color: #0077ff;
+  font-family: inherit;
+  display: inline-block;
+  width: 40px;
+  height: 30px;
+  line-height: 2.5em;
+  overflow: hidden;
+  margin: 20px;
+  font-size: 10px;
+  z-index: 1;
+  color: var(--color);
+  border: 2px solid var(--color);
+  border-radius: 6px;
+  position: relative;
+
+}
+
+.ViewEquipIDBtn::before {
+  position: absolute;
+  content: "";
+  background: var(--color);
+  width: 150px;
+  height: 200px;
+  z-index: -1;
+  border-radius: 50%;
+}
+
+.ViewEquipIDBtn:hover {
+  color: white;
+}
+
+.ViewEquipIDBtn:before {
+  top: 100%;
+  left: 100%;
+  transition: .3s all;
+}
+
+.ViewEquipIDBtn:hover::before {
+  top: -30px;
+  left: -30px;
+}
+/*  View Equipment ID Button-------------------------------------- */
+
+/* Logout Button----------------------------------- */
+.LogoutBtn {
+  background-color: #0077ff; /* Green */
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 10px;
+  margin-left: 55px;
+  margin-top: 0px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+/* Logout Button----------------------------------- */
+
+.notificationBtn{
+margin-left: 1200px;
+height: 20px;
+width: 30px;
+background-color: transparent;
+border: none;
+}
+
+.alignNavbarBtn{
+  display: inline-block;
+}
+
+
+
+
