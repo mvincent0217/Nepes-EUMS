@@ -60,6 +60,7 @@ export default {
         <div>
             <br>
                 <MyGroupEquipmentComponent v-on="$listeners"
+                    :EquipmentResult="this.GetTempEquipmentResult"
                     :MyModalId="this.myTempModalTrigger"
                     :Equipment_ID="this.GetTempEquipmentResult.Equipment_ID"
                     :MES_State="this.GetTempEquipmentResult.MES_State"
