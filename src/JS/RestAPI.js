@@ -25,3 +25,8 @@ export async function AuthenticateUser(userID,password){
     var res = await axios.post('http://hayyim-breach:8005/api/EUMS/AuthenticateUser?userID=' + userID + '&password=' + password);
     return res;
 }
+
+export async function AddEquipment(parentEquipmentID, childEquipmentID){
+    var res = await axios.post("http://hayyim-breach:8005/api/EUMS/AddEquipment?parentEquipmentID=" + parentEquipmentID + "&childEquipmentID=" + childEquipmentID);
+    return res;
+}

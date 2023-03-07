@@ -1,7 +1,7 @@
 <script>
 import  Navbar from './MyNavigationBar.vue';
 import CardStatus from './MyCardStatus.vue';
-import MyEquipmentComponent from './MyEquipmentComponent.vue';
+import MyGroupEquipmentComponent from './MyGroupEquipmentComponent.vue';
 import MyTable from './MyTable.vue';
 import * as RestAPI from '@/JS/RestAPI.js';
 export default {
@@ -23,7 +23,7 @@ export default {
             // Click specific Equipment ID
             GetTempEquipmentID: 'PLT-003-03',
             GetTempEquipmentResult: '',
-            myTempModalId: '',
+            myTempModalTrigger: '',
             GetProductivityStateResult: '',
         
             ButtonValue: '',
@@ -34,12 +34,12 @@ export default {
     components:{
         Navbar,
         CardStatus,
-        MyEquipmentComponent,
         MyTable,
+        MyGroupEquipmentComponent,
     },
     methods:{
         async fnLoad(){
-            this.myTempModalId = 'MyModal';
+            this.myTempModalTrigger = 'MyModal';
         },
         async GetEquipmentID(){
             this.GetTempEquipmentResult = await RestAPI.GetEquipmentID(this.GetTempEquipmentID);
@@ -201,18 +201,19 @@ export default {
             <!-- My Table -->
            
             <br>
-                <MyEquipmentComponent
-                    :MyModalId="this.myTempModalId"
+                 <MyGroupEquipmentComponent v-on="$listeners"
+                    :MyModalId="this.myTempModalTrigger"
                     :Equipment_ID="this.GetTempEquipmentResult.Equipment_ID"
                     :MES_State="this.GetTempEquipmentResult.MES_State"
                     :EUMS_State="this.GetTempEquipmentResult.EUMS_State" 
                     :Productivity_State="this.GetTempEquipmentResult.Productivity_State"
                     :Equipment_Model="this.GetTempEquipmentResult.Equipment_Model"
+                    :PartType="this.GetTempEquipmentResult.Part_Type"
+                    :Classification="this.GetTempEquipmentResult.Classification"
+                    :ChildrenEquipment="this.GetTempEquipmentResult.ChildrenEquipment"
+                    :ChildrenEquipmentConfig="this.GetTempEquipmentResult.ChildEquipmentConfig"
+                    :EquipmentUsage="this.GetTempEquipmentResult.EquipmentUsage"
                 />
         </div>
     </div>
 </template>
-
-<style>
-
-</style>
