@@ -1,0 +1,63 @@
+<script>
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+import * as RestAPI from '@/JS/RestAPI.js';
+
+Vue.use(VueRouter)
+
+export default {
+  data() {
+    return {
+      userID: '',
+      password: '',
+      AuthenticateUserResult: ''
+    }
+  },
+  methods: {
+      login() {
+        if (this.$route.path !== '/dashboard') {
+          this.$router.push('/dashboard')
+        }
+      },
+
+      async AuthenticateUser() {
+      this.AuthenticateUserResult = await RestAPI.AuthenticateUser(this.userID, this.password);
+      this.AuthenticateUserResult = JSON.parse(this.AuthenticateUserResult.data);
+      console.log(this.AuthenticateUserResult);
+      for (let i = 0; i < this.AuthenticateUserResult.UserRights.length; i++) {
+        const userRight = this.AuthenticateUserResult.UserRights[i];
+        console.log(userRight);
+      }
+      
+    },
+}
+}
+</script>
+
+
+<template>
+  <div>
+    <br><br><br><br><br><br>
+  <div class="login-card">
+    <div class="card-header">
+      <img class="nepeslogo" src="../../public/images/nepeshayyim logo.png">
+      <br><br>
+      <a class="formfont">Welcome! Please Login</a>
+    </div>
+    <form>
+      <div class="form-group">
+        <label for="userID">User ID:</label>
+        <input v-model="userID" name="userID" id="userID" type="text">
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input v-model="password" name="password" id="password" type="password">
+      </div>
+      <div class="form-group">
+        <button class="loginBtn" type="submit" @click.prevent="login">Login</button>
+      </div>
+    </form>
+  </div>
+</div>
+</template>
+
