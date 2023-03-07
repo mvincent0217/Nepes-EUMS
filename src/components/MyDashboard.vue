@@ -22,7 +22,7 @@ export default {
 
             // Click specific Equipment ID
             GetTempEquipmentID: 'PLT-003-03',
-            GetTempEquipmentResult: '',
+            GetTempEquipmentResult: {},
             myTempModalTrigger: '',
             GetProductivityStateResult: '',
         
@@ -44,7 +44,7 @@ export default {
         async GetEquipmentID(){
             this.GetTempEquipmentResult = await RestAPI.GetEquipmentID(this.GetTempEquipmentID);
             this.GetTempEquipmentResult = JSON.parse(this.GetTempEquipmentResult.data);
-            // console.log(this.GetTempEquipmentResult)
+            console.log(this.GetTempEquipmentResult)
         },
         async GetAllEquipment(){
             this.GetEquipmentsResult = await RestAPI.GetAllEquipments();
