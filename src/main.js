@@ -9,11 +9,13 @@ Vue.use(VueRouter);
 
 const router = new VueRouter({
   routes: [
-    { path: '/dashboard', component: MyDashboard },
+    { path: '/dashboard', component: MyDashboard},
     { path: '/', component: MyLoginPage },
-    { path: '/hierarchy', component: MyHierarchy },
+    { path: '/hierarchy', component: MyHierarchy,},
   ]
 });
+
+
 
 new Vue({
   router,
