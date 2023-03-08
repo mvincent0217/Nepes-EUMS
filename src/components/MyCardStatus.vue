@@ -31,6 +31,7 @@ export default {
 <template>
   <div>
     <br>
+    <div class="aligncards">
     <div v-for="(CardTitle, key) in productivityStateResult" :key="key" class="card">
       <div class="card-details">
         <p class="text-title">{{ CardTitle }}</p>
@@ -44,6 +45,6 @@ export default {
       </div>
       <button class="card-button" @click="handleButtonClick(CardTitle)">Click me</button>
     </div>
-    
+  </div>
   </div>
 </template>

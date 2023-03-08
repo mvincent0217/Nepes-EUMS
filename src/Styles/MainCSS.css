@@ -61,7 +61,7 @@
 
 /* Card Status -------------------------------- */
 .card {
-  width: 150px;
+  width: 110px;
   height: 70px;
   border-radius: 20px;
   background: whitesmoke;
@@ -70,24 +70,19 @@
   border: 2px solid var(--bgcolorCard);
   transition: 0.5s ease-out;
   overflow: visible;
-  margin: 10px; /* Default margin size for all resolution */
+  margin-left: 20px;
   display: inline-block;
   text-align: center;
  }
 
- @media screen and (min-width: 768px) {
-  .card {
-    margin: 7px; /* Margin for screen width 768px and above */
-    text-align: center;
-  }
+ .aligncards {
+  border-collapse: collapse;
+  width: 100%;
+  margin-left: auto; 
+  margin-right: auto;
+  text-align: center;
 }
 
-@media screen and (min-width: 1024px) {
-  .card {
-    margin: 30px; /* Margin for screen width 1024px and above */
-    text-align: center;
-  }
-}
  
  .card-details {
   color: black;
@@ -98,15 +93,15 @@
  }
  
  .card-button {
-  height: 130px;
-  width: 210px;
+  height: 126px;
+  width: 167px;
   margin-bottom: 63px;
   transform: translate(-50%, 10%);
   border-radius: 9px;
   border: none;
   background-color: #008bf8;
   color: #fff;
-  font-size: 12PX;
+  font-size: 10PX;
   padding: 20px;
   position: absolute;
   bottom: 0;
@@ -122,7 +117,7 @@
  
  /*Text*/
  .text-title {
-  font-size: auto;
+  font-size: 11px;
   font-weight: bold;
  }
  
