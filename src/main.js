@@ -3,13 +3,15 @@ import App from './App.vue';
 import VueRouter from 'vue-router';
 import MyLoginPage from './components/MyLoginPage.vue';
 import MyDashboard from './components/MyDashboard.vue';
+import MyHierarchy from './components/MyHierarchy.vue';
 Vue.use(VueRouter);
 
 
 const router = new VueRouter({
   routes: [
     { path: '/dashboard', component: MyDashboard },
-    { path: '/login', component: MyLoginPage },
+    { path: '/', component: MyLoginPage },
+    { path: '/hierarchy', component: MyHierarchy },
   ]
 });
 

@@ -115,7 +115,7 @@ export default {
     },
     methods:{
         ReSummarizeEquipmentObject(object) {
-            console.log('qwe')
+            // console.log('qwe')
             //loop through the object and get each child equipment
             for (var key in object.ChildrenEquipment) {
                 var iChildCount = 0;

@@ -24,7 +24,7 @@
       },
       logout() {
       if (this.$router.currentRoute.path !== '/login') {
-        this.$router.push('/login');
+        this.$router.push('/');
       }
     },
       
@@ -38,7 +38,7 @@
         <div class="alignNavbarBtn">
           <button class="LogoutBtn" @click="logout">Logout</button>
         </div>
-        <a href="#">Services</a>
+        <!-- <a href="/dashboard">Dashboard</a> -->
         <a href="#">Clients</a>
         <a href="#">Contact</a>
       </div>

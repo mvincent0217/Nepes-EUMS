@@ -10,26 +10,34 @@ export default {
     return {
       userID: '',
       password: '',
-      AuthenticateUserResult: ''
+      AuthenticateUserResult: '',
+      IncorrectPass:''
     }
   },
   methods: {
-    login() {
-      if (this.$router.currentRoute.path !== '/dashboard') {
+    // login() {
+    //   if (this.$router.currentRoute.path !== '/dashboard') {
+    //     this.$router.push('/dashboard');
+    //   }
+    // },
+    async AuthenticateUser() {
+  this.AuthenticateUserResult = await RestAPI.AuthenticateUser(this.userID, this.password);
+  this.AuthenticateUserResult = JSON.parse(this.AuthenticateUserResult.data);
+  // console.log(this.AuthenticateUserResult);
+  if (this.AuthenticateUserResult && this.AuthenticateUserResult.UserRights) {
+    for (let i = 0; i < this.AuthenticateUserResult.UserRights.length; i++) {
+      const userRight = this.AuthenticateUserResult.UserRights[i];
+      // console.log(userRight);
+      if (userRight && this.$router.currentRoute.path !== '/dashboard') {
         this.$router.push('/dashboard');
+        break;
       }
-    },
+    }
+  } else {
+    this.IncorrectPass = 'Incorrect password'
+  }
+}
 
-      async AuthenticateUser() {
-      this.AuthenticateUserResult = await RestAPI.AuthenticateUser(this.userID, this.password);
-      this.AuthenticateUserResult = JSON.parse(this.AuthenticateUserResult.data);
-      console.log(this.AuthenticateUserResult);
-      for (let i = 0; i < this.AuthenticateUserResult.UserRights.length; i++) {
-        const userRight = this.AuthenticateUserResult.UserRights[i];
-        console.log(userRight);
-      }
-      
-    },
 }
 }
 </script>
@@ -37,7 +45,7 @@ export default {
 
 <template>
   <div>
-    <br><br><br><br><br><br>
+    <br><br><br><br>
   <div class="login-card">
     <div class="card-header">
       <img class="nepeslogo" src="../../public/images/nepeshayyim logo.png">
@@ -53,8 +61,10 @@ export default {
         <label for="password">Password:</label>
         <input v-model="password" name="password" id="password" type="password">
       </div>
+      <a class="IncorrectPassText">{{ this.IncorrectPass}}</a>
+        <br><br>
       <div class="form-group">
-        <button class="loginBtn" type="submit" @click.prevent="login">Login</button>
+        <button class="loginBtn" type="submit" @keydown.enter="AuthenticateUser" @click.prevent="AuthenticateUser">Login</button>
       </div>
     </form>
   </div>

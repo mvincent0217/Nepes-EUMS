@@ -11,7 +11,7 @@ export default {
     CardTitle: String,
     CardNumber: Number,
     bgcolorCard: String,
-    buttonFunction: Function  // Add this prop
+    buttonFunction: Function
 
   },
   methods: {

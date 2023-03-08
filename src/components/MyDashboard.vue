@@ -1,7 +1,6 @@
 <script>
 import  Navbar from './MyNavigationBar.vue';
 import CardStatus from './MyCardStatus.vue';
-import MyGroupEquipmentComponent from './MyGroupEquipmentComponent.vue';
 import MyTable from './MyTable.vue';
 import * as RestAPI from '@/JS/RestAPI.js';
 export default {
@@ -35,7 +34,7 @@ export default {
         Navbar,
         CardStatus,
         MyTable,
-        MyGroupEquipmentComponent,
+     
     },
     methods:{
         async fnLoad(){
@@ -54,36 +53,19 @@ export default {
             Object.values(this.GetEquipmentsResult).forEach(element => {
            
               if (element.Productivity_State == "PRODUCTIVE")
-              {
-                this.CountProductive += 1
-              }
-
+              {this.CountProductive += 1}
               else if (element.Productivity_State == "WARNING")
-              {
-                this.CountWarning += 1
-              }
-
+              {this.CountWarning += 1}
               else if (element.Productivity_State == "CRITICAL")
-              {
-                this.CountCritical += 1
-              }
-
+              {this.CountCritical += 1}
               else if (element.Productivity_State == "NON-PRODUCTIVE")
-              {
-                this.CountNonProductive += 1
-              }
+              {this.CountNonProductive += 1}
               else if (element.Productivity_State == "SPARE")
-              {
-                this.CountSpare += 1
-              }
+              {this.CountSpare += 1}
               else if (element.Productivity_State == "ONGOING-REPAIR")
-              {
-                this.CountOngoingRepair += 1
-              }
+              {this.CountOngoingRepair += 1}
               else if (element.Productivity_State == "SCRAPPED")
-              {
-                this.CountScrapped += 1
-              }
+              {this.CountScrapped += 1}
                 
             });
 
@@ -98,10 +80,9 @@ export default {
             // console.log(this.ButtonValue)
         },
         handleEquipmentIdSelected(equipmentId) {
-            this.GetTempEquipmentID = equipmentId
-            console.log(this.GetTempEquipmentID)
-            alert(this.GetTempEquipmentID)
-      
+        this.GetTempEquipmentID = equipmentId;
+        this.$emit('equipmentIdSelected', this.GetTempEquipmentID);
+        this.$router.push('/hierarchy');
         },
 
     },
@@ -111,7 +92,6 @@ export default {
     },
     created(){
         this.GetAllEquipment();
-        this.GetEquipmentID();
       
     }
 }
@@ -201,19 +181,7 @@ export default {
             <!-- My Table -->
            
             <br>
-                 <MyGroupEquipmentComponent v-on="$listeners"
-                    :MyModalId="this.myTempModalTrigger"
-                    :Equipment_ID="this.GetTempEquipmentResult.Equipment_ID"
-                    :MES_State="this.GetTempEquipmentResult.MES_State"
-                    :EUMS_State="this.GetTempEquipmentResult.EUMS_State" 
-                    :Productivity_State="this.GetTempEquipmentResult.Productivity_State"
-                    :Equipment_Model="this.GetTempEquipmentResult.Equipment_Model"
-                    :PartType="this.GetTempEquipmentResult.Part_Type"
-                    :Classification="this.GetTempEquipmentResult.Classification"
-                    :ChildrenEquipment="this.GetTempEquipmentResult.ChildrenEquipment"
-                    :ChildrenEquipmentConfig="this.GetTempEquipmentResult.ChildEquipmentConfig"
-                    :EquipmentUsage="this.GetTempEquipmentResult.EquipmentUsage"
-                />
+
         </div>
     </div>
 </template>
