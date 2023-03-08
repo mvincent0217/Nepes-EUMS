@@ -70,11 +70,24 @@
   border: 2px solid var(--bgcolorCard);
   transition: 0.5s ease-out;
   overflow: visible;
-  margin-left: 50px;
+  margin: 10px; /* Default margin size for all resolution */
   display: inline-block;
   text-align: center;
-  
  }
+
+ @media screen and (min-width: 768px) {
+  .card {
+    margin: 7px; /* Margin for screen width 768px and above */
+    text-align: center;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .card {
+    margin: 30px; /* Margin for screen width 1024px and above */
+    text-align: center;
+  }
+}
  
  .card-details {
   color: black;

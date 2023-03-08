@@ -1,51 +1,49 @@
 <script>
 export default {
+  props: {
+  CardTitle: String, // Add this line
+  buttonFunction: Function,
+  productivityStateResult: {
+    required: true,
+  },
+  CountProductive: Number,
+  CountWarning: Number,
+  CountCritical: Number,
+  CountNonProductive: Number,
+  CountSpare: Number,
+  CountOngoingRepair: Number,
+  CountScrapped: Number,
+},
   data() {
     return {
-      MyCardTitle: '',
-      MyCardNumber: '',
+      CardNumber: null,
     };
   },
-  props: {
-    equipmentData: Array,
-    CardTitle: String,
-    CardNumber: Number,
-    bgcolorCard: String,
-    buttonFunction: Function
-
-  },
   methods: {
-    handleButtonClick() {
-    this.buttonFunction(this.CardTitle);
-    
-  }
+  handleButtonClick(CardTitle) {
+    this.buttonFunction(CardTitle);
+    // console.log(CardTitle);
   },
-  watch: {
-    CardTitle: {
-      deep: true,
-      handler(val) {
-        this.MyCardTitle = val;
-      },
-    },
-    CardNumber: {
-      deep: true,
-      handler(val) {
-        this.MyCardNumber = val;
-      },
-    },
-  },
+}
 };
 </script>
 
-
-
 <template>
-    <div class="card" :style="{'--bgcolorCard':this.bgcolorCard} ">
-        <div class="card-details">
-            <p class="text-title">{{ CardTitle }}</p>
-            <p class="text-body">{{ CardNumber }}</p>
-         </div>
-            <button class="card-button" @click="handleButtonClick">Click me</button>
+  <div>
+    <br>
+    <div v-for="(CardTitle, key) in productivityStateResult" :key="key" class="card">
+      <div class="card-details">
+        <p class="text-title">{{ CardTitle }}</p>
+        <a class="text-body" v-if="CardTitle === 'PRODUCTIVE' ? true : false" >{{  CountProductive || 0 }}</a>
+        <a class="text-body" v-if="CardTitle === 'WARNING' ? true : false">{{  CountWarning || 0 }}</a>
+        <a class="text-body" v-if="CardTitle === 'CRITICAL' ? true : false">{{  CountCritical || 0 }}</a>
+        <a class="text-body" v-if="CardTitle === 'NON-PRODUCTIVE' ? true : false">{{  CountNonProductive || 0 }}</a>
+        <a class="text-body" v-if="CardTitle === 'SPARE' ? true : false">{{  CountSpare || 0 }}</a>
+        <a class="text-body" v-if="CardTitle === 'ONGOING-REPAIR' ? true : false">{{  CountOngoingRepair || 0 }}</a>
+        <a class="text-body" v-if="CardTitle === 'SCRAPPED' ? true : false">{{  CountScrapped || 0 }}</a>
+      </div>
+      <button class="card-button" @click="handleButtonClick(CardTitle)">Click me</button>
     </div>
     
+  </div>
 </template>
