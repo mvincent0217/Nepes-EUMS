@@ -437,4 +437,15 @@ svg {
   top: 20px;
   right: 70px;
 }
+
+.notification .badge {
+  position: absolute;
+  top: -4px;
+  right: -30px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+  font-size: medium;
+}
 /* Notification ------------- */

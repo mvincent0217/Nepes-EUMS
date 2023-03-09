@@ -2,6 +2,7 @@
     <div class="notification">
   <div class="notification-header">
     <p>🔔</p>
+    <span class="badge">3</span>
     <span class="arrow"></span>
   </div>
   <div class="notification-dropdown">
