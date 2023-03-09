@@ -79,7 +79,7 @@ export default {
         this.GetTempEquipmentID = equipmentId;
         this.$emit('equipmentIdSelected', this.GetTempEquipmentID);
         alert(this.GetTempEquipmentID)
-        // this.$router.push('/hierarchy');
+        this.$router.push('/hierarchy');
         },
 
     },
