@@ -2,10 +2,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import * as RestAPI from '@/JS/RestAPI.js';
-
+// import Loading from './MyLoading.vue'
 Vue.use(VueRouter)
 
 export default {
+  components: {
+    // Loading
+  },
   data() {
     return {
       userID: '',
@@ -68,6 +71,8 @@ export default {
       </div>
     </form>
   </div>
+  <!-- <div v-if="!AuthenticateUserResult"><Loading/></div> -->
+  
 </div>
 </template>
 

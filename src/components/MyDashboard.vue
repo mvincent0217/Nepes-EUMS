@@ -3,12 +3,13 @@ import Navbar from './MyNavigationBar.vue';
 import CardStatus from './MyCardStatus.vue';
 import MyTable from './MyTable.vue';
 import * as RestAPI from '@/JS/RestAPI.js';
-
+import Loading from './MyLoading.vue';
 export default {
   components: {
     Navbar,
     CardStatus,
     MyTable,
+    Loading
   },
   data() {
     return {
@@ -110,7 +111,9 @@ export default {
           :CountScrapped="CountScrapped"
           :buttonFunction="handleCardStatusButtonClick"
         />
-
+        <div v-if="!GetProductivityStateResult">
+        <Loading />
+      </div>
         <div>
           <br><br><br>
           <MyTable

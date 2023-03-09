@@ -1,9 +1,13 @@
 <script>
+import Notification from './MyNotification.vue';
   export default {
     data() {
       return {
         isOpen: false
       }
+    },
+    components:{
+      Notification
     },
     methods: {
       openNav() {
@@ -33,23 +37,25 @@
   </script>
 
 <template>
-    <div>
-      <div id="mySidenav" class="ClassSideNavigationBar1">
-        <div class="alignNavbarBtn">
-          <button class="LogoutBtn" @click="logout">Logout</button>
-        </div>
-        <!-- <a href="/dashboard">Dashboard</a> -->
-        <a href="#">Clients</a>
-        <a href="#">Contact</a>
+  <div>
+    <div id="mySidenav" class="ClassSideNavigationBar1">
+      <div class="alignNavbarBtn">
+        <button class="LogoutBtn" @click="logout">Logout</button>
       </div>
-      <div id="main1" class="ClassNavbarcolor1">
-        <span class="ClassNavbutton" @click="isOpen ? closeNav() : openNav()">
-          <template v-if="isOpen">&#10005;</template>
-          <template v-else>&#9776;</template>
-        </span>
-      </div>
+      <a href="/dashboard">Dashboard</a>
+      <a href="#">Clients</a>
+      <a href="#">Contact</a>
+      <button class="LogoutBtn" @click="logout">Logout</button>
     </div>
-  </template>
+    <div id="main1" class="ClassNavbarcolor1">
+      <span class="ClassNavbutton" @click="isOpen ? closeNav() : openNav()">
+        <template v-if="isOpen">&#10005;</template>
+        <template v-else>&#9776;</template>
+      </span>
+    </div>
+    <Notification class="notification-position" />
+  </div>
+</template>
   
   
   

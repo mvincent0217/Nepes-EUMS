@@ -1,0 +1,15 @@
+<template>
+    <div class="notification">
+  <div class="notification-header">
+    <p>🔔</p>
+    <span class="arrow"></span>
+  </div>
+  <div class="notification-dropdown">
+    <ul>
+      <li>Notification 1</li>
+      <li>Notification 2</li>
+      <li>Notification 3</li>
+    </ul>
+  </div>
+</div>
+</template>
