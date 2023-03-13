@@ -30,7 +30,6 @@ export default {
 
 <template>
   <div>
-    <br>
     <div class="aligncards">
     <div v-for="(CardTitle, key) in productivityStateResult" :key="key" class="card">
       <div class="card-details">
