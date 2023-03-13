@@ -10,7 +10,11 @@ export default {
         return {            
             ShowModal: false,
             tempChildEquipmentID: '',
-            tempParentEquipmentID: ''
+            tempParentEquipmentID: '',
+
+            tempEquipHeight: null,
+            tempEquipWidth: null,
+            tempEquipLeftPosition: null,
         }
     },
     props:{
@@ -25,6 +29,11 @@ export default {
         ChildrenEquipmentConfig: Object,
         EquipmentUsage: Object,
         MyModalId: String,
+
+        MyEquipHeight: Number,
+        MyEquipWidth: Number,
+        MyEquipLeftPosition: Number,
+        MyEquipColor: String,
     },
     components:{
         MyEquipmentModal
@@ -66,6 +75,24 @@ export default {
     },
     created(){
         tempthis = this;
+        if(!isNaN(this.MyEquipHeight)){
+            this.tempEquipHeight = this.MyEquipHeight + 'px';
+        }else{
+            //default Value
+            this.tempEquipHeight = '300px';
+        }
+        if(!isNaN(this.MyEquipWidth)){
+            this.tempEquipWidth = this.MyEquipWidth + 'px';
+        }else{
+            //default Value
+            this.tempEquipWidth = '300px';
+        }
+        if(!isNaN(this.MyEquipLeftPosition)){
+            this.tempEquipLeftPosition = this.MyEquipLeftPosition + 'px';
+        }else{
+            //default Value
+            this.tempEquipLeftPosition = '300px';
+        }
     },
     mounted(){
         // console.log(this.AlertNotification());
@@ -74,10 +101,34 @@ export default {
 </script>
 <template>
     <div>
-        <div :id="MyModalId" class="Equipment tooltip" @click.self="openModal">
-             <span @click.prevent="showSweetAlert(Equipment_ID)" class="close">&times;</span> <!-- v-if="this.Classification == 'Component'" -->
-                <label><b><center>{{ this.Equipment_ID }}</center></b></label>
-                <span class="tooltiptext">Equipment Model : {{ this.Equipment_Model }} <br> MES STATE : {{ this.MES_State }} <br> EUMS STATE : {{ this.EUMS_State }} <br> PRODUCTIVITY STATE : {{ this.Productivity_State }}</span>
+        <div :id="MyModalId" class="Equipment tooltip" @click.self="openModal"
+        :style="{'--heightEquipment':this.tempEquipHeight,
+                 '--widthEquipment': this.tempEquipWidth,
+                 '--leftPositionEquipment': this.tempEquipLeftPosition,
+                 '--bgColorEquipment': this.MyEquipColor || 'white'
+                }">
+             <span v-if="this.Classification == 'Equipment'" @click.prevent="showSweetAlert(Equipment_ID)" class="close">&times;</span>
+                <label class="EquipTitle" @click.prevent="openModal"><b><center>{{ this.Equipment_ID }}</center></b></label>
+                <span class="tooltiptext">
+                    <table>
+                        <tr>
+                        <td>Equipment Model</td>
+                        <td>{{ this.Equipment_Model }}</td>
+                    </tr>
+                    <tr>
+                        <td> MES STATE</td>
+                        <td>{{ this.MES_State }}</td>
+                    </tr>
+                    <tr>
+                        <td> EUMS STATE</td>
+                        <td>{{ this.EUMS_State }}</td>
+                    </tr>
+                    <tr>
+                        <td> PRODUCTIVITY STATE </td>
+                        <td>{{ this.Productivity_State }}</td>
+                    </tr>
+                    </table>
+                </span>
 
         </div>
         <MyEquipmentModal @BoolModal="CloseModal" ref="modal" :MyModalID="MyModalId" :ShowModal="ShowModal"/>

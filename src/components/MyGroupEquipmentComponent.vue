@@ -1,7 +1,9 @@
 <script>
 /* eslint-disable */
 import MyEquipmentComponent from './MyEquipmentComponent.vue'
+import MyChildrenEquipmentComponent from './MyChildrenEquipmentComponent.vue'
 export default {
+    name: 'MyGroupEquipmentComponent',
     data() {
         return {
             MyEquipmentComponentEquipmentID: '',
@@ -17,10 +19,33 @@ export default {
             MyEquipmentComponentModalID: '',
             oTempChildEquipments: {},
             oChildEquipments: {},
-        };
+            oChildEquipComponent: {},
+            arrChildEquipments: [],
+            TempBool: false,
+            arrTest: [],
+
+            skills: [
+                {
+                name: 'Frozen Yogurt',
+                required: 1,
+                vMode1: ''
+                },
+                {
+                name: 'Ice cream sandwich',
+                required: 3,
+                vMode1: ''
+                },
+                {
+                name: 'Eclair',
+                required: 1,
+                vMode1: ''
+                }
+            ],
+        }
     },
     components: { 
-        MyEquipmentComponent 
+        MyEquipmentComponent,
+        MyChildrenEquipmentComponent
     },
     props:{
         EquipmentResult: Object,
@@ -35,12 +60,18 @@ export default {
         ChildrenEquipmentConfig: Object,
         EquipmentUsage: Object,
         MyModalTrigger: String,
+
+        MyGrpEquipHeight: Number,
+        MyGrpEquipWidth: Number,
+        MyGrpEquipLeftPosition: Number,
+        MyGrpEquipColor: String,
     },
     watch: {
         EquipmentResult: {
             deep: true,
             handler(val) {
                 this.MyEquipmentComponentEquipmentResult = val;
+                this.GetChildEquipment();
             }
         },
         Equipment_ID: {
@@ -107,15 +138,41 @@ export default {
             deep: true,
             handler(val) {
                 this.MyEquipmentComponentModalID = val;
-                console.log(val);
             }
         },
-        methods:{
-        }
+
+        MyGrpEquipHeight: {
+            deep: true,
+            handler(val) {
+                this.MyEquipmentComponentHeight = val;
+            }
+        },
+        MyGrpEquipWidth: {
+            deep: true,
+            handler(val) {
+                this.MyEquipmentComponentWidth = val;
+            }
+        },
+        MyGrpEquipLeftPosition: {
+            deep: true,
+            handler(val) {
+                this.MyEquipmentComponentLeftPosition = val;
+            }
+        },
+        MyGrpEquipColor: {
+            deep: true,
+            handler(val) {
+                this.MyEquipmentComponentColor = val;
+            }
+        },
     },
     methods:{
+        async GetChildEquipment(){
+            const childEquipmentPropertyValues = await Object.values(this.EquipmentResult.ChildrenEquipment);
+            this.arrChildEquipments = childEquipmentPropertyValues;
+            this.TempBool = true;
+        },
         ReSummarizeEquipmentObject(object) {
-            console.log('qwe')
             //loop through the object and get each child equipment
             for (var key in object.ChildrenEquipment) {
                 var iChildCount = 0;
@@ -171,17 +228,29 @@ export default {
         },
     },
     mounted(){
-        
     },
     updated(){
-        this.GetChildrenEquipment();
-        var temp = this.ReSummarizeEquipmentObject(this.EquipmentResult);
-        console.log(temp)
+        // this.GetChildrenEquipment();
+        // this.ReSummarizeEquipmentObject(this.EquipmentResult);
+        // console.log(temp)
+        // console.log(this.oChildEquipComponent)
+        // const sample = Object.values(this.EquipmentResult.ChildrenEquipment)
+        // console.log(sample)
+        // var oTemp = {};
+        // for(var x = 0; x < sample.length; x++){
+        //     console.log(x)
+        //     oTemp = sample[x].Equipment_ID;
+        //     this.arrTest.push(oTemp);
+        // }
+        // console.log(this.arrTest)        
     },
     created(){        
+        // this.EquipmentResult
         //For calling the function, use async await if it pass through.
-        // var object = this.ReSummarizeEquipmentObject(this.EquipmentResult)
-        
+        // var object = this.ReSummarizeEquipmentObject()
+        // const myTimeout = setInterval(this.GetChildEquipment, 5000);
+        // this.GetChildEquipment
+
     }
 }
 </script>
@@ -200,22 +269,35 @@ export default {
                 :ChildrenEquipment="this.MyEquipmentComponentChildrenEquipment"
                 :ChildrenEquipmentConfig="this.MyEquipmentComponentChildrenEquipmentConfig"
                 :EquipmentUsage="this.MyEquipmentComponentChildrenEquipmentUsage"
+
+                :MyEquipHeight="this.MyGrpEquipHeight"
+                :MyEquipWidth="this.MyGrpEquipWidth"
+                :MyEquipLeftPosition="this.MyGrpEquipLeftPosition"
+                :MyEquipColor="this.MyGrpEquipColor"
             />
         </div>
         <br>
         <div>
+            <!-- :MyEquipHeight="this.MyGrpEquipHeight"
+                :MyEquipWidth="this.MyGrpEquipWidth"
+                :MyEquipLeftPosition="this.MyGrpEquipLeftPosition"
+                :MyEquipColor="this.MyGrpEquipColor"
+                :MyModalTrigger="this.MyEquipmentComponentModalID" -->
             <MyEquipmentComponent
-                :MyModalTrigger="this.MyEquipmentComponentModalID"
-                :Equipment_ID="this.MyEquipmentComponentEquipmentID"
-                :MES_State="this.MyEquipmentComponentMES_State"
-                :EUMS_State="this.MyEquipmentComponentEUMS_State" 
-                :Productivity_State="this.MyEquipmentComponentProductivity_State"
-                :Equipment_Model="this.MyEquipmentComponentEquipment_Model"
-                :PartType="this.MyEquipmentComponentPart_Type"
-                :Classification="this.MyEquipmentComponentClassification"
-                :ChildrenEquipment="this.MyEquipmentComponentChildrenEquipment"
-                :ChildrenEquipmentConfig="this.MyEquipmentComponentChildrenEquipmentConfig"
-                :EquipmentUsage="this.MyEquipmentComponentChildrenEquipmentUsage"
+                v-for="(iChildEquip, index) in arrChildEquipments.length" :key="iChildEquip[index]"
+
+                :Equipment_ID="arrChildEquipments[index].Equipment_ID"
+                :MES_State="arrChildEquipments[index].MES_State"
+                :EUMS_State="arrChildEquipments[index].EUMS_State" 
+                :Productivity_State="arrChildEquipments[index].Productivity_State"
+                :Equipment_Model="arrChildEquipments[index].Equipment_Model"
+                :PartType="arrChildEquipments[index].Part_Type"
+                :Classification="arrChildEquipments[index].Classification"
+                :ChildrenEquipment="arrChildEquipments[index].ChildrenEquipment"
+                :ChildrenEquipmentConfig="arrChildEquipments[index].ChildrenEquipmentConfig"
+                :EquipmentUsage="arrChildEquipments[index].ChildrenEquipmentUsage"
+
+                
             />
         </div>
     </div>
