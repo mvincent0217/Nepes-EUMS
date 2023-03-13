@@ -26,40 +26,89 @@ export default {
       EquipmentStatus: '',
       GetEquipmentsResult: Object,
 
-      // Click specific Equipment ID
-      GetTempEquipmentID: 'PLT-003-03',
-      GetTempEquipmentResult: {},
-      myTempModalTrigger: '',
-      GetProductivityStateResult: '',
-      ButtonValue: '',
-    };
-  },
-  methods: {
-    async fnLoad() {
-      this.myTempModalTrigger = 'MyModal';
+            // Click specific Equipment ID
+            GetTempEquipmentID: '',
+            GetTempEquipmentResult: Object,
+            myTempModalTrigger: '',
+            GetProductivityStateResult: '',
+        
+            ButtonValue: '',
+            tempBool: false,
+
+            //Style Config//
+            MyEquipmentHeight: Number,
+            MyEquipmentWidth: Number,
+            MyEquipmentLeftPosition: Number,
+            MyEquipmentColor: String,
+            tempColor: String,
+
+          
+        }
     },
-    async GetEquipmentID() {
-      this.GetTempEquipmentResult = await RestAPI.GetEquipmentID(
-        this.GetTempEquipmentID
-      );
-      this.GetTempEquipmentResult = JSON.parse(
-        this.GetTempEquipmentResult.data
-      );
-      console.log(this.GetTempEquipmentResult);
-    },
-    async GetAllEquipment() {
-      this.GetEquipmentsResult = await RestAPI.GetAllEquipments();
-      this.GetEquipmentsResult = JSON.parse(this.GetEquipmentsResult.data);
-      Object.values(this.GetEquipmentsResult).forEach((element) => {
-              if (element.Productivity_State == 'PRODUCTIVE') {
-              this.CountProductive += 1;
-              } else if (element.Productivity_State == 'WARNING') {
-              this.CountWarning += 1;
-              } else if (element.Productivity_State == 'CRITICAL') {
-              this.CountCritical += 1;
-              } else if (element.Productivity_State == 'NON-PRODUCTIVE') {
-              this.CountNonProductive += 1;
-              } else if (element.Productivity_State == "SPARE")
+    methods:{
+        async fnLoad(){
+            this.myTempModalTrigger = 'MyModal';
+
+            this.MyEquipmentHeight = 100;
+            this.MyEquipmentWidth = 100;
+            this.MyEquipmentLeftPosition = 350;
+            this.MyEquipmentColor = 'yellow';
+        },
+        async GetEquipmentID(){
+            this.GetTempEquipmentResult = await RestAPI.GetEquipmentID(this.GetTempEquipmentID);
+            this.GetTempEquipmentResult = JSON.parse(this.GetTempEquipmentResult.data);
+            // this.GetTempChildEquipResult = JSON.parse(this.GetTempEquipmentResult.Equipment_ID.data);
+            console.log(this.GetTempEquipmentResult);
+            // console.log(this.GetTempChildEquipResult);
+            Object.values(this.GetTempEquipmentResult).forEach(element =>{
+                console.log(this.GetTempEquipmentResult)
+                var o = {};
+                o = this.GetTempEquipmentResult;
+                if(element.Classification=='PRODUCTIVE')
+                {this.tempColor = 'green';}
+                else if(element.Classification=='WARNING')
+                {this.tempColor = 'yellow'}
+                else if(element.Classification=='CRITICAL')
+                {this.tempColor = 'red'}
+                else if(element.Classification=='NON-PRODUCTIVE')
+                {this.tempColor = 'Black'}
+                else if(element.Classification=='ONGOING-REPAIR')
+                {this.tempColor = 'orange'}
+                else if(element.Classification=='SCRAPPED')
+                {this.tempColor = 'violet'}
+                o['MyEquipmentColor'] = this.tempColor;
+                o['MyEquipmentHeight'] = 70;
+                o['MyEquipmentWidth'] = 100;
+                o['MyEquipmentLeftPosition'] = 100;
+                console.log(this.color)
+            })
+            // for()
+            // {
+            //     var o = {};
+            //     o = this.GetEquipmentsResult[i];
+            //     o['MyEquipmentHeight'] = 150;
+            //     if(Productivity_State=='PRODUCTIVE'){
+            //         color = 'green'
+            //     }
+            //     o['MyEquipmentColor'] = color;
+            // }
+        },
+        async GetAllEquipment(){
+            this.GetEquipmentsResult = await RestAPI.GetAllEquipments();
+            this.GetEquipmentsResult = JSON.parse(this.GetEquipmentsResult.data);
+
+            Object.values(this.GetEquipmentsResult).forEach(element => {
+                console.log(element)
+           
+              if (element.Productivity_State == "PRODUCTIVE")
+              {this.CountProductive += 1 }
+              else if (element.Productivity_State == "WARNING")
+              {this.CountWarning += 1}
+              else if (element.Productivity_State == "CRITICAL")
+              {this.CountCritical += 1}
+              else if (element.Productivity_State == "NON-PRODUCTIVE")
+              {this.CountNonProductive += 1}
+              else if (element.Productivity_State == "SPARE")
               {this.CountSpare += 1}
               else if (element.Productivity_State == "ONGOING-REPAIR")
               {this.CountOngoingRepair += 1}
@@ -84,11 +133,12 @@ export default {
 
     },
     mounted(){
-        this.fnLoad();
         this.GetProductivityStates();
     },
     created(){
         this.GetAllEquipment();
+        this.GetEquipmentID();
+        this.fnLoad();
       
     }
 }

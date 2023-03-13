@@ -44,7 +44,7 @@ import Notification from './MyNotification.vue';
       </div>
       <a href="/#/dashboard">Dashboard</a>
       <a href="#">Clients</a>
-      <a href="#">Contact</a>
+      <a href="/#/settings">Settings</a>
       <button class="LogoutBtn" @click="logout">Logout</button>
     </div>
     <div id="main1" class="ClassNavbarcolor1">

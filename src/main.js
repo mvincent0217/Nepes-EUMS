@@ -4,6 +4,7 @@ import VueRouter from 'vue-router';
 import MyLoginPage from './components/MyLoginPage.vue';
 import MyDashboard from './components/MyDashboard.vue';
 import MyHierarchy from './components/MyHierarchy.vue';
+import Settings from './components/MySettings.vue';
 Vue.use(VueRouter);
 
 
@@ -12,6 +13,7 @@ const router = new VueRouter({
     { path: '/dashboard', component: MyDashboard},
     { path: '/', component: MyLoginPage },
     { path: '/hierarchy', component: MyHierarchy,},
+    { path: '/settings', component: Settings,},
   ]
 });
 

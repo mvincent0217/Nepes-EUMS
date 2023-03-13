@@ -1,6 +1,7 @@
 <script>
 import  Navbar from './MyNavigationBar.vue';
 import MyGroupEquipmentComponent from './MyGroupEquipmentComponent.vue';
+import MyEquipmentComponent from './MyEquipmentComponent.vue';
 // import Mydash from './MyDashboard.vue';
 import * as RestAPI from '@/JS/RestAPI.js';
 export default {
@@ -15,6 +16,7 @@ export default {
     components:{
         Navbar,
         MyGroupEquipmentComponent,
+        MyEquipmentComponent
         // Mydash
     },
     props: ['equipmentId'],
@@ -63,7 +65,7 @@ export default {
                     :ChildrenEquipment="this.GetTempEquipmentResult.ChildrenEquipment"
                     :ChildrenEquipmentConfig="this.GetTempEquipmentResult.ChildEquipmentConfig"
                     :EquipmentUsage="this.GetTempEquipmentResult.EquipmentUsage"
-                />
+                /><MyEquipmentComponent/>
         </div>
     </div>
 </template>
