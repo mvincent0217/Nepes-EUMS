@@ -53,7 +53,7 @@ export default {
 }
 </script>
 <template>
-    <div>
+    <div v-if="!EquipmentId">
         <div id="EquipmentModal" class="modal">
             <div class="modal-content">
                 <span @click="closeModal(false)" class="close">&times;</span>

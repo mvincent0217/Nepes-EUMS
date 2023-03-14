@@ -2,6 +2,7 @@
 /* eslint-disable */
 import MyEquipmentComponent from './MyEquipmentComponent.vue'
 import MyChildrenEquipmentComponent from './MyChildrenEquipmentComponent.vue'
+// import Loading from './MyLoading.vue';
 export default {
     name: 'MyGroupEquipmentComponent',
     data() {
@@ -45,7 +46,8 @@ export default {
     },
     components: { 
         MyEquipmentComponent,
-        MyChildrenEquipmentComponent
+        MyChildrenEquipmentComponent,
+        // Loading
     },
     props:{
         EquipmentResult: Object,
@@ -157,12 +159,14 @@ export default {
             deep: true,
             handler(val) {
                 this.MyEquipmentComponentLeftPosition = val;
+                console.log(val)
             }
         },
         MyGrpEquipColor: {
             deep: true,
             handler(val) {
                 this.MyEquipmentComponentColor = val;
+                console.log(val)
             }
         },
     },
@@ -202,14 +206,10 @@ export default {
             for(var ChildEquipConfigkey in EquipmentConfig){
                 var oEquipmentConfig = {};
                 oEquipmentConfig = EquipmentConfig[ChildEquipConfigkey];
-                //PLB-001, PLB-002
-                //console.log('1st loop: ' + ChildEquipConfigkey);
                 for(var ChildEquipKey in ChildrenEquipment){
-                    //console.log(this.MyEquipmentComponentChildrenEquipment[ChildEquipKey]);
                     var oEquipment = {};
                     oEquipment = ChildrenEquipment[ChildEquipKey];
                     if(oEquipment.Equipment_Model == oEquipmentConfig.Child_Equipment_Model){
-                        //console.log(oEquipment.Equipment_Model);
                         if(null == this.oChildEquipments[ChildEquipConfigkey]){
                             var arTemp = [];
                             arTemp.push(oEquipment);
@@ -256,6 +256,9 @@ export default {
 </script>
 <template>
     <div>
+        <!-- <div v-if="!TempBool">
+        <Loading />
+        </div> -->
         <div>
             <MyEquipmentComponent
                 :MyModalTrigger="this.MyEquipmentComponentModalID"

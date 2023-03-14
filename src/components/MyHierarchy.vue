@@ -1,7 +1,6 @@
 <script>
 import  Navbar from './MyNavigationBar.vue';
 import MyGroupEquipmentComponent from './MyGroupEquipmentComponent.vue';
-import MyEquipmentComponent from './MyEquipmentComponent.vue';
 // import Mydash from './MyDashboard.vue';
 import * as RestAPI from '@/JS/RestAPI.js';
 export default {
@@ -10,35 +9,81 @@ export default {
             GetTempEquipmentID: 'PLT-003-03',
             GetTempEquipmentResult: {},
             myTempModalTrigger: '',
+
+            //Style Config//
+            MyEquipmentHeight: 0,
+            MyEquipmentWidth: 0,
+            MyEquipmentLeftPosition: 0,
+            tempColor: '',
         }
     },
     
     components:{
         Navbar,
         MyGroupEquipmentComponent,
-        MyEquipmentComponent
         // Mydash
     },
     props: ['equipmentId'],
     methods:{
         async fnLoad(){
             this.myTempModalTrigger = 'MyModal';
+
+            this.MyEquipmentHeight = 250;
+            this.MyEquipmentWidth = 250;
+            this.MyEquipmentLeftPosition = 350;
+            this.tempColor = 'yellow';
         },
         async GetEquipmentID(){
             this.GetTempEquipmentResult = await RestAPI.GetEquipmentID(this.GetTempEquipmentID);
             this.GetTempEquipmentResult = JSON.parse(this.GetTempEquipmentResult.data);
-            // console.log(this.GetTempEquipmentResult)
+            Object.values(this.GetTempEquipmentResult).forEach(element =>{
+                var o = {};
+                o = this.GetTempEquipmentResult;
+                if(element.Productivity_State == 'PRODUCTIVE'){
+                    this.tempColor = 'green';
+                }
+                else if(element.Productivity_State == 'WARNING'){
+                    this.tempColor = 'yellow'
+                }
+                else if(element.Productivity_State == 'CRITICAL'){
+                    this.tempColor = 'red'
+                }
+                else if(element.Productivity_State == 'NON-PRODUCTIVE'){
+                    this.tempColor = 'Black'
+                }
+                else if(element.Productivity_State == 'ONGOING-REPAIR'){
+                    this.tempColor = 'orange'
+                }
+                else if(element.Productivity_State == 'SCRAPPED'){
+                    this.tempColor = 'violet'
+                }
+                o['MyEquipmentColor'] = this.tempColor;
+                o['MyEquipmentHeight'] = 100;
+                o['MyEquipmentWidth'] = 100;
+                o['MyEquipmentLeftPosition'] = 100;
+                // console.log(this.tempColor)
+            })
+            // for()
+            // {
+            //     var o = {};
+            //     o = this.GetEquipmentsResult[i];
+            //     o['MyEquipmentHeight'] = 150;
+            //     if(Productivity_State=='PRODUCTIVE'){
+            //         color = 'green'
+            //     }
+            //     o['MyEquipmentColor'] = color;
+            // }
         },
 
 
     },
     mounted(){
-        this.fnLoad();
+        
   
     },
     created(){
-       
         this.GetEquipmentID();
+        this.fnLoad();
       
     }
 }
@@ -65,7 +110,13 @@ export default {
                     :ChildrenEquipment="this.GetTempEquipmentResult.ChildrenEquipment"
                     :ChildrenEquipmentConfig="this.GetTempEquipmentResult.ChildEquipmentConfig"
                     :EquipmentUsage="this.GetTempEquipmentResult.EquipmentUsage"
-                /><MyEquipmentComponent/>
+                    :EquipmentResult="this.GetTempEquipmentResult"
+
+                    :MyGrpEquipHeight="MyEquipmentHeight"
+                    :MyGrpEquipWidth="MyEquipmentWidth"
+                    :MyGrpEquipLeftPosition="MyEquipmentLeftPosition"
+                    :MyGrpEquipColor="tempColor"
+                />
         </div>
     </div>
 </template>
