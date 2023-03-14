@@ -2,6 +2,7 @@
 import  Navbar from './MyNavigationBar.vue';
 import MyGroupEquipmentComponent from './MyGroupEquipmentComponent.vue';
 // import Mydash from './MyDashboard.vue';
+import { EventBus } from '@/main.js';
 import * as RestAPI from '@/JS/RestAPI.js';
 export default {
     data() {
@@ -15,7 +16,14 @@ export default {
             MyEquipmentWidth: 0,
             MyEquipmentLeftPosition: 0,
             tempColor: '',
+            equipmentIdLocal: ''
         }
+    },
+
+    props: ['equipmentId'],
+    
+    mounted() {
+    // console.log(this.$props.equipmentId);
     },
     
     components:{
@@ -23,7 +31,7 @@ export default {
         MyGroupEquipmentComponent,
         // Mydash
     },
-    props: ['equipmentId'],
+   
     methods:{
         async fnLoad(){
             this.myTempModalTrigger = 'MyModal';
@@ -74,17 +82,23 @@ export default {
             //     o['MyEquipmentColor'] = color;
             // }
         },
+        updateComponent() {
+        // Use this.equipmentIdLocal to update the component
+        console.log(this.equipmentIdLocal);
+        }
 
 
     },
-    mounted(){
-        
-  
-    },
+
     created(){
         this.GetEquipmentID();
         this.fnLoad();
-      
+        this.equipmentIdLocal = this.equipmentId;
+        EventBus.$on('equipment-id-changed', (equipmentId) => {
+        this.equipmentIdLocal = equipmentId;
+        // Call a method to update the component using the new equipmentId
+        this.updateComponent();
+        });
     }
 }
 </script>
@@ -99,6 +113,7 @@ export default {
             <br>
             <a href="/dashboard#/dashboard">Back</a>
                  <MyGroupEquipmentComponent v-on="$listeners"
+                    :EquipmentResult="this.GetTempEquipmentResult"
                     :MyModalId="this.myTempModalTrigger"
                     :Equipment_ID="this.GetTempEquipmentResult.Equipment_ID"
                     :MES_State="this.GetTempEquipmentResult.MES_State"
@@ -110,8 +125,6 @@ export default {
                     :ChildrenEquipment="this.GetTempEquipmentResult.ChildrenEquipment"
                     :ChildrenEquipmentConfig="this.GetTempEquipmentResult.ChildEquipmentConfig"
                     :EquipmentUsage="this.GetTempEquipmentResult.EquipmentUsage"
-                    :EquipmentResult="this.GetTempEquipmentResult"
-
                     :MyGrpEquipHeight="MyEquipmentHeight"
                     :MyGrpEquipWidth="MyEquipmentWidth"
                     :MyGrpEquipLeftPosition="MyEquipmentLeftPosition"

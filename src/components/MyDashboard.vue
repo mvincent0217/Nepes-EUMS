@@ -4,6 +4,7 @@ import CardStatus from './MyCardStatus.vue';
 import MyTable from './MyTable.vue';
 import * as RestAPI from '@/JS/RestAPI.js';
 import Loading from './MyLoading.vue';
+import { EventBus } from '@/main.js';
 export default {
   components: {
     Navbar,
@@ -82,7 +83,7 @@ export default {
             this.GetEquipmentsResult = JSON.parse(this.GetEquipmentsResult.data);
 
             Object.values(this.GetEquipmentsResult).forEach(element => {
-                console.log(element)
+                // console.log(element)
            
               if (element.Productivity_State == "PRODUCTIVE")
               {this.CountProductive += 1 }
@@ -110,10 +111,10 @@ export default {
         },
         handleEquipmentIdSelected(equipmentId) {
         this.GetTempEquipmentID = equipmentId;
-        this.$emit('equipmentIdSelected', this.GetTempEquipmentID);
-        alert(this.GetTempEquipmentID)
+        EventBus.$emit('equipment-id-changed', equipmentId);
         this.$router.push('/hierarchy');
-        },
+    },
+
 
     },
     mounted(){

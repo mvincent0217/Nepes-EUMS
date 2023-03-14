@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
 import VueRouter from 'vue-router';
+export const EventBus = new Vue();
 import MyLoginPage from './components/MyLoginPage.vue';
 import MyDashboard from './components/MyDashboard.vue';
 import MyHierarchy from './components/MyHierarchy.vue';
