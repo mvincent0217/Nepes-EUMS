@@ -12,6 +12,8 @@ export default {
             myTempModalTrigger: '',
         }
     },
+
+    props: ['equipmentId'],
     
     components:{
         Navbar,
@@ -19,7 +21,7 @@ export default {
         MyEquipmentComponent
         // Mydash
     },
-    props: ['equipmentId'],
+   
     methods:{
         async fnLoad(){
             this.myTempModalTrigger = 'MyModal';
@@ -39,7 +41,7 @@ export default {
     created(){
        
         this.GetEquipmentID();
-      
+        console.log(this.equipmentId);
     }
 }
 </script>
@@ -54,6 +56,7 @@ export default {
             <br>
             <a href="/dashboard#/dashboard">Back</a>
                  <MyGroupEquipmentComponent v-on="$listeners"
+                    :EquipmentResult="this.GetTempEquipmentResult"
                     :MyModalId="this.myTempModalTrigger"
                     :Equipment_ID="this.GetTempEquipmentResult.Equipment_ID"
                     :MES_State="this.GetTempEquipmentResult.MES_State"

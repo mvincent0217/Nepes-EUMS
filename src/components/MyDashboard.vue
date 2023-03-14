@@ -58,10 +58,10 @@ export default {
             this.GetTempEquipmentResult = await RestAPI.GetEquipmentID(this.GetTempEquipmentID);
             this.GetTempEquipmentResult = JSON.parse(this.GetTempEquipmentResult.data);
             // this.GetTempChildEquipResult = JSON.parse(this.GetTempEquipmentResult.Equipment_ID.data);
-            console.log(this.GetTempEquipmentResult);
+            // console.log(this.GetTempEquipmentResult);
             // console.log(this.GetTempChildEquipResult);
             Object.values(this.GetTempEquipmentResult).forEach(element =>{
-                console.log(this.GetTempEquipmentResult)
+                // console.log(this.GetTempEquipmentResult)
                 var o = {};
                 o = this.GetTempEquipmentResult;
                 if(element.Classification=='PRODUCTIVE')
@@ -80,7 +80,7 @@ export default {
                 o['MyEquipmentHeight'] = 70;
                 o['MyEquipmentWidth'] = 100;
                 o['MyEquipmentLeftPosition'] = 100;
-                console.log(this.color)
+                // console.log(this.color)
             })
             // for()
             // {
@@ -98,7 +98,7 @@ export default {
             this.GetEquipmentsResult = JSON.parse(this.GetEquipmentsResult.data);
 
             Object.values(this.GetEquipmentsResult).forEach(element => {
-                console.log(element)
+                // console.log(element)
            
               if (element.Productivity_State == "PRODUCTIVE")
               {this.CountProductive += 1 }
@@ -127,9 +127,12 @@ export default {
         handleEquipmentIdSelected(equipmentId) {
         this.GetTempEquipmentID = equipmentId;
         this.$emit('equipmentIdSelected', this.GetTempEquipmentID);
-        alert(this.GetTempEquipmentID)
-        this.$router.push('/hierarchy');
-        },
+        this.$router.push({
+          path: '/hierarchy',
+          params: { equipmentId: this.GetTempEquipmentID }
+        });
+        console.log(this.GetTempEquipmentID)
+       },
 
     },
     mounted(){
