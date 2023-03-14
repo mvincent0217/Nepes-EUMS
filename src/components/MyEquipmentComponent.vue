@@ -1,6 +1,7 @@
 <script>
 /* eslint-disable */
 import MyEquipmentModal from './MyEquipmentModal.vue';
+import MyHoverComponent from './MyHoverComponent.vue';
 import Swal from 'sweetalert2'
 
 var tempthis;
@@ -36,7 +37,8 @@ export default {
         MyEquipColor: String,
     },
     components:{
-        MyEquipmentModal
+        MyEquipmentModal,
+        MyHoverComponent
     },
     methods: {
         emitPopupModal(){
@@ -110,24 +112,12 @@ export default {
              <span v-if="this.Classification == 'Equipment'" @click.prevent="showSweetAlert(Equipment_ID)" class="close">&times;</span>
                 <label class="EquipTitle" @click.prevent="openModal"><b><center>{{ this.Equipment_ID }}</center></b></label>
                 <span class="tooltiptext">
-                    <table>
-                        <tr>
-                        <td>Equipment Model</td>
-                        <td>{{ this.Equipment_Model }}</td>
-                    </tr>
-                    <tr>
-                        <td> MES STATE</td>
-                        <td>{{ this.MES_State }}</td>
-                    </tr>
-                    <tr>
-                        <td> EUMS STATE</td>
-                        <td>{{ this.EUMS_State }}</td>
-                    </tr>
-                    <tr>
-                        <td> PRODUCTIVITY STATE </td>
-                        <td>{{ this.Productivity_State }}</td>
-                    </tr>
-                    </table>
+                    <MyHoverComponent
+                        :Equipment_Model="this.Equipment_Model"
+                        :MES_State="this.MES_State"
+                        :EUMS_State="this.EUMS_State"
+                        :Productivity_State="this.Productivity_State"
+                    />
                 </span>
 
         </div>
