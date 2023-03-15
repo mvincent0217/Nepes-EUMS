@@ -30,7 +30,6 @@ export default {
         // Loading
     },
     props:{
-        EquipmentResult: Object,
         Equipment_ID: String,
         MES_State: String,
         EUMS_State: String,
