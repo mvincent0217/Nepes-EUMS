@@ -2,7 +2,8 @@
 export default {
   data() {
     return {
-      ButtonNewVariable: ''
+      ButtonNewVariable: '',
+      bgColor: localStorage.getItem('EquipmentButtonColor') || '#0077ff',
     }
   },
   props: {
@@ -17,7 +18,10 @@ export default {
   watch: {
     ButtonValue(newValue) {
       this.ButtonNewVariable = `${newValue}`
-    }
+    },
+    bgColor: function(val) {
+      document.documentElement.style.setProperty('--bgEquipmentBtn', val);
+    },
   },
   methods: {
     emitEquipmentId(equipmentId) {
@@ -46,7 +50,7 @@ export default {
           <td v-if="data.Productivity_State == ButtonNewVariable">{{ data.EUMS_State }}</td>
    
           <td v-if="data.Productivity_State == ButtonNewVariable">
-            <button class="ViewEquipIDBtn" @click="emitEquipmentId(data.Equipment_ID)">View</button>
+            <button  :style="{ '--bgEquipmentBtn': bgColor }" class="ViewEquipIDBtn" @click="emitEquipmentId(data.Equipment_ID)">View</button>
           </td>
         </tr>
       </tbody>

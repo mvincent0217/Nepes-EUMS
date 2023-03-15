@@ -4,7 +4,6 @@ import CardStatus from './MyCardStatus.vue';
 import MyTable from './MyTable.vue';
 import * as RestAPI from '@/JS/RestAPI.js';
 import Loading from './MyLoading.vue';
-import { EventBus } from '@/main.js';
 export default {
   components: {
     Navbar,
@@ -71,10 +70,9 @@ export default {
             this.ButtonValue = `${cardTitle}`
         },
         handleEquipmentIdSelected(equipmentId) {
-        this.GetTempEquipmentID = equipmentId;
-        EventBus.$emit('equipment-id-changed', equipmentId);
-        this.$router.push('/hierarchy');
-    },
+         localStorage.setItem('equipmentId', equipmentId);
+         this.$router.push('/hierarchy');
+        },
 
 
     },
@@ -94,7 +92,7 @@ export default {
 <template>
     <div>
       <div>
-        <Navbar />
+        <Navbar/>
         <br>
         <CardStatus
           :productivityStateResult="GetProductivityStateResult"

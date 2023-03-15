@@ -2,7 +2,6 @@
 import  Navbar from './MyNavigationBar.vue';
 import MyGroupEquipmentComponent from './MyGroupEquipmentComponent.vue';
 // import Mydash from './MyDashboard.vue';
-import { EventBus } from '@/main.js';
 import * as RestAPI from '@/JS/RestAPI.js';
 export default {
     data() {
@@ -16,13 +15,13 @@ export default {
             MyEquipmentWidth: 0,
             MyEquipmentLeftPosition: 0,
             tempColor: '',
-            equipmentIdLocal: ''
+           
         }
     },
 
-    props: ['equipmentId'],
+ 
     mounted() {
-    // console.log(this.$props.equipmentId);
+
     },
     
     components:{
@@ -71,21 +70,16 @@ export default {
             })
 
         },
-        updateComponent() {
-        console.log('New equipment ID:', this.equipmentIdLocal);
-        }
+
+
 
     },
 
     created(){
         this.GetEquipmentID();
         this.fnLoad();
-        this.equipmentIdLocal = this.equipmentId;
-        EventBus.$on('equipment-id-changed', (equipmentId) => {
-        this.equipmentIdLocal = equipmentId;
-        // Call a method to update the component using the new equipmentId
-        this.updateComponent();
-        });
+        const equipmentId = localStorage.getItem('equipmentId');
+        console.log(equipmentId);
     }
 }
 </script>

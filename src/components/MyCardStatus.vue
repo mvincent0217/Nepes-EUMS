@@ -17,6 +17,7 @@ export default {
   data() {
     return {
       CardNumber: null,
+      bgColor: localStorage.getItem('ButtonColor') || '#0077ff',
     };
   },
   methods: {
@@ -24,7 +25,12 @@ export default {
     this.buttonFunction(CardTitle);
     // console.log(CardTitle);
   },
-}
+},
+watch: {
+    bgColor: function(val) {
+      document.documentElement.style.setProperty('--bgCardBtn', val);
+    },
+  },
 };
 </script>
 
@@ -42,7 +48,7 @@ export default {
         <a class="text-body" v-if="CardTitle === 'ONGOING-REPAIR' ? true : false">{{  CountOngoingRepair || 0 }}</a>
         <a class="text-body" v-if="CardTitle === 'SCRAPPED' ? true : false">{{  CountScrapped || 0 }}</a>
       </div>
-      <button class="card-button" @click="handleButtonClick(CardTitle)">Click me</button>
+      <button  :style="{ '--bgCardBtn': bgColor }" class="card-button" @click="handleButtonClick(CardTitle)">Click me</button>
     </div>
   </div>
   </div>
