@@ -21,7 +21,6 @@ export default {
     },
 
     props: ['equipmentId'],
-    
     mounted() {
     // console.log(this.$props.equipmentId);
     },
@@ -35,7 +34,6 @@ export default {
     methods:{
         async fnLoad(){
             this.myTempModalTrigger = 'MyModal';
-
             this.MyEquipmentHeight = 250;
             this.MyEquipmentWidth = 250;
             this.MyEquipmentLeftPosition = 350;
@@ -69,24 +67,13 @@ export default {
                 o['MyEquipmentHeight'] = 100;
                 o['MyEquipmentWidth'] = 100;
                 o['MyEquipmentLeftPosition'] = 100;
-                // console.log(this.tempColor)
+            
             })
-            // for()
-            // {
-            //     var o = {};
-            //     o = this.GetEquipmentsResult[i];
-            //     o['MyEquipmentHeight'] = 150;
-            //     if(Productivity_State=='PRODUCTIVE'){
-            //         color = 'green'
-            //     }
-            //     o['MyEquipmentColor'] = color;
-            // }
+
         },
         updateComponent() {
-        // Use this.equipmentIdLocal to update the component
-        console.log(this.equipmentIdLocal);
+        console.log('New equipment ID:', this.equipmentIdLocal);
         }
-
 
     },
 

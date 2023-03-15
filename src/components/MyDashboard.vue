@@ -41,43 +41,6 @@ export default {
         async fnLoad(){
             this.myTempModalTrigger = 'MyModal';
         },
-        // async GetEquipmentID(){
-        //     this.GetTempEquipmentResult = await RestAPI.GetEquipmentID(this.GetTempEquipmentID);
-        //     this.GetTempEquipmentResult = JSON.parse(this.GetTempEquipmentResult.data);
-        //     console.log(this.GetTempEquipmentResult);
-        //     Object.values(this.GetTempEquipmentResult).forEach(element =>{
-        //         console.log(this.GetTempEquipmentResult)
-        //         var o = {};
-        //         o = this.GetTempEquipmentResult;
-        //         if(element.Classification == 'PRODUCTIVE')
-        //         {this.tempColor = 'green';}
-        //         else if(element.Classification == 'WARNING')
-        //         {this.tempColor = 'yellow'}
-        //         else if(element.Classification == 'CRITICAL')
-        //         {this.tempColor = 'red'}
-        //         else if(element.Classification == 'NON-PRODUCTIVE')
-        //         {this.tempColor = 'Black'}
-        //         else if(element.Classification == 'ONGOING-REPAIR')
-        //         {this.tempColor = 'orange'}
-        //         else if(element.Classification == 'SCRAPPED')
-        //         {this.tempColor = 'violet'}
-        //         o['MyEquipmentColor'] = this.tempColor;
-        //         o['MyEquipmentHeight'] = 70;
-        //         o['MyEquipmentWidth'] = 100;
-        //         o['MyEquipmentLeftPosition'] = 100;
-        //         console.log(this.color)
-        //     })
-        //     // for()
-        //     // {
-        //     //     var o = {};
-        //     //     o = this.GetEquipmentsResult[i];
-        //     //     o['MyEquipmentHeight'] = 150;
-        //     //     if(Productivity_State=='PRODUCTIVE'){
-        //     //         color = 'green'
-        //     //     }
-        //     //     o['MyEquipmentColor'] = color;
-        //     // }
-        // },
         async GetAllEquipment(){
             this.GetEquipmentsResult = await RestAPI.GetAllEquipments();
             this.GetEquipmentsResult = JSON.parse(this.GetEquipmentsResult.data);
@@ -105,9 +68,7 @@ export default {
             this.GetProductivityStateResult = JSON.parse(this.GetProductivityStateResult.data);
         },
         handleCardStatusButtonClick(cardTitle) {
-            // console.log(`${cardTitle}`);
             this.ButtonValue = `${cardTitle}`
-            // console.log(this.ButtonValue)
         },
         handleEquipmentIdSelected(equipmentId) {
         this.GetTempEquipmentID = equipmentId;
@@ -122,7 +83,7 @@ export default {
     },
     created(){
         this.GetAllEquipment();
-        this.GetEquipmentID();
+     
         this.fnLoad();
       
     }
