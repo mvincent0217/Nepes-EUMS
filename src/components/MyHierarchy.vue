@@ -1,4 +1,5 @@
 <script>
+/* eslint-disable */
 import  Navbar from './MyNavigationBar.vue';
 import MyGroupEquipmentComponent from './MyGroupEquipmentComponent.vue';
 // import Mydash from './MyDashboard.vue';
@@ -10,6 +11,7 @@ export default {
             GetTempEquipmentID: 'PLT-003-03',
             GetTempEquipmentResult: {},
             myTempModalTrigger: '',
+            arrTest: [],
 
             //Style Config//
             MyEquipmentHeight: 0,
@@ -35,52 +37,60 @@ export default {
     methods:{
         async fnLoad(){
             this.myTempModalTrigger = 'MyModal';
-
-            this.MyEquipmentHeight = 250;
-            this.MyEquipmentWidth = 250;
-            this.MyEquipmentLeftPosition = 350;
-            this.tempColor = 'yellow';
         },
         async GetEquipmentID(){
             this.GetTempEquipmentResult = await RestAPI.GetEquipmentID(this.GetTempEquipmentID);
             this.GetTempEquipmentResult = JSON.parse(this.GetTempEquipmentResult.data);
-            Object.values(this.GetTempEquipmentResult).forEach(element =>{
+            var object = await this.ReSummarizeEquipmentObject(this.GetTempEquipmentResult)
                 var o = {};
                 o = this.GetTempEquipmentResult;
-                if(element.Productivity_State == 'PRODUCTIVE'){
-                    this.tempColor = 'green';
+                if(this.GetTempEquipmentResult.Productivity_State == 'PRODUCTIVE'){
+                    this.tempColor = '#90EE90';
                 }
-                else if(element.Productivity_State == 'WARNING'){
+                else if(this.GetTempEquipmentResult.Productivity_State == 'WARNING'){
                     this.tempColor = 'yellow'
                 }
-                else if(element.Productivity_State == 'CRITICAL'){
+                else if(this.GetTempEquipmentResult.Productivity_State == 'CRITICAL'){
                     this.tempColor = 'red'
                 }
-                else if(element.Productivity_State == 'NON-PRODUCTIVE'){
+                else if(this.GetTempEquipmentResult.Productivity_State == 'NON-PRODUCTIVE'){
                     this.tempColor = 'Black'
                 }
-                else if(element.Productivity_State == 'ONGOING-REPAIR'){
+                else if(this.GetTempEquipmentResult.Productivity_State == 'ONGOING-REPAIR'){
                     this.tempColor = 'orange'
                 }
-                else if(element.Productivity_State == 'SCRAPPED'){
+                else if(this.GetTempEquipmentResult.Productivity_State == 'SCRAPPED'){
                     this.tempColor = 'violet'
                 }
                 o['MyEquipmentColor'] = this.tempColor;
                 o['MyEquipmentHeight'] = 100;
                 o['MyEquipmentWidth'] = 100;
                 o['MyEquipmentLeftPosition'] = 100;
-                // console.log(this.tempColor)
-            })
-            // for()
-            // {
-            //     var o = {};
-            //     o = this.GetEquipmentsResult[i];
-            //     o['MyEquipmentHeight'] = 150;
-            //     if(Productivity_State=='PRODUCTIVE'){
-            //         color = 'green'
-            //     }
-            //     o['MyEquipmentColor'] = color;
-            // }
+        },
+        async ReSummarizeEquipmentObject(object) {
+            //loop through the object and get each child equipment
+            this.arrTest.push(object);
+            for (var key in object.ChildrenEquipment) {
+                var iChildCount = 0;
+                //Count the number of child of the next node
+                iChildCount = Object.keys(object.ChildrenEquipment[key].ChildrenEquipment)
+                    .length;
+                //Add child count as attribute to the parent
+                object.ChildrenEquipment[key]["ChildCount"] = iChildCount;
+                //Add the parent equipment id to the current child equipment
+                object.ChildrenEquipment[key]["ParentEquipmentID"] = object.Equipment_ID; 
+                //Check if the next children has count
+                //If 0 then it is the last child for that node
+                var bLastEquipment = false;
+                if (iChildCount === 0) {
+                    bLastEquipment = true;
+                }
+                object.ChildrenEquipment[key]["LastEquipment"] = bLastEquipment;
+                //call itself to check the next children equipment
+
+                this.ReSummarizeEquipmentObject(object.ChildrenEquipment[key]);
+            }
+                return object;
         },
         updateComponent() {
         // Use this.equipmentIdLocal to update the component
@@ -112,23 +122,24 @@ export default {
             <br>
             <br>
             <a href="/dashboard#/dashboard">Back</a>
+            <!--    :MyGrpEquipHeight="GetTempEquipmentResult.MyEquipmentHeight"
+                    :MyGrpEquipWidth="GetTempEquipmentResult.MyEquipmentWidth"
+                    :MyGrpEquipLeftPosition="GetTempEquipmentResult.MyEquipmentLeftPosition"
+                    :MyGrpEquipColor="GetTempEquipmentResult.MyEquipmentColor"
+                    :MyModalId="myTempModalTrigger" -->
                  <MyGroupEquipmentComponent v-on="$listeners"
-                    :EquipmentResult="this.GetTempEquipmentResult"
-                    :MyModalId="this.myTempModalTrigger"
-                    :Equipment_ID="this.GetTempEquipmentResult.Equipment_ID"
-                    :MES_State="this.GetTempEquipmentResult.MES_State"
-                    :EUMS_State="this.GetTempEquipmentResult.EUMS_State" 
-                    :Productivity_State="this.GetTempEquipmentResult.Productivity_State"
-                    :Equipment_Model="this.GetTempEquipmentResult.Equipment_Model"
-                    :PartType="this.GetTempEquipmentResult.Part_Type"
-                    :Classification="this.GetTempEquipmentResult.Classification"
-                    :ChildrenEquipment="this.GetTempEquipmentResult.ChildrenEquipment"
-                    :ChildrenEquipmentConfig="this.GetTempEquipmentResult.ChildEquipmentConfig"
-                    :EquipmentUsage="this.GetTempEquipmentResult.EquipmentUsage"
-                    :MyGrpEquipHeight="MyEquipmentHeight"
-                    :MyGrpEquipWidth="MyEquipmentWidth"
-                    :MyGrpEquipLeftPosition="MyEquipmentLeftPosition"
-                    :MyGrpEquipColor="tempColor"
+                 v-for="(iChildEquip, index) in arrTest" :key="index"
+                    :Equipment_ID="iChildEquip.Equipment_ID"
+                    :MES_State="iChildEquip.MES_State"
+                    :EUMS_State="iChildEquip.EUMS_State" 
+                    :Productivity_State="iChildEquip.Productivity_State"
+                    :Equipment_Model="iChildEquip.Equipment_Model"
+                    :PartType="iChildEquip.Part_Type"
+                    :Classification="iChildEquip.Classification"
+                    :ChildrenEquipment="iChildEquip.ChildrenEquipment"
+                    :ChildrenEquipmentConfig="iChildEquip.ChildEquipmentConfig"
+                    :EquipmentUsage="iChildEquip.EquipmentUsage"
+                    
                 />
         </div>
     </div>

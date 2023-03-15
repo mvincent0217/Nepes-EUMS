@@ -98,7 +98,8 @@ export default {
               else if (element.Productivity_State == "ONGOING-REPAIR")
               {this.CountOngoingRepair += 1}
               else if (element.Productivity_State == "SCRAPPED")
-              {this.CountScrapped += 1} });
+              {this.CountScrapped += 1} 
+            });
         },
         async GetProductivityStates(){
             this.GetProductivityStateResult = await RestAPI.GetProductivityStates();
@@ -122,7 +123,6 @@ export default {
     },
     created(){
         this.GetAllEquipment();
-        this.GetEquipmentID();
         this.fnLoad();
       
     }

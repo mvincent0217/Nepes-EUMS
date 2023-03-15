@@ -16,6 +16,9 @@ export default {
             tempEquipHeight: null,
             tempEquipWidth: null,
             tempEquipLeftPosition: null,
+
+            tempEquipMES_State: '',
+            iCount: 0
         }
     },
     props:{
@@ -36,6 +39,21 @@ export default {
         MyEquipLeftPosition: Number,
         MyEquipColor: String,
     },
+    watch: {
+        Equipment_ID:{
+            deep: true,
+            handler(val) {
+                console.log(val)
+            }
+        },
+        MES_State: {
+            deep: true, 
+            handler(val) {
+                //this.tempEquipMES_State = val
+                console.log(this.iCount++)
+            }
+        },
+    },
     components:{
         MyEquipmentModal,
         MyHoverComponent
@@ -45,7 +63,6 @@ export default {
             this.$emit('PopupModal');
         },
         showSweetAlert(e){
-            this.ShowModal = false;
             console.log(e);
             Swal.fire({
                 title: 'Are you sure?',
@@ -57,6 +74,7 @@ export default {
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    console.log('delete click'),
                     Swal.fire(
                     'Deleted!',
                     'Your file has been deleted.',
@@ -109,14 +127,14 @@ export default {
                  '--leftPositionEquipment': this.tempEquipLeftPosition,
                  '--bgColorEquipment': this.MyEquipColor || 'white'
                 }">
-             <span v-if="this.Classification == 'Equipment'" @click.prevent="showSweetAlert(Equipment_ID)" class="close">&times;</span>
+             <span v-if="this.Classification == 'Component'" @click.prevent="showSweetAlert(Equipment_ID)" class="close">&times;</span>
                 <label class="EquipTitle" @click.prevent="openModal"><b><center>{{ this.Equipment_ID }}</center></b></label>
                 <span class="tooltiptext">
                     <MyHoverComponent
-                        :Equipment_Model="this.Equipment_Model"
-                        :MES_State="this.MES_State"
-                        :EUMS_State="this.EUMS_State"
-                        :Productivity_State="this.Productivity_State"
+                        :Equipment_Model="Equipment_Model"
+                        :MES_State="MES_State"
+                        :EUMS_State="EUMS_State"
+                        :Productivity_State="Productivity_State"
                     />
                 </span>
 
