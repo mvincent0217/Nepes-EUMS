@@ -2,15 +2,16 @@
 /* eslint-disable */
 import  Navbar from './MyNavigationBar.vue';
 import MyGroupEquipmentComponent from './MyGroupEquipmentComponent.vue';
-// import Mydash from './MyDashboard.vue';
+import Loading from './MyLoading.vue';
 import * as RestAPI from '@/JS/RestAPI.js';
 export default {
     data() {
         return {
-            GetTempEquipmentID: 'PLT-003-03',
+            GetTempEquipmentID: '',
             GetTempEquipmentResult: {},
             myTempModalTrigger: '',
             arrAllEquipments: [],
+            BoolLoad: false,
 
             //Style Config//
             MyEquipmentHeight: 0,
@@ -29,7 +30,7 @@ export default {
     components:{
         Navbar,
         MyGroupEquipmentComponent,
-        // Mydash
+        Loading,
     },
    
     methods:{
@@ -119,6 +120,9 @@ export default {
                     :MyGrpEquipLeftPosition="GetTempEquipmentResult.MyEquipmentLeftPosition"
                     :MyGrpEquipColor="GetTempEquipmentResult.MyEquipmentColor"
                     :MyModalId="myTempModalTrigger" -->
+                    <div v-if="!BoolLoad">
+                        <Loading />
+                    </div>
                  <MyGroupEquipmentComponent v-on="$listeners"
                  v-for="(iChildEquip, index) in arrAllEquipments" :key="index"
                     :Equipment_ID="iChildEquip.Equipment_ID"
