@@ -135,7 +135,7 @@ export default {
                  '--bgColorEquipment': this.MyEquipColor || 'white'
                 }">
              <!-- <span v-if="this.Classification == 'Component'" @click.prevent="showSweetAlert(Equipment_ID)" class="close">&times;</span> -->
-             <a @click="toggle">&#9776;</a>
+             <a @click="toggle" class="equipmentMenu">&#9776;</a>
              <div v-if="active">
                 <MyMenuComponent/>
              </div>
