@@ -11,7 +11,7 @@ export default {
             GetTempEquipmentID: 'PLT-003-03',
             GetTempEquipmentResult: {},
             myTempModalTrigger: '',
-            arrTest: [],
+            arrAllEquipments: [],
 
             //Style Config//
             MyEquipmentHeight: 0,
@@ -69,7 +69,7 @@ export default {
         },
         async ReSummarizeEquipmentObject(object) {
             //loop through the object and get each child equipment
-            this.arrTest.push(object);
+            this.arrAllEquipments.push(object);
             for (var key in object.ChildrenEquipment) {
                 var iChildCount = 0;
                 //Count the number of child of the next node
@@ -128,7 +128,7 @@ export default {
                     :MyGrpEquipColor="GetTempEquipmentResult.MyEquipmentColor"
                     :MyModalId="myTempModalTrigger" -->
                  <MyGroupEquipmentComponent v-on="$listeners"
-                 v-for="(iChildEquip, index) in arrTest" :key="index"
+                 v-for="(iChildEquip, index) in arrAllEquipments" :key="index"
                     :Equipment_ID="iChildEquip.Equipment_ID"
                     :MES_State="iChildEquip.MES_State"
                     :EUMS_State="iChildEquip.EUMS_State" 
