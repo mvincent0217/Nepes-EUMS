@@ -174,11 +174,15 @@ export default {
                 :EUMS_State="EUMS_State" 
                 :Productivity_State="Productivity_State"
                 :Equipment_Model="Equipment_Model"
-                :PartType="Part_Type"
+                :PartType="PartType"
                 :Classification="Classification"
                 :ChildrenEquipment="ChildrenEquipment"
                 :ChildrenEquipmentConfig="ChildrenEquipmentConfig"
-                :EquipmentUsage="ChildrenEquipmentUsage"
+                :EquipmentUsage="EquipmentUsage"
+                :MyEquipHeight="MyGrpEquipHeight"
+                :MyEquipWidth="MyGrpEquipWidth"
+                :MyEquipLeftPosition="MyGrpEquipLeftPosition"
+                :MyEquipColor="MyGrpEquipColor"
             />
         </div>
     </div>

@@ -42,21 +42,6 @@ export default {
         MyEquipLeftPosition: Number,
         MyEquipColor: String,
     },
-    watch: {
-        Equipment_ID:{
-            deep: true,
-            handler(val) {
-                console.log(val)
-            }
-        },
-        MES_State: {
-            deep: true, 
-            handler(val) {
-                //this.tempEquipMES_State = val
-                console.log(this.iCount++)
-            }
-        },
-    },
     components:{
         MyEquipmentModal,
         MyHoverComponent,
@@ -137,7 +122,7 @@ export default {
              <!-- <span v-if="this.Classification == 'Component'" @click.prevent="showSweetAlert(Equipment_ID)" class="close">&times;</span> -->
              <a @click="toggle" class="equipmentMenu">&#9776;</a>
              <div v-if="active">
-                <MyMenuComponent/>
+                <MyMenuComponent :Classification="Classification"/>
              </div>
                 <label class="EquipTitle" @click.prevent="openModal"><b><center>{{ this.Equipment_ID }}</center></b></label>
                 <span class="tooltiptext">

@@ -4,6 +4,7 @@ import  Navbar from './MyNavigationBar.vue';
 import MyGroupEquipmentComponent from './MyGroupEquipmentComponent.vue';
 import Loading from './MyLoading.vue';
 import * as RestAPI from '@/JS/RestAPI.js';
+import { States } from '@/JS/Constants.js';
 export default {
     data() {
         return {
@@ -43,34 +44,38 @@ export default {
             this.GetTempEquipmentResult = await RestAPI.GetEquipmentID(this.GetTempEquipmentID);
             this.GetTempEquipmentResult = JSON.parse(this.GetTempEquipmentResult.data);
             var object = await this.ReSummarizeEquipmentObject(this.GetTempEquipmentResult)
-                var o = {};
-                o = this.GetTempEquipmentResult;
-                if(this.GetTempEquipmentResult.Productivity_State == 'PRODUCTIVE'){
-                    this.tempColor = '#90EE90';
+        },
+        async AddStyles(object){
+            if(object.Productivity_State == States._Productive ){
+                    object["MyEquipmentColor"] = 'green';
                 }
-                else if(this.GetTempEquipmentResult.Productivity_State == 'WARNING'){
-                    this.tempColor = 'yellow'
+                else if(object.Productivity_State == States._Warning){
+                    object["MyEquipmentColor"] = 'yellow'
                 }
-                else if(this.GetTempEquipmentResult.Productivity_State == 'CRITICAL'){
-                    this.tempColor = 'red'
+                else if(object.Productivity_State == States._Critical){
+                    object["MyEquipmentColor"] = 'orange'
                 }
-                else if(this.GetTempEquipmentResult.Productivity_State == 'NON-PRODUCTIVE'){
-                    this.tempColor = 'Black'
+                else if(object.Productivity_State == States._Non_Productive ){
+                    object["MyEquipmentColor"] = 'red'
                 }
-                else if(this.GetTempEquipmentResult.Productivity_State == 'ONGOING-REPAIR'){
-                    this.tempColor = 'orange'
+                else if(object.Productivity_State == States._Spare ){
+                    object["MyEquipmentColor"] = 'brown'
                 }
-                else if(this.GetTempEquipmentResult.Productivity_State == 'SCRAPPED'){
-                    this.tempColor = 'violet'
+                else if(object.Productivity_State == States._Ongoing_Repair){
+                    object["MyEquipmentColor"] = 'blue'
                 }
-                o['MyEquipmentColor'] = this.tempColor;
-                o['MyEquipmentHeight'] = 100;
-                o['MyEquipmentWidth'] = 100;
-                o['MyEquipmentLeftPosition'] = 100;
+                else if(object.Productivity_State == States._Scrapped){
+                    object["MyEquipmentColor"] = 'violet'
+                }
+                object["MyEquipmentHeight"] = 300;
+                object["MyEquipmentWidth"] = 300;
+                object["MyEquipmentLeftPosition"] = 300;
+                object["MyModalTrigger"] = this.myTempModalTrigger;
         },
         async ReSummarizeEquipmentObject(object) {
             //loop through the object and get each child equipment
             this.arrAllEquipments.push(object);
+            await this.AddStyles(object);
             for (var key in object.ChildrenEquipment) {
                 var iChildCount = 0;
                 //Count the number of child of the next node
@@ -88,8 +93,7 @@ export default {
                 }
                 object.ChildrenEquipment[key]["LastEquipment"] = bLastEquipment;
                 //call itself to check the next children equipment
-
-                this.ReSummarizeEquipmentObject(object.ChildrenEquipment[key]);
+                await this.ReSummarizeEquipmentObject(object.ChildrenEquipment[key]);
             }
                 return object;
         },
@@ -101,6 +105,7 @@ export default {
     created(){
         this.GetEquipmentID();
         this.fnLoad();
+        console.log(this.arrAllEquipments)
     
     }
 }
@@ -135,6 +140,10 @@ export default {
                     :ChildrenEquipment="iChildEquip.ChildrenEquipment"
                     :ChildrenEquipmentConfig="iChildEquip.ChildEquipmentConfig"
                     :EquipmentUsage="iChildEquip.EquipmentUsage"
+                    :MyGrpEquipHeight="iChildEquip.MyEquipmentHeight"
+                    :MyGrpEquipWidth="iChildEquip.MyEquipmentWidth"
+                    :MyGrpEquipLeftPosition="iChildEquip.MyEquipmentLeftPosition"
+                    :MyGrpEquipColor="iChildEquip.MyEquipmentColor"
                     
                 />
         </div>
