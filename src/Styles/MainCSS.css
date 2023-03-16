@@ -474,7 +474,7 @@ svg {
  align-items: center;
  text-align: center;
  position: fixed;
- top: 60%;
+ top: 50%;
  left: 50%;
  transform: translate(-50%, -50%);
  }
@@ -498,7 +498,7 @@ svg {
 .FormSettingsCard{
   display: inline-block;
   position: fixed;
-  top: 36%;
+  top: 26%;
   left: 45%;
   transform: translate(-50%, -50%);
 }
@@ -506,7 +506,7 @@ svg {
 .FormSettingsButton{
   display: inline-block;
   position: fixed;
-  top: 36%;
+  top: 26%;
   left: 55%;
   transform: translate(-50%, -50%);
 }

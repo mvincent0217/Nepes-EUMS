@@ -72,9 +72,9 @@
     <div class="Formcard">
       <a for="color-dropdown">Navigation Bar Color: &nbsp;</a>
       <select id="color-dropdown" class="Settingsdropdown" v-model="NavbarColor" @change="saveNavbarColor">
-        <option value="">--Please select a color--</option>
+        <option value="">Default Color</option>
         <option value="red">Red</option>
-        <option value="blue">Blue</option>
+        <option value="Purple">Purple</option>
         <option value="green">Green</option>
         <option value="orange">Orange</option>
       </select>
@@ -82,9 +82,9 @@
       <br>
       <a for="color-dropdown">Card Button Color: &nbsp;</a>
       <select id="color-dropdown" class="Settingsdropdown" v-model="ButtonColor" @change="saveButtonColor">
-        <option value="">--Please select a color--</option>
+        <option value="">Default Color</option>
         <option value="red">Red</option>
-        <option value="blue">Blue</option>
+        <option value="Purple">Purple</option>
         <option value="green">Green</option>
         <option value="orange">Orange</option>
       </select>
@@ -93,9 +93,9 @@
       <br>
       <a for="color-dropdown">Table Button Color: &nbsp;</a>
       <select id="color-dropdown" class="Settingsdropdown" v-model="EquipmentButtonColor" @change="saveEquipmentButtonColor">
-        <option value="">--Please select a color--</option>
+        <option value="">Default Color</option>
         <option value="red">Red</option>
-        <option value="blue">Blue</option>
+        <option value="Purple">Purple</option>
         <option value="green">Green</option>
         <option value="orange">Orange</option>
       </select>

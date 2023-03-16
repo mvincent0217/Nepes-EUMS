@@ -100,7 +100,10 @@ export default {
     created(){
         this.GetEquipmentID();
         this.fnLoad();
-    
+
+        const userRightsJSON = localStorage.getItem('userRights');
+        const userRights = JSON.parse(userRightsJSON);
+        console.log(userRights);
     }
 }
 </script>

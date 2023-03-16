@@ -26,11 +26,15 @@ export default {
   async AuthenticateUser() {
   this.AuthenticateUserResult = await RestAPI.AuthenticateUser(this.userID, this.password);
   this.AuthenticateUserResult = JSON.parse(this.AuthenticateUserResult.data);
-  // console.log(this.AuthenticateUserResult);
+  
+  //  console.log(this.AuthenticateUserResult.UserRights);
+   const userRights = this.AuthenticateUserResult.UserRights;
+   localStorage.setItem('userRights', JSON.stringify(userRights));
+
   if (this.AuthenticateUserResult && this.AuthenticateUserResult.UserRights) {
     for (let i = 0; i < this.AuthenticateUserResult.UserRights.length; i++) {
       const userRight = this.AuthenticateUserResult.UserRights[i];
-      console.log(userRight);
+      // console.log(userRight);
       if (userRight && this.$router.currentRoute.path !== '/dashboard') {
         this.$router.push('/dashboard');
         break;
