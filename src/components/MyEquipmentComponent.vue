@@ -2,6 +2,7 @@
 /* eslint-disable */
 import MyEquipmentModal from './MyEquipmentModal.vue';
 import MyHoverComponent from './MyHoverComponent.vue';
+import MyMenuComponent from './MyMenuComponent.vue';
 import Swal from 'sweetalert2'
 
 var tempthis;
@@ -18,7 +19,9 @@ export default {
             tempEquipLeftPosition: null,
 
             tempEquipMES_State: '',
-            iCount: 0
+            iCount: 0,
+
+            active: false,
         }
     },
     props:{
@@ -39,24 +42,10 @@ export default {
         MyEquipLeftPosition: Number,
         MyEquipColor: String,
     },
-    watch: {
-        Equipment_ID:{
-            deep: true,
-            handler(val) {
-                console.log(val)
-            }
-        },
-        MES_State: {
-            deep: true, 
-            handler(val) {
-                //this.tempEquipMES_State = val
-                console.log(this.iCount++)
-            }
-        },
-    },
     components:{
         MyEquipmentModal,
-        MyHoverComponent
+        MyHoverComponent,
+        MyMenuComponent,
     },
     methods: {
         emitPopupModal(){
@@ -89,6 +78,9 @@ export default {
         CloseModal(e){
             this.ShowModal = false;
         },
+        toggle(){
+            this.active = !this.active;
+        }
     },
     updated(){
         // console.log(this.ChildrenEquipment)
@@ -127,7 +119,11 @@ export default {
                  '--leftPositionEquipment': this.tempEquipLeftPosition,
                  '--bgColorEquipment': this.MyEquipColor || 'white'
                 }">
-             <span v-if="this.Classification == 'Component'" @click.prevent="showSweetAlert(Equipment_ID)" class="close">&times;</span>
+             <!-- <span v-if="this.Classification == 'Component'" @click.prevent="showSweetAlert(Equipment_ID)" class="close">&times;</span> -->
+             <a @click="toggle" class="equipmentMenu">&#9776;</a>
+             <div v-if="active">
+                <MyMenuComponent :Classification="Classification"/>
+             </div>
                 <label class="EquipTitle" @click.prevent="openModal"><b><center>{{ this.Equipment_ID }}</center></b></label>
                 <span class="tooltiptext">
                     <MyHoverComponent

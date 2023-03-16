@@ -2,11 +2,11 @@
     width: var(--widthEquipment);
     height: var(--heightEquipment);
     border-radius: 20px;
-    background: var(--bgColorEquipment);
+    background: white;
     left: var(--leftPositionEquipment);
     position: relative;
     padding: 1.8rem;
-    border: 2px solid #c3c6ce;
+    border: 2px solid var(--bgColorEquipment);
     transition: 0.5s ease-out;
     overflow: visible;
 }
@@ -102,7 +102,21 @@
   
   .close:hover,
   .close:focus {
-    color: #000;
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .equipmentMenu {
+    color: gray;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .equipmentMenu:hover,
+  .equipmentMenu:focus {
+    color: red;
     text-decoration: none;
     cursor: pointer;
   }
