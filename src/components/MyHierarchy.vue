@@ -3,7 +3,6 @@
 import  Navbar from './MyNavigationBar.vue';
 import MyGroupEquipmentComponent from './MyGroupEquipmentComponent.vue';
 // import Mydash from './MyDashboard.vue';
-import { EventBus } from '@/main.js';
 import * as RestAPI from '@/JS/RestAPI.js';
 export default {
     data() {
@@ -18,14 +17,13 @@ export default {
             MyEquipmentWidth: 0,
             MyEquipmentLeftPosition: 0,
             tempColor: '',
-            equipmentIdLocal: ''
+           
         }
     },
 
-    props: ['equipmentId'],
-    
+ 
     mounted() {
-    // console.log(this.$props.equipmentId);
+
     },
     
     components:{
@@ -39,6 +37,8 @@ export default {
             this.myTempModalTrigger = 'MyModal';
         },
         async GetEquipmentID(){
+            const equipmentId = localStorage.getItem('equipmentId');
+            this.GetTempEquipmentID = equipmentId;
             this.GetTempEquipmentResult = await RestAPI.GetEquipmentID(this.GetTempEquipmentID);
             this.GetTempEquipmentResult = JSON.parse(this.GetTempEquipmentResult.data);
             var object = await this.ReSummarizeEquipmentObject(this.GetTempEquipmentResult)
@@ -92,10 +92,7 @@ export default {
             }
                 return object;
         },
-        updateComponent() {
-        // Use this.equipmentIdLocal to update the component
-        console.log(this.equipmentIdLocal);
-        }
+
 
 
     },
@@ -103,12 +100,7 @@ export default {
     created(){
         this.GetEquipmentID();
         this.fnLoad();
-        this.equipmentIdLocal = this.equipmentId;
-        EventBus.$on('equipment-id-changed', (equipmentId) => {
-        this.equipmentIdLocal = equipmentId;
-        // Call a method to update the component using the new equipmentId
-        this.updateComponent();
-        });
+    
     }
 }
 </script>
