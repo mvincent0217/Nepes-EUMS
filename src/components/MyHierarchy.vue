@@ -44,6 +44,7 @@ export default {
             this.GetTempEquipmentResult = await RestAPI.GetEquipmentID(this.GetTempEquipmentID);
             this.GetTempEquipmentResult = JSON.parse(this.GetTempEquipmentResult.data);
             var object = await this.ReSummarizeEquipmentObject(this.GetTempEquipmentResult)
+            this.BoolLoad = true
         },
         async AddStyles(object){
             if(object.Productivity_State == States._Productive ){
