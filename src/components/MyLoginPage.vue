@@ -30,7 +30,7 @@ export default {
   if (this.AuthenticateUserResult && this.AuthenticateUserResult.UserRights) {
     for (let i = 0; i < this.AuthenticateUserResult.UserRights.length; i++) {
       const userRight = this.AuthenticateUserResult.UserRights[i];
-      // console.log(userRight);
+      console.log(userRight);
       if (userRight && this.$router.currentRoute.path !== '/dashboard') {
         this.$router.push('/dashboard');
         break;
