@@ -19,6 +19,7 @@ export default {
             deep: true,
             handler(val) {
                 this.TempEquipment_Model = val;
+                console.log(val)
             }
         },
         MES_State: {
@@ -46,19 +47,19 @@ export default {
         <table>
             <tr>
                 <td>Equipment Model</td>
-                <td>{{ this.TempEquipment_Model }}</td>
+                <td>{{ Equipment_Model }}</td>
             </tr>
             <tr>
                 <td> MES STATE</td>
-                <td>{{ this.TempMES_State }}</td>
+                <td>{{ MES_State }}</td>
             </tr>
             <tr>
                 <td> EUMS STATE</td>
-                <td>{{ this.TempEUMS_State }}</td>
+                <td>{{ EUMS_State }}</td>
             </tr>
             <tr>
                 <td> PRODUCTIVITY STATE </td>
-                <td>{{ this.TempProductivity_State }}</td>
+                <td>{{ Productivity_State }}</td>
             </tr>
         </table>
 </template>
