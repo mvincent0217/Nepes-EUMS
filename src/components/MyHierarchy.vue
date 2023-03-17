@@ -68,8 +68,8 @@ export default {
                 else if(object.Productivity_State == States._Scrapped){
                     object["MyEquipmentColor"] = 'violet'
                 }
-                object["MyEquipmentHeight"] = 300;
-                object["MyEquipmentWidth"] = 300;
+                object["MyEquipmentHeight"] = 200;
+                object["MyEquipmentWidth"] = 200;
                 object["MyEquipmentLeftPosition"] = 300;
                 object["MyModalTrigger"] = this.myTempModalTrigger;
         },
@@ -106,6 +106,7 @@ export default {
     created(){
         this.GetEquipmentID();
         this.fnLoad();
+        console.log(this.arrAllEquipments)
     }
 }
 </script>

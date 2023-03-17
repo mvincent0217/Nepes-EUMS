@@ -11,8 +11,7 @@ export default {
     data() {
         return {            
             ShowModal: false,
-            tempChildEquipmentID: '',
-            tempParentEquipmentID: '',
+            TempEquipment_ID: '',
 
             tempEquipHeight: null,
             tempEquipWidth: null,
@@ -51,7 +50,7 @@ export default {
         emitPopupModal(){
             this.$emit('PopupModal');
         },
-        showSweetAlert(e){
+        DeleteEquip(e){
             console.log(e);
             Swal.fire({
                 title: 'Are you sure?',
@@ -105,6 +104,7 @@ export default {
             //default Value
             this.tempEquipLeftPosition = '300px';
         }
+        this.TempEquipment_ID = localStorage.getItem('equipmentId')
     },
     mounted(){
         // console.log(this.AlertNotification());
@@ -120,9 +120,9 @@ export default {
                  '--bgColorEquipment': this.MyEquipColor || 'white'
                 }">
              <!-- <span v-if="this.Classification == 'Component'" @click.prevent="showSweetAlert(Equipment_ID)" class="close">&times;</span> -->
-             <a @click="toggle" class="equipmentMenu">&#9776;</a>
+             <a @click="toggle" class="equipmentMenu" v-if="Equipment_ID != TempEquipment_ID">&#9776;</a>
              <div v-if="active">
-                <MyMenuComponent :Classification="Classification"/>
+                <MyMenuComponent @DeleteEquipment="DeleteEquip()" :Classification="Classification" :MenuEquipment_ID="Equipment_ID"/>
              </div>
                 <label class="EquipTitle" @click.prevent="openModal"><b><center>{{ this.Equipment_ID }}</center></b></label>
                 <span class="tooltiptext">

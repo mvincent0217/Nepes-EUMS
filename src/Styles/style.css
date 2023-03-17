@@ -42,25 +42,23 @@
   .tooltip {
     position: relative;
     display: inline-block;
-    border-bottom: 1px dotted black;
   }
   
   .tooltip .tooltiptext {
     visibility: hidden;
-    width: 350px;
+    width: 280px;
     color: black;
     text-align: center;
     border-radius: 6px;
     padding: 5px 0;
     position: absolute;
     z-index: 1;
-    border:3px solid black;
-    bottom: -100px;
-    left: 17%;
-    margin-left: -60px;
+    border:3px dashed black;
+    left: 100%;
     background-color:white;
     opacity: 0;
     transition: opacity 1s;
+    overflow: auto;
   }
   
   .tooltip:hover .tooltiptext {
