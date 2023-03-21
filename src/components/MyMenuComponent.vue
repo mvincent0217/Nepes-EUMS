@@ -12,6 +12,7 @@ export default {
         DisplayAlert(){
             alert('clicked');
             console.log('clicked equipment')
+            console.log(this.MenuEquipment_ID + ' ' + this.ParentEquipment_ID)
         },
     },
     created(){
@@ -27,7 +28,7 @@ export default {
 <template>
      <div class="main-menu">
         <ul class="menu-list">
-            <li><a href="#">Add ▼</a>
+            <li v-if="MenuEquipment_ID == 'empty'"><a href="#">Add ▼</a>
                 <ul class="menu-list">
                     <li @click="DisplayAlert()"><a href="#">Equipment</a></li>
                     <li><a href="#">Usage</a></li>

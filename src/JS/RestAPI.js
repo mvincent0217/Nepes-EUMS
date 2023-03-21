@@ -30,3 +30,7 @@ export async function AddEquipment(parentEquipmentID, childEquipmentID){
     var res = await axios.post("http://hayyim-breach:8005/api/EUMS/AddEquipment?parentEquipmentID=" + parentEquipmentID + "&childEquipmentID=" + childEquipmentID);
     return res;
 }
+export async function RemoveEquipment(parentEquipmentID, childEquipmentID){
+    var res = await axios.post("http://hayyim-breach:8005/api/EUMS/RemoveEquipment?parentEquipmentID=" + parentEquipmentID + "&childEquipmentID=" + childEquipmentID);
+    return res;
+}

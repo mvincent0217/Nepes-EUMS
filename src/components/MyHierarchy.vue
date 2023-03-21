@@ -74,9 +74,11 @@ export default {
                 object["MyModalTrigger"] = this.myTempModalTrigger;
         },
         async ReSummarizeEquipmentObject(object) {
-            //loop through the object and get each child equipment
+            //Push to Array
             this.arrAllEquipments.push(object);
+            //Add Style Properties
             await this.AddStyles(object);
+            //loop through the object and get each child equipment
             for (var key in object.ChildrenEquipment) {
                 var iChildCount = 0;
                 //Count the number of child of the next node

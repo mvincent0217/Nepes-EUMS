@@ -5,6 +5,7 @@ import MyHoverComponent from './MyHoverComponent.vue';
 import MyMenuComponent from './MyMenuComponent.vue';
 import Swal from 'sweetalert2'
 import * as RestAPI from '@/JS/RestAPI.js';
+import VueRouter from 'vue-router'
 
 
 export default { 
@@ -51,8 +52,8 @@ export default {
         emitPopupModal(){
             this.$emit('PopupModal');
         },
-        DeleteEquip(v1,v2){
-            console.log('ID ' + v1 + ' ' + 'Parent ID ' + v2);
+        DeleteEquip(ChildID,ParentID){
+            console.log('ID ' + ParentID + ' ' + 'Parent ID ' + ChildID);
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -63,12 +64,13 @@ export default {
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    console.log('delete click'),
+                    RestAPI.RemoveEquipment(ParentID, ChildID);
                     Swal.fire(
                     'Deleted!',
                     'Your file has been deleted.',
                     'success'
                     )
+                    this.$router.push('/dashboard');
                 }
             })
         },
