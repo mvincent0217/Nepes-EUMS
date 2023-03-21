@@ -16,9 +16,8 @@
     width: 100px;
     height: 100px;
     position: absolute;
-    top: 50%;
     left: 50%;
-    margin: -50px 0 0 -50px;
+    margin: -30px 0 0 -50px;
 }
 .EquipmentClose {
     cursor: pointer;
@@ -41,12 +40,11 @@
 
   .tooltip {
     position: relative;
-    display: inline-block;
   }
   
   .tooltip .tooltiptext {
     visibility: hidden;
-    width: 280px;
+    width: 310px;
     color: black;
     text-align: center;
     border-radius: 6px;
@@ -55,7 +53,6 @@
     z-index: 1;
     border:3px dashed black;
     left: 100%;
-    background-color:white;
     opacity: 0;
     transition: opacity 1s;
     overflow: auto;
@@ -218,7 +215,7 @@
       margin: 0;
       padding: 0;
       list-style-type: none;
-      display: flex;
+      display: inline-block;
     }
     
     .main-menu ul li a {

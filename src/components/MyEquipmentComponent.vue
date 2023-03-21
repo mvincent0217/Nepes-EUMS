@@ -4,8 +4,8 @@ import MyEquipmentModal from './MyEquipmentModal.vue';
 import MyHoverComponent from './MyHoverComponent.vue';
 import MyMenuComponent from './MyMenuComponent.vue';
 import Swal from 'sweetalert2'
+import * as RestAPI from '@/JS/RestAPI.js';
 
-var tempthis;
 
 export default { 
     data() {
@@ -35,6 +35,7 @@ export default {
         ChildrenEquipmentConfig: Object,
         EquipmentUsage: Object,
         MyModalId: String,
+        ParentEquipment_ID: String,
 
         MyEquipHeight: Number,
         MyEquipWidth: Number,
@@ -50,8 +51,8 @@ export default {
         emitPopupModal(){
             this.$emit('PopupModal');
         },
-        DeleteEquip(e){
-            console.log(e);
+        DeleteEquip(v1,v2){
+            console.log('ID ' + v1 + ' ' + 'Parent ID ' + v2);
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -85,7 +86,6 @@ export default {
         // console.log(this.ChildrenEquipment)
     },
     created(){
-        tempthis = this;
         if(!isNaN(this.MyEquipHeight)){
             this.tempEquipHeight = this.MyEquipHeight + 'px';
         }else{
@@ -107,24 +107,21 @@ export default {
         this.TempEquipment_ID = localStorage.getItem('equipmentId')
     },
     mounted(){
-        // console.log(this.AlertNotification());
     }
 }
 </script>
 <template>
     <div>
         <div :id="MyModalId" class="Equipment tooltip" @click.self="openModal"
-        :style="{'--heightEquipment':this.tempEquipHeight,
-                 '--widthEquipment': this.tempEquipWidth,
-                 '--leftPositionEquipment': this.tempEquipLeftPosition,
-                 '--bgColorEquipment': this.MyEquipColor || 'white'
+        :style="{
+                '--heightEquipment':this.tempEquipHeight,
+                '--widthEquipment': this.tempEquipWidth,
+                '--leftPositionEquipment': this.tempEquipLeftPosition,
+                '--bgColorEquipment': this.MyEquipColor || 'white'
                 }">
-             <!-- <span v-if="this.Classification == 'Component'" @click.prevent="showSweetAlert(Equipment_ID)" class="close">&times;</span> -->
-             <a @click="toggle" class="equipmentMenu" v-if="Equipment_ID != TempEquipment_ID">&#9776;</a>
-             <div v-if="active">
-                <MyMenuComponent @DeleteEquipment="DeleteEquip()" :Classification="Classification" :MenuEquipment_ID="Equipment_ID"/>
-             </div>
-                <label class="EquipTitle" @click.prevent="openModal"><b><center>{{ this.Equipment_ID }}</center></b></label>
+             <!-- <span v-if="this.Classification == 'Component'" @click.prevent="DeleteEquip(Equipment_ID,ParentEquipment_ID)" class="close">&times;</span> -->
+             <a v-if="ParentEquipment_ID" @click="toggle" class="equipmentMenu tooltip">&#9776;</a>
+                <label class="EquipTitle" @click.prevent="openModal"><b><center>{{ Equipment_ID }}</center></b></label>
                 <span class="tooltiptext">
                     <MyHoverComponent
                         :Equipment_Model="Equipment_Model"
@@ -133,6 +130,14 @@ export default {
                         :Productivity_State="Productivity_State"
                     />
                 </span>
+                <div v-if="active">
+                <MyMenuComponent 
+                    @DeleteEquipment="DeleteEquip" 
+                    :Classification="Classification" 
+                    :MenuEquipment_ID="Equipment_ID"
+                    :ParentEquipment_ID="ParentEquipment_ID"
+                />
+             </div>
 
         </div>
         <MyEquipmentModal @BoolModal="CloseModal" ref="modal" :MyModalID="MyModalId" :ShowModal="ShowModal"/>

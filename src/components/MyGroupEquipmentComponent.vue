@@ -17,6 +17,7 @@ export default {
             MyEquipmentComponentChildrenEquipmentConfig: {},
             MyEquipmentComponentChildrenEquipmentUsage: {},
             MyEquipmentComponentModalID: '',
+            MyEquipmentParentEquipment_ID: '',
             oTempChildEquipments: {},
             oChildEquipments: {},
             oChildEquipComponent: {},
@@ -41,6 +42,7 @@ export default {
         ChildrenEquipmentConfig: Object,
         EquipmentUsage: Object,
         MyModalTrigger: String,
+        ParentEquip_ID: String,
 
         MyGrpEquipHeight: Number,
         MyGrpEquipWidth: Number,
@@ -48,104 +50,6 @@ export default {
         MyGrpEquipColor: String,
     },
     watch: {
-        EquipmentResult: {
-            deep: true,
-            handler(val) {
-                this.MyEquipmentComponentEquipmentResult = val;
-                this.GetChildEquipment();
-            }
-        },
-        Equipment_ID: {
-            deep: true,
-            handler(val) {
-                this.MyEquipmentComponentEquipmentID = val;
-            }
-        },
-        MES_State: {
-            deep: true,
-            handler(val) {
-                this.MyEquipmentComponentMES_State = val;
-            }
-        },
-        EUMS_State: {
-            deep: true,
-            handler(val) {
-                this.MyEquipmentComponentEUMS_State = val;
-            }
-        },
-        Equipment_Model: {
-            deep: true,
-            handler(val) {
-                this.MyEquipmentComponentEquipment_Model = val;
-            }
-        },
-        Productivity_State: {
-            deep: true,
-            handler(val) {
-                this.MyEquipmentComponentProductivity_State = val;
-            }
-        },
-        PartType: {
-            deep: true,
-            handler(val) {
-                this.MyEquipmentComponentPart_Type = val;
-            }
-        },
-        Classification: {
-            deep: true,
-            handler(val) {
-                this.MyEquipmentComponentClassification = val;
-            }
-        },
-        ChildrenEquipment: {
-            deep: true,
-            handler(val) {
-                this.MyEquipmentComponentChildrenEquipment = val;
-            }
-        },
-        ChildrenEquipmentConfig: {
-            deep: true,
-            handler(val) {
-                this.MyEquipmentComponentChildrenEquipmentConfig = val;
-            }
-        },
-        EquipmentUsage: {
-            deep: true,
-            handler(val) {
-                this.MyEquipmentComponentChildrenEquipmentUsage = val;
-            }
-        },
-        MyModalTrigger: {
-            deep: true,
-            handler(val) {
-                this.MyEquipmentComponentModalID = val;
-            }
-        },
-
-        MyGrpEquipHeight: {
-            deep: true,
-            handler(val) {
-                this.MyEquipmentComponentHeight = val;
-            }
-        },
-        MyGrpEquipWidth: {
-            deep: true,
-            handler(val) {
-                this.MyEquipmentComponentWidth = val;
-            }
-        },
-        MyGrpEquipLeftPosition: {
-            deep: true,
-            handler(val) {
-                this.MyEquipmentComponentLeftPosition = val;
-            }
-        },
-        MyGrpEquipColor: {
-            deep: true,
-            handler(val) {
-                this.MyEquipmentComponentColor = val;
-            }
-        },
     },
     methods:{
     },
@@ -153,7 +57,8 @@ export default {
     },
     updated(){    
     },
-    created(){         
+    created(){
+        console.log(this.ParentEquip_ID)         
     }
 }
 </script>
@@ -168,7 +73,8 @@ export default {
                 :MyEquipLeftPosition="this.MyGrpEquipLeftPosition"
                 :MyEquipColor="this.MyGrpEquipColor"
                 :MyModalTrigger="this.MyEquipmentComponentModalID" -->
-            <MyEquipmentComponent
+            <MyEquipmentComponent 
+                v-on="$listeners"
                 :Equipment_ID="Equipment_ID"
                 :MES_State="MES_State"
                 :EUMS_State="EUMS_State" 
@@ -183,6 +89,8 @@ export default {
                 :MyEquipWidth="MyGrpEquipWidth"
                 :MyEquipLeftPosition="MyGrpEquipLeftPosition"
                 :MyEquipColor="MyGrpEquipColor"
+                :MyModalId="MyModalTrigger"
+                :ParentEquipment_ID="ParentEquip_ID"
             />
         </div>
     </div>
