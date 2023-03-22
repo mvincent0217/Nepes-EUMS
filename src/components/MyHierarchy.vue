@@ -19,7 +19,6 @@ export default {
             MyEquipmentWidth: 0,
             MyEquipmentLeftPosition: 0,
             tempColor: '',
-           
         }
     },
 

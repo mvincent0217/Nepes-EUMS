@@ -72,7 +72,7 @@
   background: whitesmoke;
   position: relative;
   padding: 1.8rem;
-  border: 2px solid var(--bgcolorCard);
+  border: 1px solid var(--bgcolorCard);
   transition: 0.5s ease-out;
   overflow: visible;
   margin-left: 20px;
