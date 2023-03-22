@@ -45,6 +45,8 @@ export default {
 </script>
 <template>
         <table>
+            <th>Name</th>
+            <th>Value</th>
             <tr>
                 <td>Equipment Model</td>
                 <td>{{ Equipment_Model }}</td>

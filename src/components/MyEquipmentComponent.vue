@@ -4,15 +4,15 @@ import MyEquipmentModal from './MyEquipmentModal.vue';
 import MyHoverComponent from './MyHoverComponent.vue';
 import MyMenuComponent from './MyMenuComponent.vue';
 import Swal from 'sweetalert2'
+import * as RestAPI from '@/JS/RestAPI.js';
+import VueRouter from 'vue-router'
 
-var tempthis;
 
 export default { 
     data() {
         return {            
             ShowModal: false,
-            tempChildEquipmentID: '',
-            tempParentEquipmentID: '',
+            TempEquipment_ID: '',
 
             tempEquipHeight: null,
             tempEquipWidth: null,
@@ -36,6 +36,7 @@ export default {
         ChildrenEquipmentConfig: Object,
         EquipmentUsage: Object,
         MyModalId: String,
+        ParentEquipment_ID: String,
 
         MyEquipHeight: Number,
         MyEquipWidth: Number,
@@ -51,8 +52,8 @@ export default {
         emitPopupModal(){
             this.$emit('PopupModal');
         },
-        showSweetAlert(e){
-            console.log(e);
+        DeleteEquip(ChildID,ParentID){
+            console.log('ID ' + ParentID + ' ' + 'Parent ID ' + ChildID);
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -63,12 +64,13 @@ export default {
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    console.log('delete click'),
+                    RestAPI.RemoveEquipment(ParentID, ChildID);
                     Swal.fire(
                     'Deleted!',
                     'Your file has been deleted.',
                     'success'
                     )
+                    this.$router.push('/dashboard');
                 }
             })
         },
@@ -86,7 +88,6 @@ export default {
         // console.log(this.ChildrenEquipment)
     },
     created(){
-        tempthis = this;
         if(!isNaN(this.MyEquipHeight)){
             this.tempEquipHeight = this.MyEquipHeight + 'px';
         }else{
@@ -105,26 +106,24 @@ export default {
             //default Value
             this.tempEquipLeftPosition = '300px';
         }
+        this.TempEquipment_ID = localStorage.getItem('equipmentId')
     },
     mounted(){
-        // console.log(this.AlertNotification());
     }
 }
 </script>
 <template>
     <div>
         <div :id="MyModalId" class="Equipment tooltip" @click.self="openModal"
-        :style="{'--heightEquipment':this.tempEquipHeight,
-                 '--widthEquipment': this.tempEquipWidth,
-                 '--leftPositionEquipment': this.tempEquipLeftPosition,
-                 '--bgColorEquipment': this.MyEquipColor || 'white'
+        :style="{
+                '--heightEquipment':this.tempEquipHeight,
+                '--widthEquipment': this.tempEquipWidth,
+                '--leftPositionEquipment': this.tempEquipLeftPosition,
+                '--bgColorEquipment': this.MyEquipColor || 'white'
                 }">
-             <!-- <span v-if="this.Classification == 'Component'" @click.prevent="showSweetAlert(Equipment_ID)" class="close">&times;</span> -->
-             <a @click="toggle" class="equipmentMenu">&#9776;</a>
-             <div v-if="active">
-                <MyMenuComponent :Classification="Classification"/>
-             </div>
-                <label class="EquipTitle" @click.prevent="openModal"><b><center>{{ this.Equipment_ID }}</center></b></label>
+             <!-- <span v-if="this.Classification == 'Component'" @click.prevent="DeleteEquip(Equipment_ID,ParentEquipment_ID)" class="close">&times;</span> -->
+             <a v-if="ParentEquipment_ID" @click="toggle" class="equipmentMenu tooltip">&#9776;</a>
+                <label class="EquipTitle" @click.prevent="openModal"><b><center>{{ Equipment_ID }}</center></b></label>
                 <span class="tooltiptext">
                     <MyHoverComponent
                         :Equipment_Model="Equipment_Model"
@@ -133,6 +132,14 @@ export default {
                         :Productivity_State="Productivity_State"
                     />
                 </span>
+                <div v-if="active">
+                <MyMenuComponent 
+                    @DeleteEquipment="DeleteEquip" 
+                    :Classification="Classification" 
+                    :MenuEquipment_ID="Equipment_ID"
+                    :ParentEquipment_ID="ParentEquipment_ID"
+                />
+             </div>
 
         </div>
         <MyEquipmentModal @BoolModal="CloseModal" ref="modal" :MyModalID="MyModalId" :ShowModal="ShowModal"/>

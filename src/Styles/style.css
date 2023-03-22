@@ -16,9 +16,8 @@
     width: 100px;
     height: 100px;
     position: absolute;
-    top: 50%;
     left: 50%;
-    margin: -50px 0 0 -50px;
+    margin: -30px 0 0 -50px;
 }
 .EquipmentClose {
     cursor: pointer;
@@ -41,26 +40,22 @@
 
   .tooltip {
     position: relative;
-    display: inline-block;
-    border-bottom: 1px dotted black;
   }
   
   .tooltip .tooltiptext {
     visibility: hidden;
-    width: 350px;
+    width: 310px;
     color: black;
     text-align: center;
     border-radius: 6px;
     padding: 5px 0;
     position: absolute;
     z-index: 1;
-    border:3px solid black;
-    bottom: -100px;
-    left: 17%;
-    margin-left: -60px;
-    background-color:white;
+    border:3px dashed black;
+    left: 100%;
     opacity: 0;
     transition: opacity 1s;
+    overflow: auto;
   }
   
   .tooltip:hover .tooltiptext {
@@ -220,7 +215,7 @@
       margin: 0;
       padding: 0;
       list-style-type: none;
-      display: flex;
+      display: inline-block;
     }
     
     .main-menu ul li a {

@@ -50,32 +50,34 @@ export default {
                     object["MyEquipmentColor"] = 'green';
                 }
                 else if(object.Productivity_State == States._Warning){
-                    object["MyEquipmentColor"] = 'yellow'
+                    object["MyEquipmentColor"] = 'yellow';
                 }
                 else if(object.Productivity_State == States._Critical){
-                    object["MyEquipmentColor"] = 'orange'
+                    object["MyEquipmentColor"] = 'orange';
                 }
                 else if(object.Productivity_State == States._Non_Productive ){
-                    object["MyEquipmentColor"] = 'red'
+                    object["MyEquipmentColor"] = 'red';
                 }
                 else if(object.Productivity_State == States._Spare ){
-                    object["MyEquipmentColor"] = 'brown'
+                    object["MyEquipmentColor"] = 'brown';
                 }
                 else if(object.Productivity_State == States._Ongoing_Repair){
-                    object["MyEquipmentColor"] = 'blue'
+                    object["MyEquipmentColor"] = 'blue';
                 }
                 else if(object.Productivity_State == States._Scrapped){
-                    object["MyEquipmentColor"] = 'violet'
+                    object["MyEquipmentColor"] = 'violet';
                 }
-                object["MyEquipmentHeight"] = 300;
-                object["MyEquipmentWidth"] = 300;
+                object["MyEquipmentHeight"] = 200;
+                object["MyEquipmentWidth"] = 200;
                 object["MyEquipmentLeftPosition"] = 300;
                 object["MyModalTrigger"] = this.myTempModalTrigger;
         },
         async ReSummarizeEquipmentObject(object) {
-            //loop through the object and get each child equipment
+            //Push to Array
             this.arrAllEquipments.push(object);
+            //Add Style Properties
             await this.AddStyles(object);
+            //loop through the object and get each child equipment
             for (var key in object.ChildrenEquipment) {
                 var iChildCount = 0;
                 //Count the number of child of the next node
@@ -105,6 +107,7 @@ export default {
     created(){
         this.GetEquipmentID();
         this.fnLoad();
+        console.log(this.arrAllEquipments)
     }
 }
 </script>
@@ -118,11 +121,6 @@ export default {
             <br>
             <br>
             <a href="/dashboard#/dashboard">Back</a>
-            <!--    :MyGrpEquipHeight="GetTempEquipmentResult.MyEquipmentHeight"
-                    :MyGrpEquipWidth="GetTempEquipmentResult.MyEquipmentWidth"
-                    :MyGrpEquipLeftPosition="GetTempEquipmentResult.MyEquipmentLeftPosition"
-                    :MyGrpEquipColor="GetTempEquipmentResult.MyEquipmentColor"
-                    :MyModalId="myTempModalTrigger" -->
                     <div v-if="!BoolLoad">
                         <Loading />
                     </div>
@@ -142,7 +140,8 @@ export default {
                     :MyGrpEquipWidth="iChildEquip.MyEquipmentWidth"
                     :MyGrpEquipLeftPosition="iChildEquip.MyEquipmentLeftPosition"
                     :MyGrpEquipColor="iChildEquip.MyEquipmentColor"
-                    
+                    :MyModalTrigger="iChildEquip.MyModalTrigger"
+                    :ParentEquip_ID="iChildEquip.ParentEquipmentID"
                 />
         </div>
     </div>
