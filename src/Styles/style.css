@@ -6,7 +6,7 @@
     left: var(--leftPositionEquipment);
     position: relative;
     padding: 1.8rem;
-    border: 2px solid var(--bgColorEquipment);
+    border: var(--bgColorEquipment);
     transition: 0.5s ease-out;
     overflow: visible;
 }

@@ -48,7 +48,7 @@ export default {
 
     },
     created(){
-        //this.initModal();
+        this.ParentEquipmentId = 'PLT-003-03'
     }
 }
 </script>

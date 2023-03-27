@@ -57,8 +57,7 @@ export default {
     },
     updated(){    
     },
-    created(){
-        console.log(this.ParentEquip_ID)         
+    created(){     
     }
 }
 </script>

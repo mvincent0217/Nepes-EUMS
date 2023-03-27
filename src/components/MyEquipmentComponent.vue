@@ -114,17 +114,17 @@ export default {
 </script>
 <template>
     <div>
-        <div :id="MyModalId" class="Equipment tooltip" @click.self="openModal"
+        <div class="Equipment tooltip"
         :style="{
                 '--heightEquipment':this.tempEquipHeight,
                 '--widthEquipment': this.tempEquipWidth,
                 '--leftPositionEquipment': this.tempEquipLeftPosition,
-                '--bgColorEquipment': this.MyEquipColor || 'white'
+                '--bgColorEquipment': this.MyEquipColor || 'white',
                 }">
              <!-- <span v-if="this.Classification == 'Component'" @click.prevent="DeleteEquip(Equipment_ID,ParentEquipment_ID)" class="close">&times;</span> -->
              <a v-if="ParentEquipment_ID" @click="toggle" class="equipmentMenu tooltip">&#9776;</a>
-                <label class="EquipTitle" @click.prevent="openModal"><b><center>{{ Equipment_ID }}</center></b></label>
-                <span class="tooltiptext">
+                <label class="EquipTitle"><b><center>{{ Equipment_ID }}</center></b></label>
+                <span class="tooltiptext" v-if="Equipment_ID != 'EMPTY'">
                     <MyHoverComponent
                         :Equipment_Model="Equipment_Model"
                         :MES_State="MES_State"
@@ -134,9 +134,10 @@ export default {
                 </span>
                 <div v-if="active">
                 <MyMenuComponent 
-                    @DeleteEquipment="DeleteEquip" 
+                    @DeleteEquipment="DeleteEquip"
+                    @PopUpModal="openModal"
                     :Classification="Classification" 
-                    :MenuEquipment_ID="Equipment_ID"
+                    :Equipment_ID="Equipment_ID"
                     :ParentEquipment_ID="ParentEquipment_ID"
                 />
              </div>
