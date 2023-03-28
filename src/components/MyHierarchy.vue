@@ -11,6 +11,7 @@ export default {
             GetTempEquipmentID: '',
             GetTempEquipmentResult: {},
             arrAllEquipments: [],
+            arrHierarchy: [],
             BoolLoad: false,
 
             //Style Config//
@@ -21,11 +22,6 @@ export default {
            
         }
     },
-
- 
-    mounted() {
-
-    },
     
     components:{
         Navbar,
@@ -34,8 +30,6 @@ export default {
     },
    
     methods:{
-        async fnLoad(){
-        },
         async GetEquipmentID(){
             const equipmentId = localStorage.getItem('equipmentId');
             this.GetTempEquipmentID = equipmentId;
@@ -43,16 +37,20 @@ export default {
             this.GetTempEquipmentResult = JSON.parse(this.GetTempEquipmentResult.data);
             var object = await this.ReSummarizeEquipmentObject(this.GetTempEquipmentResult)
             var obj = await this.ReSummarizeEquipmentChildObject();
+            var tempobj = await this.buildHierarchy(this.arrAllEquipments)
+            // var result = await this.buildHierarchy2(this.arrAllEquipments);
+            console.log(tempobj)
+            // console.log(result)
             this.BoolLoad = true
         },
         async ReSummarizeEquipmentChildObject(){
             if(this.arrAllEquipments.length > 0)
             {
-                for (var i = 0;  i <= this.arrAllEquipments.length; i++)
+                for (var i = 0;  i < this.arrAllEquipments.length; i++)
                 {
                     var oTemp = {};
                     oTemp = this.arrAllEquipments[i]; 
-                    if(null!=oTemp['ChildEquipmentConfig'])
+                    if(oTemp.ChildEquipmentConfig != null)
                     {
                         var oTempConfig = {};
                         oTempConfig = oTemp.ChildEquipmentConfig;
@@ -80,7 +78,7 @@ export default {
                                 for(var iEmpty = 0; iEmpty < iEmptyCnt; iEmpty++){
                                     var PlaceholderEquipment = {};
                                     PlaceholderEquipment['Equipment_ID'] = 'EMPTY'; 
-                                    PlaceholderEquipment['ParentEquipmentID'] = key; 
+                                    PlaceholderEquipment['ParentEquipmentID'] = oTemp.Equipment_ID; 
                                     PlaceholderEquipment['ChildEquipmentConfig'] = {};
                                     oTempChildrens[key+'_EMPTY_'+iEmpty] = PlaceholderEquipment;
                                     this.arrAllEquipments.push(PlaceholderEquipment);
@@ -150,6 +148,59 @@ export default {
             }
                 return object;
         },
+        async buildHierarchy(object){
+            var roots = [], children = {};
+            //find the top level nodes and hash the children based on parent
+            for(var i = 0, len = object.length; i < len; i++){
+                var tEquipment = object[i],
+                    p = object.ParentEquipmentID,
+                    target = !p ? roots : (children[p] || (children[p] = []));
+
+                    target.push({ value: tEquipment});
+            }
+            // function to recursively build the tree
+            var findChildren = function(parent){
+                if(children[parent.value.Equipment_ID]){
+                    parent.children = children[parent.value.Equipment_ID];
+                    for(var i = 0, len = parent.children.length; i < len; i++){
+                        findChildren(parent.children[i]);
+                    }
+                }
+            };
+            // enumerate through to handle the case where there are multiple roots
+            for(var i = 0, len = roots.length; i < len; i++){
+                findChildren(roots[i]);
+            }
+            return roots
+        },
+        async buildHierarchy2(object){
+            var tree = [], mappedArr = {};
+
+            object.forEach(function(equip){
+                var id = equip.Equipment_ID;
+                if(!mappedArr.hasOwnProperty(id)){
+                    mappedArr[id] = equip;
+                    mappedArr[id].children = []; 
+                }
+            })
+            for (var id in mappedArr) { 
+                if (mappedArr.hasOwnProperty(id)) {
+                    var mappedElem = mappedArr[id];
+                    
+                    if (mappedElem.Parent) { 
+                        var parentId = mappedElem.Parent;
+                        mappedArr[parentId].children.push(mappedElem); 
+                    }
+                    
+                    else { 
+                        tree.push(mappedElem);
+                    } 
+                }
+            }
+            return tree;
+        }
+            
+        
     },
     created(){
         this.GetEquipmentID();

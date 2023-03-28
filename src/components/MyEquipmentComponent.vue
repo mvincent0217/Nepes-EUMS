@@ -22,6 +22,7 @@ export default {
             iCount: 0,
 
             active: false,
+            EquipmentIdModal: ''            
         }
     },
     props:{
@@ -70,12 +71,13 @@ export default {
                     'Your file has been deleted.',
                     'success'
                     )
-                    this.$router.push('/dashboard');
+                    this.$router.push('/hierarchy');
                 }
             })
         },
         openModal(){
             this.ShowModal = true;
+            this.EquipmentIdModal = this.ParentEquipment_ID;
         },
         CloseModal(e){
             this.ShowModal = false;
@@ -107,6 +109,7 @@ export default {
             this.tempEquipLeftPosition = '300px';
         }
         this.TempEquipment_ID = localStorage.getItem('equipmentId')
+        // console.log(this.ParentEquipment_ID)
     },
     mounted(){
     }
@@ -143,6 +146,6 @@ export default {
              </div>
 
         </div>
-        <MyEquipmentModal @BoolModal="CloseModal" ref="modal" :MyModalID="MyModalId" :ShowModal="ShowModal"/>
+        <MyEquipmentModal @BoolModal="CloseModal" ref="modal" :ParentEquipment_ID="this.EquipmentIdModal" :MyModalID="MyModalId" :ShowModal="ShowModal" :LoadModal="ShowModal"/>
     </div>
 </template>
