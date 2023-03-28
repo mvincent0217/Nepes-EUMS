@@ -10,8 +10,8 @@ export default {
         return {
             GetTempEquipmentID: '',
             GetTempEquipmentResult: {},
-            myTempModalTrigger: '',
             arrAllEquipments: [],
+            arrHierarchy: [],
             BoolLoad: false,
 
             //Style Config//
@@ -21,11 +21,6 @@ export default {
             tempColor: '',
         }
     },
-
- 
-    mounted() {
-
-    },
     
     components:{
         Navbar,
@@ -34,43 +29,94 @@ export default {
     },
    
     methods:{
-        async fnLoad(){
-            this.myTempModalTrigger = 'MyModal';
-        },
         async GetEquipmentID(){
             const equipmentId = localStorage.getItem('equipmentId');
             this.GetTempEquipmentID = equipmentId;
             this.GetTempEquipmentResult = await RestAPI.GetEquipmentID(this.GetTempEquipmentID);
             this.GetTempEquipmentResult = JSON.parse(this.GetTempEquipmentResult.data);
             var object = await this.ReSummarizeEquipmentObject(this.GetTempEquipmentResult)
+            var obj = await this.ReSummarizeEquipmentChildObject();
+            var tempobj = await this.buildHierarchy(this.arrAllEquipments)
+            // var result = await this.buildHierarchy2(this.arrAllEquipments);
+            console.log(tempobj)
+            // console.log(result)
             this.BoolLoad = true
+        },
+        async ReSummarizeEquipmentChildObject(){
+            if(this.arrAllEquipments.length > 0)
+            {
+                for (var i = 0;  i < this.arrAllEquipments.length; i++)
+                {
+                    var oTemp = {};
+                    oTemp = this.arrAllEquipments[i]; 
+                    if(oTemp.ChildEquipmentConfig != null)
+                    {
+                        var oTempConfig = {};
+                        oTempConfig = oTemp.ChildEquipmentConfig;
+                        var iConfigCount = 0;
+                        iConfigCount =  Object.keys(oTempConfig).length;
+                        var oTempChildrens = {};
+                        oTempChildrens = oTemp.ChildrenEquipment;
+                        for(var key in oTempConfig){
+                            var iChildCount = 0; 
+                            var oTempEquipmentConfig = oTempConfig[key];
+                            var iTempEquipmentCount = oTempEquipmentConfig.Child_Equipment_Count;
+                            for(var child in oTempChildrens)
+                            {
+                                var oTempChildEquipment = oTempChildrens[child];
+                                var sTempEquipmentModel = oTempChildEquipment.Equipment_Model;
+                                if(sTempEquipmentModel == key)
+                                {
+                                    iChildCount++;
+                                }
+                            }
+                            if(iChildCount != iTempEquipmentCount)
+                            {
+                                var iEmptyCnt = 0;
+                                iEmptyCnt = iTempEquipmentCount - iChildCount;
+                                for(var iEmpty = 0; iEmpty < iEmptyCnt; iEmpty++){
+                                    var PlaceholderEquipment = {};
+                                    PlaceholderEquipment['Equipment_ID'] = 'EMPTY'; 
+                                    PlaceholderEquipment['ParentEquipmentID'] = oTemp.Equipment_ID; 
+                                    PlaceholderEquipment['ChildEquipmentConfig'] = {};
+                                    oTempChildrens[key+'_EMPTY_'+iEmpty] = PlaceholderEquipment;
+                                    this.arrAllEquipments.push(PlaceholderEquipment);
+                                    this.AddStyles(PlaceholderEquipment)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         },
         async AddStyles(object){
             if(object.Productivity_State == States._Productive ){
-                    object["MyEquipmentColor"] = 'green';
+                    object["MyEquipmentColor"] = '2px solid green';
                 }
                 else if(object.Productivity_State == States._Warning){
-                    object["MyEquipmentColor"] = 'yellow';
+                    object["MyEquipmentColor"] = '2px solid yellow';
                 }
                 else if(object.Productivity_State == States._Critical){
-                    object["MyEquipmentColor"] = 'orange';
+                    object["MyEquipmentColor"] = '2px solid orange';
                 }
                 else if(object.Productivity_State == States._Non_Productive ){
-                    object["MyEquipmentColor"] = 'red';
+                    object["MyEquipmentColor"] = '2px solid red';
                 }
                 else if(object.Productivity_State == States._Spare ){
-                    object["MyEquipmentColor"] = 'brown';
+                    object["MyEquipmentColor"] = '2px solid brown';
                 }
                 else if(object.Productivity_State == States._Ongoing_Repair){
-                    object["MyEquipmentColor"] = 'blue';
+                    object["MyEquipmentColor"] = '2px solid blue';
                 }
                 else if(object.Productivity_State == States._Scrapped){
-                    object["MyEquipmentColor"] = 'violet';
+                    object["MyEquipmentColor"] = '2px solid violet';
+                }else{
+                    object["MyEquipmentColor"] = '2px dashed black';
                 }
                 object["MyEquipmentHeight"] = 200;
                 object["MyEquipmentWidth"] = 200;
                 object["MyEquipmentLeftPosition"] = 300;
-                object["MyModalTrigger"] = this.myTempModalTrigger;
+                object["MyModalTrigger"] = 'MyModal';
         },
         async ReSummarizeEquipmentObject(object) {
             //Push to Array
@@ -78,44 +124,91 @@ export default {
             //Add Style Properties
             await this.AddStyles(object);
             //loop through the object and get each child equipment
-            for (var key in object.ChildrenEquipment) {
+            for (var Childkey in object.ChildrenEquipment) {
+               
+
                 var iChildCount = 0;
                 //Count the number of child of the next node
-                iChildCount = Object.keys(object.ChildrenEquipment[key].ChildrenEquipment)
+                iChildCount = Object.keys(object.ChildrenEquipment[Childkey].ChildrenEquipment)
                     .length;
                 //Add child count as attribute to the parent
-                object.ChildrenEquipment[key]["ChildCount"] = iChildCount;
+                object.ChildrenEquipment[Childkey]["ChildCount"] = iChildCount;
                 //Add the parent equipment id to the current child equipment
-                object.ChildrenEquipment[key]["ParentEquipmentID"] = object.Equipment_ID; 
+                object.ChildrenEquipment[Childkey]["ParentEquipmentID"] = object.Equipment_ID; 
                 //Check if the next children has count
                 //If 0 then it is the last child for that node
                 var bLastEquipment = false;
                 if (iChildCount === 0) {
                     bLastEquipment = true;
                 }
-                object.ChildrenEquipment[key]["LastEquipment"] = bLastEquipment;
+                object.ChildrenEquipment[Childkey]["LastEquipment"] = bLastEquipment;
                 //call itself to check the next children equipment
-                await this.ReSummarizeEquipmentObject(object.ChildrenEquipment[key]);
+                await this.ReSummarizeEquipmentObject(object.ChildrenEquipment[Childkey]);
             }
                 return object;
         },
+        async buildHierarchy(object){
+            var roots = [], children = {};
+            //find the top level nodes and hash the children based on parent
+            for(var i = 0, len = object.length; i < len; i++){
+                var tEquipment = object[i],
+                    p = object.ParentEquipmentID,
+                    target = !p ? roots : (children[p] || (children[p] = []));
 
+                    target.push({ value: tEquipment});
+            }
+            // function to recursively build the tree
+            var findChildren = function(parent){
+                if(children[parent.value.Equipment_ID]){
+                    parent.children = children[parent.value.Equipment_ID];
+                    for(var i = 0, len = parent.children.length; i < len; i++){
+                        findChildren(parent.children[i]);
+                    }
+                }
+            };
+            // enumerate through to handle the case where there are multiple roots
+            for(var i = 0, len = roots.length; i < len; i++){
+                findChildren(roots[i]);
+            }
+            return roots
+        },
+        async buildHierarchy2(object){
+            var tree = [], mappedArr = {};
 
-
+            object.forEach(function(equip){
+                var id = equip.Equipment_ID;
+                if(!mappedArr.hasOwnProperty(id)){
+                    mappedArr[id] = equip;
+                    mappedArr[id].children = []; 
+                }
+            })
+            for (var id in mappedArr) { 
+                if (mappedArr.hasOwnProperty(id)) {
+                    var mappedElem = mappedArr[id];
+                    
+                    if (mappedElem.Parent) { 
+                        var parentId = mappedElem.Parent;
+                        mappedArr[parentId].children.push(mappedElem); 
+                    }
+                    
+                    else { 
+                        tree.push(mappedElem);
+                    } 
+                }
+            }
+            return tree;
+        }
+            
+        
     },
-
     created(){
         this.GetEquipmentID();
-        this.fnLoad();
         console.log(this.arrAllEquipments)
     }
 }
 </script>
-
-
 <template>
     <div>
-        
         <div>
             <Navbar/>
             <br>
@@ -140,6 +233,7 @@ export default {
                     :MyGrpEquipWidth="iChildEquip.MyEquipmentWidth"
                     :MyGrpEquipLeftPosition="iChildEquip.MyEquipmentLeftPosition"
                     :MyGrpEquipColor="iChildEquip.MyEquipmentColor"
+                    :MyGrpEquipBorderStyle="iChildEquip.MyEquipmentBorderStyle"
                     :MyModalTrigger="iChildEquip.MyModalTrigger"
                     :ParentEquip_ID="iChildEquip.ParentEquipmentID"
                 />

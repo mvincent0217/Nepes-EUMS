@@ -8,12 +8,15 @@ export default {
             ParentEquipmentId: '',
             ChildEquipmentId: '',
             ToastMessage: '',
+            bShowModal: false
         }
     },
     props: {
         MyModalID: String,
         ShowModal: Boolean,
-        CloseModal: Boolean
+        LoadModal: Boolean,
+        CloseModal: Boolean,
+        ParentEquipment_ID: String,
     },
     watch: {
         ShowModal: {
@@ -21,11 +24,22 @@ export default {
             handler(val) {
                 // if(!this.TempBool) { this.TempBool = val; }
                 if(val){
+                    this.bShowModal = val;
                     this.Modal = document.getElementById('EquipmentModal');
                     this.Modal.style.display = "block";
+                    //console.log(this.ParentEquipmentId);
                 }
             }
-        },
+        }, 
+        ParentEquipment_ID:{
+            deep: true,
+            handler(val) {
+                this.ParentEquipmentId = val
+                //console.log(val)
+            }
+        }
+    },
+    mounted(){
     },
     methods:
     {
@@ -48,20 +62,20 @@ export default {
 
     },
     created(){
-        //this.initModal();
+        //this.ParentEquipmentId = '123'
     }
 }
 </script>
 <template>
-    <div v-if="!EquipmentId">
-        <div id="EquipmentModal" class="modal">
+    <div v-if="this.bShowModal" >
+        <div  id="EquipmentModal"  class="modal">
             <div class="modal-content">
                 <span @click="closeModal(false)" class="close">&times;</span>
                 <div class="container">
                     <h1>Add</h1>
                     <hr>
                     <label for="ParentEquipmentId"><b>Parent Equipment Id:</b></label>
-                    <input type="text" placeholder="Enter Parent Equipment Id" name="ParentEquipmentId" v-model="ParentEquipmentId" required>
+                    <input type="text" placeholder="Enter Parent Equipment Id" id="ParentEquipment" name="ParentEquipmentId" v-model="ParentEquipmentId" disabled>
 
                     <label for="ChildEquipmentId"><b>Child Equipment Id:</b></label>
                     <input type="text" placeholder="Enter Child Equipment Id" name="ChildEquipmentId" v-model="ChildEquipmentId" required>
