@@ -6,6 +6,12 @@ export default {
         Equipment_ID: String,
         ParentEquipment_ID: String,
     },
+    data() {
+        return {
+            userCanAddEquipment: false,
+            userCanDeleteEquipment: false
+        }
+    },
     methods:{
         emitDeleteEquipment(Equipment_ID, ParentEquipment_ID){
             this.$emit('DeleteEquipment',Equipment_ID, ParentEquipment_ID);
@@ -21,19 +27,30 @@ export default {
         const userRightsJSON = localStorage.getItem('userRights');
         const userRights = JSON.parse(userRightsJSON);
         console.log(userRights);
+
+        if (userRights.includes(`${equipmentId}_ADD-EQUIPMENT`)) {
+            this.userCanAddEquipment = true;
+        }
+
+        if (userRights.includes(`${equipmentId}_DELETE-EQUIPMENT`)) {
+            this.userCanDeleteEquipment = true;
+        }
     }
 }
 </script>
+
 <template>
      <div class="main-menu">
         <ul class="menu-list">
+            <div v-if="userCanAddEquipment">
             <li v-if="Equipment_ID == 'EMPTY'"><a href="#">Add ▼</a>
                 <ul class="menu-list">
-                    <li @click="EmitPopUpModal()"><a href="#">Add Item</a></li>
+                    <li  @click="EmitPopUpModal()"><a href="#">Add Item</a></li>
                     <li><a href="#">Usage</a></li>
                 </ul>
             </li>
-            <li v-if="Classification == 'Component'" v-on:click="emitDeleteEquipment(Equipment_ID,ParentEquipment_ID)"><a href="#">Delete</a></li> 
+            </div>
+            <li v-if="Classification == 'Component' && userCanDeleteEquipment" v-on:click="emitDeleteEquipment(Equipment_ID,ParentEquipment_ID)"><a href="#">Delete</a></li> 
         </ul>
     </div>
 </template>
