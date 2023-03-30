@@ -22,11 +22,11 @@ export default {
     },
     created(){
         const equipmentId = localStorage.getItem('equipmentId');
-        console.log(equipmentId)
+        // console.log(equipmentId)
 
         const userRightsJSON = localStorage.getItem('userRights');
         const userRights = JSON.parse(userRightsJSON);
-        console.log(userRights);
+        // console.log(userRights);
 
         if (userRights.includes(`${equipmentId}_ADD-EQUIPMENT`)) {
             this.userCanAddEquipment = true;
@@ -45,12 +45,12 @@ export default {
             <div v-if="userCanAddEquipment">
             <li v-if="Equipment_ID == 'EMPTY'"><a href="#">Add ▼</a>
                 <ul class="menu-list">
-                    <li  @click="EmitPopUpModal()"><a href="#">Add Item</a></li>
-                    <li><a href="#">Usage</a></li>
+                    <li @click="EmitPopUpModal()"><a class ="OptionColor" href="#">Add Item</a></li>
+                    <li class ="OptionColor"><a href="#">Usage</a></li>
                 </ul>
             </li>
             </div>
-            <li v-if="Classification == 'Component' && userCanDeleteEquipment" v-on:click="emitDeleteEquipment(Equipment_ID,ParentEquipment_ID)"><a href="#">Delete</a></li> 
+            <li class ="OptionColor" v-if="Classification == 'Component' && userCanDeleteEquipment" v-on:click="emitDeleteEquipment(Equipment_ID,ParentEquipment_ID)"><a href="#">Delete</a></li> 
         </ul>
     </div>
 </template>

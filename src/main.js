@@ -5,8 +5,8 @@ import MyLoginPage from './components/MyLoginPage.vue';
 import MyDashboard from './components/MyDashboard.vue';
 import MyHierarchy from './components/MyHierarchy.vue';
 import Settings from './components/MySettings.vue';
-Vue.use(VueRouter);
 
+Vue.use(VueRouter);
 
 const router = new VueRouter({
   routes: [
@@ -17,6 +17,17 @@ const router = new VueRouter({
   ]
 });
 
+// Check if user is authenticated before each route change
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+  if (to.path !== '/' && !isAuthenticated) {
+    next('/');
+  } else if (to.path === '/' && isAuthenticated) {
+    next('/dashboard');
+  } else {
+    next();
+  }
+});
 
 new Vue({
   router,
