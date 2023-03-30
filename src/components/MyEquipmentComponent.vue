@@ -133,6 +133,7 @@ export default {
                         :MES_State="MES_State"
                         :EUMS_State="EUMS_State"
                         :Productivity_State="Productivity_State"
+                        :EquipmentUsage="EquipmentUsage"
                     />
                 </span>
                 <div v-if="active">

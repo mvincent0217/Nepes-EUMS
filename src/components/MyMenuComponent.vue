@@ -27,10 +27,10 @@ export default {
 <template>
      <div class="main-menu">
         <ul class="menu-list">
+            <li><a href="#">View Usage</a></li>
             <li v-if="Equipment_ID == 'EMPTY'"><a href="#">Add ▼</a>
                 <ul class="menu-list">
                     <li @click="EmitPopUpModal()"><a href="#">Add Item</a></li>
-                    <li><a href="#">Usage</a></li>
                 </ul>
             </li>
             <li v-if="Classification == 'Component'" v-on:click="emitDeleteEquipment(Equipment_ID,ParentEquipment_ID)"><a href="#">Delete</a></li> 
