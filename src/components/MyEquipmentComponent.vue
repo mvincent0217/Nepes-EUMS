@@ -12,6 +12,7 @@ export default {
             ShowModal: false,
             TempEquipment_ID: '',
             getApplicableIds: '',
+            tempUserID: '',
 
             tempEquipHeight: null,
             tempEquipWidth: null,
@@ -64,13 +65,14 @@ export default {
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    RestAPI.RemoveEquipment(ParentID, ChildID);
+                    this.tempUserID = localStorage.getItem('userID')
+                    RestAPI.RemoveEquipment(ParentID, ChildID, this.tempUserID);
                     Swal.fire(
                     'Deleted!',
                     'Your file has been deleted.',
                     'success'
                     )
-                    this.$router.push('/hierarchy');
+                    this.$router.push('/dashboard');
                 }
             })
         },

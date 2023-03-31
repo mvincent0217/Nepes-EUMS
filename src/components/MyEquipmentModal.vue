@@ -11,6 +11,7 @@ export default {
             bShowModal: false,
             ModalStyle: '',
             tempApplicableIds: '',
+            tempUserID: '',
         }
     },
     props: {
@@ -63,11 +64,13 @@ export default {
             this.$emit('BoolModal', e);
         },
         async AddEquipment(ParentEquipmentId, ChildEquipmentId){
-            this.GetTempEquipmentResult = await RestAPI.AddEquipment(ParentEquipmentId, ChildEquipmentId);
+            this.tempUserID = localStorage.getItem('userID')
+            this.GetTempEquipmentResult = await RestAPI.AddEquipment(ParentEquipmentId, ChildEquipmentId, this.tempUserID);
             var x = document.getElementById("snackbar");
             x.className = "show";
             setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
             this.ModalStyle = "none";
+            this.$router.push('/dashboard');
         },
         CancelEquipment(){
             this.ModalStyle = 'none'
