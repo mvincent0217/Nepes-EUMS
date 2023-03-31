@@ -50,6 +50,7 @@ export default {
     },
     logout() {
       if (this.$router.currentRoute.path !== '/login') {
+        localStorage.setItem('isAuthenticated', 'false');
         this.$router.push('/');
       }
     },

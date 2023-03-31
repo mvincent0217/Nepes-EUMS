@@ -5,8 +5,6 @@ import MyHoverComponent from './MyHoverComponent.vue';
 import MyMenuComponent from './MyMenuComponent.vue';
 import Swal from 'sweetalert2'
 import * as RestAPI from '@/JS/RestAPI.js';
-import VueRouter from 'vue-router'
-
 
 export default { 
     data() {
@@ -83,10 +81,16 @@ export default {
         CloseModal(e){
             this.ShowModal = false;
         },
-        async toggle(){
+        toggle(){
             this.active = !this.active;
+            this.getApplicableEquipmentIds();
+        },
+        async getApplicableEquipmentIds()
+        {
             this.getApplicableIds = await RestAPI.ApplicableEquipments(this.ParentEquipment_ID);
-            this.getApplicableIds = JSON.parse(ApplicableEquipments(this.getApplicableIds.data))
+            // this.getApplicableIds = JSON.parse(this.getApplicableIds.data)
+            // console.log(this.getApplicableIds.data)
+            // this.getApplicableIds = JSON.parse(this.getApplicableIds.data)
         }
     },
     updated(){
@@ -150,6 +154,12 @@ export default {
              </div>
 
         </div>
-        <MyEquipmentModal @BoolModal="CloseModal" ref="modal" :ParentEquipment_ID="this.EquipmentIdModal" :MyModalID="MyModalId" :ShowModal="ShowModal" :LoadModal="ShowModal"/>
+        <MyEquipmentModal @BoolModal="CloseModal" ref="modal" 
+            :ParentEquipment_ID="this.EquipmentIdModal" 
+            :MyModalID="MyModalId" 
+            :ShowModal="ShowModal" 
+            :LoadModal="ShowModal"
+            :ApplicableIds="getApplicableIds.data"
+            />
     </div>
 </template>

@@ -9,7 +9,8 @@ export default {
             ChildEquipmentId: '',
             ToastMessage: '',
             bShowModal: false,
-            ModalStyle: ''
+            ModalStyle: '',
+            tempApplicableIds: '',
         }
     },
     props: {
@@ -18,6 +19,7 @@ export default {
         LoadModal: Boolean,
         CloseModal: Boolean,
         ParentEquipment_ID: String,
+        ApplicableIds: String,
     },
     watch: {
         ShowModal: {
@@ -41,6 +43,13 @@ export default {
                 //this.Modal = document.getElementById('EquipmentModal');
                 //this.Modal.style.display = "block";
             }
+        },
+        ApplicableIds:{
+            deep: true,
+            handler(val){
+                this.tempApplicableIds = JSON.parse(val)
+                console.log(this.tempApplicableIds)
+            }
         }
     },
     mounted(){
@@ -55,14 +64,13 @@ export default {
         },
         async AddEquipment(ParentEquipmentId, ChildEquipmentId){
             this.GetTempEquipmentResult = await RestAPI.AddEquipment(ParentEquipmentId, ChildEquipmentId);
-
-            console.log(ParentEquipmentId + ' ' + ChildEquipmentId)
             var x = document.getElementById("snackbar");
-            this.ToastMessage = "Successfully Added";
             x.className = "show";
             setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
-
-            this.Modal.style.display = "none";
+            this.ModalStyle = "none";
+        },
+        CancelEquipment(){
+            this.ModalStyle = 'none'
         }
 
     },
@@ -72,10 +80,10 @@ export default {
 }
 </script>
 <template>
-    <div v-if="this.bShowModal" >
-        <div  id="EquipmentModal" class="modal" :style="{display:this.ModalStyle}">
+    
+    <div>
+        <div v-if="this.bShowModal && tempApplicableIds" id="EquipmentModal" class="modal" :style="{display:this.ModalStyle}">
             <div class="modal-content">
-                <span @click="closeModal(false)" class="close">&times;</span>
                 <div class="container">
                     <h1>Add Item</h1>
                     <hr>
@@ -83,12 +91,17 @@ export default {
                     <input type="text" placeholder="Enter Parent Equipment Id" id="ParentEquipment" name="ParentEquipmentId" v-model="ParentEquipmentId" disabled>
 
                     <label for="ChildEquipmentId"><b>Child Item Id:</b></label>
-                    <input type="text"  name="ChildEquipmentId" v-model="ChildEquipmentId" required>
+                    <select v-model="ChildEquipmentId">
+                        <option value="">SELECT IDs Here</option>
+                        <option v-for="(id,index) in tempApplicableIds" :key="index">{{ id }}</option>
+                    </select>
+                    <!-- <input type="text"  name="ChildEquipmentId" v-model="ChildEquipmentId" required> -->
 
                     <button class="AddEquipmentbtn" @click="AddEquipment(ParentEquipmentId, ChildEquipmentId)">Submit</button>
+                    <button class="CancelEquipmentbtn" @click="CancelEquipment()">Cancel</button>
                 </div>
             </div>
         </div>
-        <div id="snackbar">{{ToastMessage}}</div>
+        <div id="snackbar">Successfully Added</div>
     </div>
 </template>

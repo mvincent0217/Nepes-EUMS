@@ -36,6 +36,7 @@ export default {
       const userRight = this.AuthenticateUserResult.UserRights[i];
       // console.log(userRight);
       if (userRight && this.$router.currentRoute.path !== '/dashboard') {
+        localStorage.setItem('isAuthenticated', 'true');
         this.$router.push('/dashboard');
         break;
       }
