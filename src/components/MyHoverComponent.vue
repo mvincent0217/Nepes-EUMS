@@ -1,7 +1,7 @@
 <script>
-import Vue from 'vue'
-import moment from 'moment';
-Vue.prototype.moment = moment;
+// import Vue from 'vue'
+// import moment from 'moment';
+// Vue.prototype.moment = moment;
 export default {
     data() {
         return {            
@@ -93,7 +93,7 @@ export default {
             </tr>
             <tr>
                 <td>Last Repair Timestamp</td>
-                <td>{{ (null ?? moment(EquipmentUsage['AMP-MIN']?.Last_Repair_TimeStamp).format('MMM DD YYYY hh:mmA')) || 'None'}}</td>
+                <!-- <td>{{ (null ?? moment(EquipmentUsage['AMP-MIN']?.Last_Repair_TimeStamp).format('MMM DD YYYY hh:mmA')) || 'None'}}</td> -->
             </tr>
         </table>
 </template>

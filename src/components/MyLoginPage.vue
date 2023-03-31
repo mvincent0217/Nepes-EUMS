@@ -25,7 +25,9 @@ export default {
     // },
   async AuthenticateUser() {
   this.AuthenticateUserResult = await RestAPI.AuthenticateUser(this.userID, this.password);
+  localStorage.setItem(this.userID);
   this.AuthenticateUserResult = JSON.parse(this.AuthenticateUserResult.data);
+
   
   //  console.log(this.AuthenticateUserResult.UserRights);
    const userRights = this.AuthenticateUserResult.UserRights;
