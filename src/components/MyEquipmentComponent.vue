@@ -13,6 +13,7 @@ export default {
         return {            
             ShowModal: false,
             TempEquipment_ID: '',
+            getApplicableIds: '',
 
             tempEquipHeight: null,
             tempEquipWidth: null,
@@ -82,8 +83,10 @@ export default {
         CloseModal(e){
             this.ShowModal = false;
         },
-        toggle(){
+        async toggle(){
             this.active = !this.active;
+            this.getApplicableIds = await RestAPI.ApplicableEquipments(this.ParentEquipment_ID);
+            this.getApplicableIds = JSON.parse(ApplicableEquipments(this.getApplicableIds.data))
         }
     },
     updated(){
@@ -133,6 +136,7 @@ export default {
                         :MES_State="MES_State"
                         :EUMS_State="EUMS_State"
                         :Productivity_State="Productivity_State"
+                        :EquipmentUsage="EquipmentUsage"
                     />
                 </span>
                 <div v-if="active">

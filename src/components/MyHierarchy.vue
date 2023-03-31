@@ -13,6 +13,7 @@ export default {
             arrAllEquipments: [],
             arrHierarchy: [],
             BoolLoad: false,
+            level: 0,
 
             //Style Config//
             MyEquipmentHeight: 0,
@@ -37,12 +38,11 @@ export default {
             var object = await this.ReSummarizeEquipmentObject(this.GetTempEquipmentResult)
             var obj = await this.ReSummarizeEquipmentChildObject();
             var tempobj = await this.buildHierarchy(this.arrAllEquipments)
-            // var result = await this.buildHierarchy2(this.arrAllEquipments);
             console.log(tempobj)
-            // console.log(result)
             this.BoolLoad = true
         },
         async ReSummarizeEquipmentChildObject(){
+            var level = 0;
             if(this.arrAllEquipments.length > 0)
             {
                 for (var i = 0;  i < this.arrAllEquipments.length; i++)
@@ -54,7 +54,7 @@ export default {
                         var oTempConfig = {};
                         oTempConfig = oTemp.ChildEquipmentConfig;
                         var iConfigCount = 0;
-                        iConfigCount =  Object.keys(oTempConfig).length;
+                        iConfigCount = Object.keys(oTempConfig).length;
                         var oTempChildrens = {};
                         oTempChildrens = oTemp.ChildrenEquipment;
                         for(var key in oTempConfig){
@@ -77,13 +77,16 @@ export default {
                                 for(var iEmpty = 0; iEmpty < iEmptyCnt; iEmpty++){
                                     var PlaceholderEquipment = {};
                                     PlaceholderEquipment['Equipment_ID'] = 'EMPTY'; 
-                                    PlaceholderEquipment['ParentEquipmentID'] = oTemp.Equipment_ID; 
+                                    PlaceholderEquipment['ParentEquipmentID'] = oTemp.Equipment_ID;
+                                    PlaceholderEquipment['level'] = level + 1; 
                                     PlaceholderEquipment['ChildEquipmentConfig'] = {};
                                     oTempChildrens[key+'_EMPTY_'+iEmpty] = PlaceholderEquipment;
                                     this.arrAllEquipments.push(PlaceholderEquipment);
                                     this.AddStyles(PlaceholderEquipment)
+                                    level = level + 1;
                                 }
                             }
+                            level = 0;
                         }
                     }
                 }
@@ -125,8 +128,6 @@ export default {
             await this.AddStyles(object);
             //loop through the object and get each child equipment
             for (var Childkey in object.ChildrenEquipment) {
-               
-
                 var iChildCount = 0;
                 //Count the number of child of the next node
                 iChildCount = Object.keys(object.ChildrenEquipment[Childkey].ChildrenEquipment)
@@ -134,9 +135,11 @@ export default {
                 //Add child count as attribute to the parent
                 object.ChildrenEquipment[Childkey]["ChildCount"] = iChildCount;
                 //Add the parent equipment id to the current child equipment
-                object.ChildrenEquipment[Childkey]["ParentEquipmentID"] = object.Equipment_ID; 
+                object.ChildrenEquipment[Childkey]["ParentEquipmentID"] = object.Equipment_ID;
+                object.ChildrenEquipment[Childkey]["Level"] = this.level;                
                 //Check if the next children has count
                 //If 0 then it is the last child for that node
+                this.level++;
                 var bLastEquipment = false;
                 if (iChildCount === 0) {
                     bLastEquipment = true;
@@ -152,9 +155,8 @@ export default {
             //find the top level nodes and hash the children based on parent
             for(var i = 0, len = object.length; i < len; i++){
                 var tEquipment = object[i],
-                    p = object.ParentEquipmentID,
+                    p = object[i].ParentEquipmentID,
                     target = !p ? roots : (children[p] || (children[p] = []));
-
                     target.push({ value: tEquipment});
             }
             // function to recursively build the tree
@@ -172,32 +174,6 @@ export default {
             }
             return roots
         },
-        async buildHierarchy2(object){
-            var tree = [], mappedArr = {};
-
-            object.forEach(function(equip){
-                var id = equip.Equipment_ID;
-                if(!mappedArr.hasOwnProperty(id)){
-                    mappedArr[id] = equip;
-                    mappedArr[id].children = []; 
-                }
-            })
-            for (var id in mappedArr) { 
-                if (mappedArr.hasOwnProperty(id)) {
-                    var mappedElem = mappedArr[id];
-                    
-                    if (mappedElem.Parent) { 
-                        var parentId = mappedElem.Parent;
-                        mappedArr[parentId].children.push(mappedElem); 
-                    }
-                    
-                    else { 
-                        tree.push(mappedElem);
-                    } 
-                }
-            }
-            return tree;
-        }
             
         
     },

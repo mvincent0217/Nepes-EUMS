@@ -8,7 +8,8 @@ export default {
             ParentEquipmentId: '',
             ChildEquipmentId: '',
             ToastMessage: '',
-            bShowModal: false
+            bShowModal: false,
+            ModalStyle: ''
         }
     },
     props: {
@@ -25,8 +26,8 @@ export default {
                 // if(!this.TempBool) { this.TempBool = val; }
                 if(val){
                     this.bShowModal = val;
-                    this.Modal = document.getElementById('EquipmentModal');
-                    this.Modal.style.display = "block";
+                    //this.Modal = document.getElementById('EquipmentModal');
+                    //this.Modal.style.display = "block";
                     //console.log(this.ParentEquipmentId);
                 }
             }
@@ -35,7 +36,10 @@ export default {
             deep: true,
             handler(val) {
                 this.ParentEquipmentId = val
-                //console.log(val)
+                this.bShowModal = true;
+                this.ModalStyle = 'block';
+                //this.Modal = document.getElementById('EquipmentModal');
+                //this.Modal.style.display = "block";
             }
         }
     },
@@ -44,8 +48,9 @@ export default {
     methods:
     {
         closeModal(e){
-            this.Modal = document.getElementById('EquipmentModal');
-            this.Modal.style.display = "none";
+            //this.Modal = document.getElementById('EquipmentModal');
+            //this.Modal.style.display = "none";
+            this.ModalStyle = 'none';
             this.$emit('BoolModal', e);
         },
         async AddEquipment(ParentEquipmentId, ChildEquipmentId){
@@ -68,17 +73,17 @@ export default {
 </script>
 <template>
     <div v-if="this.bShowModal" >
-        <div  id="EquipmentModal"  class="modal">
+        <div  id="EquipmentModal" class="modal" :style="{display:this.ModalStyle}">
             <div class="modal-content">
                 <span @click="closeModal(false)" class="close">&times;</span>
                 <div class="container">
-                    <h1>Add</h1>
+                    <h1>Add Item</h1>
                     <hr>
-                    <label for="ParentEquipmentId"><b>Parent Equipment Id:</b></label>
+                    <label for="ParentEquipmentId"><b>Parent Item Id:</b></label>
                     <input type="text" placeholder="Enter Parent Equipment Id" id="ParentEquipment" name="ParentEquipmentId" v-model="ParentEquipmentId" disabled>
 
-                    <label for="ChildEquipmentId"><b>Child Equipment Id:</b></label>
-                    <input type="text" placeholder="Enter Child Equipment Id" name="ChildEquipmentId" v-model="ChildEquipmentId" required>
+                    <label for="ChildEquipmentId"><b>Child Item Id:</b></label>
+                    <input type="text"  name="ChildEquipmentId" v-model="ChildEquipmentId" required>
 
                     <button class="AddEquipmentbtn" @click="AddEquipment(ParentEquipmentId, ChildEquipmentId)">Submit</button>
                 </div>
