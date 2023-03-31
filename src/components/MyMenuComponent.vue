@@ -27,7 +27,6 @@ export default {
 <template>
      <div class="main-menu">
         <ul class="menu-list">
-            <li><a href="#">View Usage</a></li>
             <li v-if="Equipment_ID == 'EMPTY'"><a href="#">Add ▼</a>
                 <ul class="menu-list">
                     <li @click="EmitPopUpModal()"><a href="#">Add Item</a></li>

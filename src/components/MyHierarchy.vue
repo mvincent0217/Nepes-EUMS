@@ -13,6 +13,7 @@ export default {
             arrAllEquipments: [],
             arrHierarchy: [],
             BoolLoad: false,
+            level: 0,
 
             //Style Config//
             MyEquipmentHeight: 0,
@@ -37,8 +38,8 @@ export default {
             this.GetTempEquipmentResult = JSON.parse(this.GetTempEquipmentResult.data);
             var object = await this.ReSummarizeEquipmentObject(this.GetTempEquipmentResult)
             var obj = await this.ReSummarizeEquipmentChildObject();
-            // var tempobj = await this.buildHierarchy(this.arrAllEquipments)
-            // console.log(tempobj)
+            var tempobj = await this.buildHierarchy(this.arrAllEquipments)
+            console.log(tempobj)
             this.BoolLoad = true
         },
         async ReSummarizeEquipmentChildObject(){
@@ -78,13 +79,13 @@ export default {
                                     var PlaceholderEquipment = {};
                                     PlaceholderEquipment['Equipment_ID'] = 'EMPTY'; 
                                     PlaceholderEquipment['ParentEquipmentID'] = oTemp.Equipment_ID;
-                                    PlaceholderEquipment['level'] = level += 1; 
+                                    PlaceholderEquipment['level'] = level + 1; 
                                     PlaceholderEquipment['ChildEquipmentConfig'] = {};
                                     oTempChildrens[key+'_EMPTY_'+iEmpty] = PlaceholderEquipment;
                                     this.arrAllEquipments.push(PlaceholderEquipment);
                                     this.AddStyles(PlaceholderEquipment)
+                                    level = level + 1;
                                 }
-                                level = 0;
                             }
                             level = 0;
                         }
@@ -128,7 +129,6 @@ export default {
             await this.AddStyles(object);
             //loop through the object and get each child equipment
             for (var Childkey in object.ChildrenEquipment) {
-                var level = 0;
                 var iChildCount = 0;
                 //Count the number of child of the next node
                 iChildCount = Object.keys(object.ChildrenEquipment[Childkey].ChildrenEquipment)
@@ -137,9 +137,10 @@ export default {
                 object.ChildrenEquipment[Childkey]["ChildCount"] = iChildCount;
                 //Add the parent equipment id to the current child equipment
                 object.ChildrenEquipment[Childkey]["ParentEquipmentID"] = object.Equipment_ID;
-                object.ChildrenEquipment[Childkey]["Level"] = level += 1;                
+                object.ChildrenEquipment[Childkey]["Level"] = this.level;                
                 //Check if the next children has count
                 //If 0 then it is the last child for that node
+                this.level++;
                 var bLastEquipment = false;
                 if (iChildCount === 0) {
                     bLastEquipment = true;

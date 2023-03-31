@@ -34,3 +34,7 @@ export async function RemoveEquipment(parentEquipmentID, childEquipmentID){
     var res = await axios.post("http://hayyim-breach:8005/api/EUMS/RemoveEquipment?parentEquipmentID=" + parentEquipmentID + "&childEquipmentID=" + childEquipmentID);
     return res;
 }
+export async function ApplicableEquipments(parentEquipmentID){
+    var res = await axios.post("http://hayyim-breach:8005/api/EUMS/GetApplicableEquipmentIDs?parentEquipmentID=" + parentEquipmentID);
+    return res;
+}

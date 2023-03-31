@@ -52,7 +52,6 @@ export default {
             deep: true,
             handler(val){
                 console.log(val)
-                this.TempUsage_Equipment_ID = val['AMP-MIN'];
             }
         }
     },
@@ -82,19 +81,19 @@ export default {
             </tr>
             <tr>
                 <td>Equipment ID</td>
-                <td>{{ EquipmentUsage['AMP-MIN'].Equipment_ID }}</td>
+                <td>{{ (undefined ?? EquipmentUsage['AMP-MIN']?.Equipment_ID) || 'None' }}</td>
             </tr>
             <tr>
                 <td>Usage Unit</td>
-                <td>{{ EquipmentUsage['AMP-MIN'].Usage_Unit }}</td>
+                <td>{{ (undefined ?? EquipmentUsage['AMP-MIN']?.Usage_Unit) || 'None' }}</td>
             </tr>
             <tr>
                 <td>Cummulative Usage</td>
-                <td>{{ EquipmentUsage['AMP-MIN'].Cummulative_Usage }}</td>
+                <td>{{ (undefined ?? EquipmentUsage['AMP-MIN']?.Cummulative_Usage) || 'None'}}</td>
             </tr>
             <tr>
                 <td>Last Repair Timestamp</td>
-                <td>{{ moment(EquipmentUsage['AMP-MIN'].Last_Repair_TimeStamp).format('MMM DD YYYY hh:mmA')}}</td>
+                <td>{{ (null ?? moment(EquipmentUsage['AMP-MIN']?.Last_Repair_TimeStamp).format('MMM DD YYYY hh:mmA')) || 'None'}}</td>
             </tr>
         </table>
 </template>
