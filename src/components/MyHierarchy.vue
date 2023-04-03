@@ -47,7 +47,7 @@ export default {
             localStorage.setItem('sessionId', newSessionId);
             // Check if the sessionId value has changed
             if (sessionId !== newSessionId) {
-            alert('This equipment is already open in another browser.');
+            alert(this.GetTempEquipmentID + ' is already open in another browser');
             }
         },
         async ReSummarizeEquipmentChildObject(){
