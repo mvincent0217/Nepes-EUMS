@@ -70,7 +70,7 @@ export default {
             x.className = "show";
             setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
             this.ModalStyle = "none";
-            this.$router.push('/dashboard');
+            this.$router.push('/hierarchy');
         },
         CancelEquipment(){
             this.ModalStyle = 'none'
