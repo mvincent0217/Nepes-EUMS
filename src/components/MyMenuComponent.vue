@@ -46,7 +46,6 @@ export default {
             <li v-if="Equipment_ID == 'EMPTY'"><a href="#">Add ▼</a>
                 <ul class="menu-list">
                     <li @click="EmitPopUpModal()"><a class ="OptionColor" href="#">Add Item</a></li>
-                    <li class ="OptionColor"><a href="#">Usage</a></li>
                 </ul>
             </li>
             </div>

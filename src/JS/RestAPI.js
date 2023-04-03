@@ -26,12 +26,12 @@ export async function AuthenticateUser(userID,password){
     return res;
 }
 
-export async function AddEquipment(parentEquipmentID, childEquipmentID){
-    var res = await axios.post("http://hayyim-breach:8005/api/EUMS/AddEquipment?parentEquipmentID=" + parentEquipmentID + "&childEquipmentID=" + childEquipmentID);
+export async function AddEquipment(parentEquipmentID, childEquipmentID, userID){
+    var res = await axios.post("http://hayyim-breach:8005/api/EUMS/AddEquipment?parentEquipmentID=" + parentEquipmentID + "&childEquipmentID=" + childEquipmentID + "&UserID=" + userID);
     return res;
 }
-export async function RemoveEquipment(parentEquipmentID, childEquipmentID){
-    var res = await axios.post("http://hayyim-breach:8005/api/EUMS/RemoveEquipment?parentEquipmentID=" + parentEquipmentID + "&childEquipmentID=" + childEquipmentID);
+export async function RemoveEquipment(parentEquipmentID, childEquipmentID, userID){
+    var res = await axios.post("http://hayyim-breach:8005/api/EUMS/RemoveEquipment?parentEquipmentID=" + parentEquipmentID + "&childEquipmentID=" + childEquipmentID + "&UserID=" + userID);
     return res;
 }
 export async function ApplicableEquipments(parentEquipmentID){
