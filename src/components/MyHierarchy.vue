@@ -14,8 +14,6 @@ export default {
             arrHierarchy: [],
             BoolLoad: false,
             level: 0,
-
-            //Style Config//
             MyEquipmentHeight: 0,
             MyEquipmentWidth: 0,
             MyEquipmentLeftPosition: 0,
@@ -40,6 +38,17 @@ export default {
             var tempobj = await this.buildHierarchy(this.arrAllEquipments)
             console.log(tempobj)
             this.BoolLoad = true
+
+            // Get the sessionId value from the localStorage
+            const sessionId = localStorage.getItem('sessionId');
+            // Generate a new sessionId value
+            const newSessionId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            // Store the new sessionId value in the localStorage
+            localStorage.setItem('sessionId', newSessionId);
+            // Check if the sessionId value has changed
+            if (sessionId !== newSessionId) {
+            alert('This equipment is already open in another browser.');
+            }
         },
         async ReSummarizeEquipmentChildObject(){
             var level = 0;
