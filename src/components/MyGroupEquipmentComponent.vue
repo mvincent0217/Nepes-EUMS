@@ -6,29 +6,10 @@ export default {
     name: 'MyGroupEquipmentComponent',
     data() {
         return {
-            MyEquipmentComponentEquipmentID: '',
-            MyEquipmentComponentMES_State: '',
-            MyEquipmentComponentEUMS_State: '',
-            MyEquipmentComponentEquipment_Model: '',
-            MyEquipmentComponentProductivity_State: '',
-            MyEquipmentComponentPart_Type: '',
-            MyEquipmentComponentClassification: '',
-            MyEquipmentComponentChildrenEquipment: {},
-            MyEquipmentComponentChildrenEquipmentConfig: {},
-            MyEquipmentComponentChildrenEquipmentUsage: {},
-            MyEquipmentComponentModalID: '',
-            MyEquipmentParentEquipment_ID: '',
-            oTempChildEquipments: {},
-            oChildEquipments: {},
-            oChildEquipComponent: {},
-            arrChildEquipments: [],
-            TempBool: false,
-            arrTest: [],
         }
     },
     components: { 
         MyEquipmentComponent,
-        // Loading
     },
     props:{
         Equipment_ID: String,
@@ -43,6 +24,7 @@ export default {
         EquipmentUsage: Object,
         MyModalTrigger: String,
         ParentEquip_ID: String,
+        EquipmentLevel: Number,
 
         MyGrpEquipHeight: Number,
         MyGrpEquipWidth: Number,
@@ -63,15 +45,7 @@ export default {
 </script>
 <template>
     <div>
-        <!-- <div v-if="!TempBool">
-        <Loading />
-        </div> -->
         <div>
-            <!-- :MyEquipHeight="this.MyGrpEquipHeight"
-                :MyEquipWidth="this.MyGrpEquipWidth"
-                :MyEquipLeftPosition="this.MyGrpEquipLeftPosition"
-                :MyEquipColor="this.MyGrpEquipColor"
-                :MyModalTrigger="this.MyEquipmentComponentModalID" -->
             <MyEquipmentComponent 
                 v-on="$listeners"
                 :Equipment_ID="Equipment_ID"
@@ -90,6 +64,7 @@ export default {
                 :MyEquipColor="MyGrpEquipColor"
                 :MyModalId="MyModalTrigger"
                 :ParentEquipment_ID="ParentEquip_ID"
+                :EquipmentLevel="EquipmentLevel"
             />
         </div>
     </div>

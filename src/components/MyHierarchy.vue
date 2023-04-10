@@ -2,9 +2,11 @@
 /* eslint-disable */
 import  Navbar from './MyNavigationBar.vue';
 import MyGroupEquipmentComponent from './MyGroupEquipmentComponent.vue';
+import MyEquipmentComponent from './MyEquipmentComponent.vue';
 import Loading from './MyLoading.vue';
 import * as RestAPI from '@/JS/RestAPI.js';
 import { States } from '@/JS/Constants.js';
+
 export default {
     data() {
         return {
@@ -18,6 +20,7 @@ export default {
             MyEquipmentWidth: 0,
             MyEquipmentLeftPosition: 0,
             tempColor: '',
+            GroupObjectPerLevel: {}
         }
     },
     
@@ -25,6 +28,7 @@ export default {
         Navbar,
         MyGroupEquipmentComponent,
         Loading,
+        MyEquipmentComponent
     },
    
     methods:{
@@ -33,10 +37,15 @@ export default {
             this.GetTempEquipmentID = equipmentId;
             this.GetTempEquipmentResult = await RestAPI.GetEquipmentID(this.GetTempEquipmentID);
             this.GetTempEquipmentResult = JSON.parse(this.GetTempEquipmentResult.data);
+            this.GetTempEquipmentResult['level'] = this.level;
+            var arLevelTemp = [];
+            arLevelTemp.push(this.GetTempEquipmentResult);
+            this.GroupObjectPerLevel['Level_0'] = arLevelTemp;
             var object = await this.ReSummarizeEquipmentObject(this.GetTempEquipmentResult)
             var obj = await this.ReSummarizeEquipmentChildObject();
             var tempobj = await this.buildHierarchy(this.arrAllEquipments)
-            console.log(tempobj)
+            //console.log(tempobj)
+            console.log(this.GroupObjectPerLevel);
             this.BoolLoad = true
 
             // Get the sessionId value from the localStorage
@@ -47,17 +56,21 @@ export default {
             localStorage.setItem('sessionId', newSessionId);
             // Check if the sessionId value has changed
             if (sessionId !== newSessionId) {
-            alert(this.GetTempEquipmentID + ' is already open in another browser');
+            // alert(this.GetTempEquipmentID + ' is already open in another browser');
             }
         },
         async ReSummarizeEquipmentChildObject(){
             var level = 0;
             if(this.arrAllEquipments.length > 0)
             {
+                //this.arrAllEquipments[0]['level'] = level;
+                //level++;
+                //var sParent = '';
                 for (var i = 0;  i < this.arrAllEquipments.length; i++)
                 {
                     var oTemp = {};
-                    oTemp = this.arrAllEquipments[i]; 
+                    oTemp = this.arrAllEquipments[i];
+                    //oTemp['level'] = level;
                     if(oTemp.ChildEquipmentConfig != null)
                     {
                         var oTempConfig = {};
@@ -66,6 +79,7 @@ export default {
                         iConfigCount = Object.keys(oTempConfig).length;
                         var oTempChildrens = {};
                         oTempChildrens = oTemp.ChildrenEquipment;
+                        
                         for(var key in oTempConfig){
                             var iChildCount = 0; 
                             var oTempEquipmentConfig = oTempConfig[key];
@@ -74,6 +88,8 @@ export default {
                             {
                                 var oTempChildEquipment = oTempChildrens[child];
                                 var sTempEquipmentModel = oTempChildEquipment.Equipment_Model;
+                                //oTempChildEquipment['level'] = level;
+
                                 if(sTempEquipmentModel == key)
                                 {
                                     iChildCount++;
@@ -87,15 +103,15 @@ export default {
                                     var PlaceholderEquipment = {};
                                     PlaceholderEquipment['Equipment_ID'] = 'EMPTY'; 
                                     PlaceholderEquipment['ParentEquipmentID'] = oTemp.Equipment_ID;
-                                    PlaceholderEquipment['level'] = level + 1; 
+                                    //PlaceholderEquipment['level'] = level + 1; 
                                     PlaceholderEquipment['ChildEquipmentConfig'] = {};
                                     oTempChildrens[key+'_EMPTY_'+iEmpty] = PlaceholderEquipment;
                                     this.arrAllEquipments.push(PlaceholderEquipment);
                                     this.AddStyles(PlaceholderEquipment)
-                                    level = level + 1;
+                                    //level = level + 1;
                                 }
                             }
-                            level = 0;
+                            //level = 0;
                         }
                     }
                 }
@@ -125,7 +141,7 @@ export default {
                 }else{
                     object["MyEquipmentColor"] = '2px dashed black';
                 }
-                object["MyEquipmentHeight"] = 200;
+                object["MyEquipmentHeight"] = 150;
                 object["MyEquipmentWidth"] = 200;
                 object["MyEquipmentLeftPosition"] = 300;
                 object["MyModalTrigger"] = 'MyModal';
@@ -143,15 +159,33 @@ export default {
                     .length;
                 //Add child count as attribute to the parent
                 object.ChildrenEquipment[Childkey]["ChildCount"] = iChildCount;
+                var iParentLevel = object['level'];
+                iParentLevel++;
+                object.ChildrenEquipment[Childkey]["level"] = iParentLevel;
+
+                if(null!=this.GroupObjectPerLevel['Level_'+iParentLevel])
+                {
+                    var arLevelTemp = [];
+                    arLevelTemp = this.GroupObjectPerLevel['Level_'+iParentLevel];
+                    arLevelTemp.push(object.ChildrenEquipment[Childkey]);
+                }
+                else
+                {
+                    var arLevelTemp = [];
+                    arLevelTemp.push(object.ChildrenEquipment[Childkey]);
+                    this.GroupObjectPerLevel['Level_'+iParentLevel] = arLevelTemp;
+                }
+
                 //Add the parent equipment id to the current child equipment
-                object.ChildrenEquipment[Childkey]["ParentEquipmentID"] = object.Equipment_ID;
-                object.ChildrenEquipment[Childkey]["Level"] = this.level;                
+                object.ChildrenEquipment[Childkey]["ParentEquipmentID"] = object.Equipment_ID;              
                 //Check if the next children has count
                 //If 0 then it is the last child for that node
-                this.level++;
                 var bLastEquipment = false;
                 if (iChildCount === 0) {
                     bLastEquipment = true;
+                }
+                else
+                {
                 }
                 object.ChildrenEquipment[Childkey]["LastEquipment"] = bLastEquipment;
                 //call itself to check the next children equipment
@@ -183,8 +217,9 @@ export default {
             }
             return roots
         },
-            
-        
+        async ChildCount(){
+
+        }
     },
     created(){
         this.GetEquipmentID();
@@ -221,7 +256,110 @@ export default {
                     :MyGrpEquipBorderStyle="iChildEquip.MyEquipmentBorderStyle"
                     :MyModalTrigger="iChildEquip.MyModalTrigger"
                     :ParentEquip_ID="iChildEquip.ParentEquipmentID"
+                    :EquipmentLevel="iChildEquip.level"
                 />
         </div>
+        <!-- <div>
+            <div class="level-1 rectangle" v-for="(grpLevel, index) in GroupObjectPerLevel.Level_0" :key="index">
+                        <MyEquipmentComponent 
+                            v-on="$listeners"
+                            :Equipment_ID="grpLevel.Equipment_ID"
+                            :MES_State="grpLevel.MES_State"
+                            :EUMS_State="grpLevel.EUMS_State" 
+                            :Productivity_State="grpLevel.Productivity_State"
+                            :Equipment_Model="grpLevel.Equipment_Model"
+                            :PartType="grpLevel.PartType"
+                            :Classification="grpLevel.Classification"
+                            :ChildrenEquipment="grpLevel.ChildrenEquipment"
+                            :ChildrenEquipmentConfig="grpLevel.ChildrenEquipmentConfig"
+                            :EquipmentUsage="grpLevel.EquipmentUsage"
+                            :MyEquipHeight="grpLevel.MyEquipmentHeight"
+                            :MyEquipWidth="grpLevel.MyEquipmentWidth"
+                            :MyEquipLeftPosition="grpLevel.MyEquipmentLeftPosition"
+                            :MyEquipColor="grpLevel.MyEquipmentColor"
+                            :MyModalId="grpLevel.MyModalTrigger"
+                            :ParentEquipment_ID="grpLevel.ParentEquip_ID"
+                            :EquipmentLevel="grpLevel.EquipmentLevel"
+                        />
+            </div>
+            <ol class="level-2-wrapper">
+                <li v-for="(grpLevel, index) in GroupObjectPerLevel.Level_1" :key="index">
+                    <div class="level-2 rectangle">
+                        <MyEquipmentComponent 
+                            v-on="$listeners"
+                            :Equipment_ID="grpLevel.Equipment_ID"
+                            :MES_State="grpLevel.MES_State"
+                            :EUMS_State="grpLevel.EUMS_State" 
+                            :Productivity_State="grpLevel.Productivity_State"
+                            :Equipment_Model="grpLevel.Equipment_Model"
+                            :PartType="grpLevel.PartType"
+                            :Classification="grpLevel.Classification"
+                            :ChildrenEquipment="grpLevel.ChildrenEquipment"
+                            :ChildrenEquipmentConfig="grpLevel.ChildrenEquipmentConfig"
+                            :EquipmentUsage="grpLevel.EquipmentUsage"
+                            :MyEquipHeight="grpLevel.MyEquipmentHeight"
+                            :MyEquipWidth="grpLevel.MyEquipmentWidth"
+                            :MyEquipLeftPosition="grpLevel.MyEquipmentLeftPosition"
+                            :MyEquipColor="grpLevel.MyEquipmentColor"
+                            :MyModalId="grpLevel.MyModalTrigger"
+                            :ParentEquipment_ID="grpLevel.ParentEquip_ID"
+                            :EquipmentLevel="grpLevel.EquipmentLevel"
+                        />
+                    </div>
+                    <ol class="level-3-wrapper">
+                        <li v-for="(grpLevel, index) in GroupObjectPerLevel.Level_2" :key="index">
+                            <div class="level-3 rectangle">
+                                <MyEquipmentComponent 
+                                v-on="$listeners"
+                                :Equipment_ID="grpLevel.Equipment_ID"
+                                :MES_State="grpLevel.MES_State"
+                                :EUMS_State="grpLevel.EUMS_State" 
+                                :Productivity_State="grpLevel.Productivity_State"
+                                :Equipment_Model="grpLevel.Equipment_Model"
+                                :PartType="grpLevel.PartType"
+                                :Classification="grpLevel.Classification"
+                                :ChildrenEquipment="grpLevel.ChildrenEquipment"
+                                :ChildrenEquipmentConfig="grpLevel.ChildrenEquipmentConfig"
+                                :EquipmentUsage="grpLevel.EquipmentUsage"
+                                :MyEquipHeight="grpLevel.MyEquipmentHeight"
+                                :MyEquipWidth="grpLevel.MyEquipmentWidth"
+                                :MyEquipLeftPosition="grpLevel.MyEquipmentLeftPosition"
+                                :MyEquipColor="grpLevel.MyEquipmentColor"
+                                :MyModalId="grpLevel.MyModalTrigger"
+                                :ParentEquipment_ID="grpLevel.ParentEquip_ID"
+                                :EquipmentLevel="grpLevel.EquipmentLevel"
+                            />
+                            </div>
+                        </li>
+                    </ol>
+                    <ol class="level-4-wrapper">
+                        <li v-for="(grpLevel, index) in GroupObjectPerLevel.Level_3" :key="index">
+                            <div class="level-4 rectangle" >
+                                <MyEquipmentComponent 
+                                v-on="$listeners"
+                                :Equipment_ID="grpLevel.Equipment_ID"
+                                :MES_State="grpLevel.MES_State"
+                                :EUMS_State="grpLevel.EUMS_State" 
+                                :Productivity_State="grpLevel.Productivity_State"
+                                :Equipment_Model="grpLevel.Equipment_Model"
+                                :PartType="grpLevel.PartType"
+                                :Classification="grpLevel.Classification"
+                                :ChildrenEquipment="grpLevel.ChildrenEquipment"
+                                :ChildrenEquipmentConfig="grpLevel.ChildrenEquipmentConfig"
+                                :EquipmentUsage="grpLevel.EquipmentUsage"
+                                :MyEquipHeight="grpLevel.MyEquipmentHeight"
+                                :MyEquipWidth="grpLevel.MyEquipmentWidth"
+                                :MyEquipLeftPosition="grpLevel.MyEquipmentLeftPosition"
+                                :MyEquipColor="grpLevel.MyEquipmentColor"
+                                :MyModalId="grpLevel.MyModalTrigger"
+                                :ParentEquipment_ID="grpLevel.ParentEquip_ID"
+                                :EquipmentLevel="grpLevel.EquipmentLevel"
+                            />
+                            </div>
+                        </li>
+                    </ol>
+                </li>
+            </ol>
+        </div> -->
     </div>
 </template>

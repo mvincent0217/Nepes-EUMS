@@ -38,6 +38,7 @@ export default {
         EquipmentUsage: Object,
         MyModalId: String,
         ParentEquipment_ID: String,
+        EquipmentLevel: Number,
 
         MyEquipHeight: Number,
         MyEquipWidth: Number,
@@ -90,35 +91,30 @@ export default {
         async getApplicableEquipmentIds()
         {
             this.getApplicableIds = await RestAPI.ApplicableEquipments(this.ParentEquipment_ID);
-            // this.getApplicableIds = JSON.parse(this.getApplicableIds.data)
-            // console.log(this.getApplicableIds.data)
-            // this.getApplicableIds = JSON.parse(this.getApplicableIds.data)
         }
     },
     updated(){
-        // console.log(this.ChildrenEquipment)
     },
     created(){
         if(!isNaN(this.MyEquipHeight)){
             this.tempEquipHeight = this.MyEquipHeight + 'px';
         }else{
             //default Value
-            this.tempEquipHeight = '300px';
+            this.tempEquipHeight = '100px';
         }
         if(!isNaN(this.MyEquipWidth)){
             this.tempEquipWidth = this.MyEquipWidth + 'px';
         }else{
             //default Value
-            this.tempEquipWidth = '300px';
+            this.tempEquipWidth = '100px';
         }
         if(!isNaN(this.MyEquipLeftPosition)){
             this.tempEquipLeftPosition = this.MyEquipLeftPosition + 'px';
         }else{
             //default Value
-            this.tempEquipLeftPosition = '300px';
+            // this.tempEquipLeftPosition = '300px';
         }
         this.TempEquipment_ID = localStorage.getItem('equipmentId')
-        // console.log(this.ParentEquipment_ID)
     },
     mounted(){
     }

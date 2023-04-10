@@ -49,7 +49,6 @@ export default {
             deep: true,
             handler(val){
                 this.tempApplicableIds = JSON.parse(val)
-                console.log(this.tempApplicableIds)
             }
         }
     },
@@ -58,13 +57,12 @@ export default {
     methods:
     {
         closeModal(e){
-            //this.Modal = document.getElementById('EquipmentModal');
-            //this.Modal.style.display = "none";
             this.ModalStyle = 'none';
             this.$emit('BoolModal', e);
         },
         async AddEquipment(ParentEquipmentId, ChildEquipmentId){
             this.tempUserID = localStorage.getItem('userID')
+            console.log(this.tempUserID)
             this.GetTempEquipmentResult = await RestAPI.AddEquipment(ParentEquipmentId, ChildEquipmentId, this.tempUserID);
             var x = document.getElementById("snackbar");
             x.className = "show";
@@ -78,7 +76,6 @@ export default {
 
     },
     created(){
-        //this.ParentEquipmentId = '123'
     }
 }
 </script>
