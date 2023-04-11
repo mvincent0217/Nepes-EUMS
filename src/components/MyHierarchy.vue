@@ -304,7 +304,7 @@ export default {
             <Navbar/>
             <br>
             <br>
-            <a href="/dashboard#/dashboard">Back</a>
+            <!-- <a href="/dashboard#/dashboard">Back</a> -->
                     <div v-if="!BoolLoad">
                         <Loading />
                     </div>
