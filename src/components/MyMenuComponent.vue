@@ -40,7 +40,7 @@ export default {
 </script>
 
 <template>
-     <div class="main-menu">
+     <div v-bind:class="{ 'main-menu': !localStorage.getItem('isEditing') }">
         <ul class="menu-list">
             <div v-if="userCanAddEquipment">
             <li v-if="Equipment_ID == 'EMPTY'"><a href="#">Add ▼</a>

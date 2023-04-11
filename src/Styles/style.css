@@ -234,7 +234,7 @@ ol {
     height: var(--heightEquipment);
     border-radius: 20px;
     background: white;
-    /* left: var(--leftPositionEquipment); */
+    left: var(--leftPositionEquipment);
     position: relative;
     padding: 1.8rem;
     padding: 20px 5px 0 5px;

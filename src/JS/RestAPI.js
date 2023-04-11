@@ -38,3 +38,23 @@ export async function ApplicableEquipments(parentEquipmentID){
     var res = await axios.post("http://hayyim-breach:8005/api/EUMS/GetApplicableEquipmentIDs?parentEquipmentID=" + parentEquipmentID);
     return res;
 }
+
+export async function GetAllActiveSessions(){
+    var res = await axios.post("http://hayyim-breach:8005/api/EUMS/GetAllActiveSessions?userID=*");
+    return res;
+}
+
+export async function AddSession(userID, sessionID, expiryDate){
+    var res = await axios.post("http://hayyim-breach:8005/api/EUMS/AddSession?userID=" + userID + "&sessionID=" + sessionID + "&expiryDate=" + expiryDate);
+    return res;
+}
+
+export async function UpdateSession(userID, expiryDate){
+    var res = await axios.post("http://hayyim-breach:8005/api/EUMS/UpdateSession?userID=" + userID + "&expiryDate=" + expiryDate);
+    return res;
+}
+
+export async function DeleteSession(userID){
+    var res = await axios.post("http://hayyim-breach:8005/api/EUMS/DeleteSession?userID=" + userID );
+    return res;
+}

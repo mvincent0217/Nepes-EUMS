@@ -20,6 +20,9 @@ export default {
             MyEquipmentWidth: 0,
             MyEquipmentLeftPosition: 0,
             tempColor: '',
+            timeoutId: null, // Store the timeout ID,
+            
+       
             GroupObjectPerLevel: {}
         }
     },
@@ -143,7 +146,7 @@ export default {
                 }
                 object["MyEquipmentHeight"] = 150;
                 object["MyEquipmentWidth"] = 200;
-                object["MyEquipmentLeftPosition"] = 300;
+                object["MyEquipmentLeftPosition"] = 50;
                 object["MyModalTrigger"] = 'MyModal';
         },
         async ReSummarizeEquipmentObject(object) {
@@ -217,14 +220,82 @@ export default {
             }
             return roots
         },
-        async ChildCount(){
+         mounted() {
+ 
+        },
 
+        async DeleteSession() {
+        this.userID = localStorage.getItem('userID');
+        this.DeleteSessionResult = await RestAPI.DeleteSession(this.userID);
+        console.log('Session deleted.'); // Placeholder for the actual logic to delete the session
+        localStorage.setItem('isAuthenticated', 'false');
+       // Check if the current route is not already the root path
+        if (this.$route.path !== '/') {
+            this.$router.push('/');
+        }
+        },
+        
+        async callGetAllActiveSessions() {
+        this.userID = localStorage.getItem('userID');
+        this.GetAllActiveSessionsResult = await RestAPI.GetAllActiveSessions();
+        const parsedData = JSON.parse(this.GetAllActiveSessionsResult.data);
+        // console.log(parsedData);
+        // Check if parsedData is empty
+        if (Object.keys(parsedData).length === 0) {
+            console.log("No Active Session");
+        } else {
+            console.log("Active Users");
+            // Iterate over parsedData object
+            for (const key in parsedData) {
+                if (parsedData.hasOwnProperty(key)) {
+                    console.log("User_ID: " + parsedData[key].User_ID);
+                    console.log("Session_ID: " + parsedData[key].Session_ID);
+                    // Check if Session_ID contains localStorage.getItem('equipmentId')
+                    if (parsedData[key].Session_ID.includes(localStorage.getItem('equipmentId'))) {
+                        
+                        if(parsedData[key].Session_ID == localStorage.getItem('sessionID')){
+                        localStorage.setItem('isEditing', 'false');
+                        }
+                        else{
+                            localStorage.setItem('isEditing', 'true');
+                            alert("Someone is Editing " + localStorage.getItem('equipmentId'));
+                        }
+                    }
+                       
+                }
+            }
         }
     },
-    created(){
+
+        
+
+    },
+        created() {
         this.GetEquipmentID();
-        console.log(this.arrAllEquipments)
-    }
+        this.callGetAllActiveSessions();
+
+        let timeoutId; // Variable to store the timeout ID
+
+        this.userID = 'crsc'; // Define userID before event listeners
+        this.GetAllActiveSessionsResult = null; // Initialize GetAllActiveSessionsResult
+
+        // Function to reset the timeout when the mouse is moved
+        const resetTimeout = () => {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+            this.DeleteSession(); // Use arrow function to preserve the scope of 'this'
+            }, 300000); // 5 minutes
+        }
+
+        // Add event listeners for mousemove and touchmove
+        document.addEventListener('mousemove', resetTimeout);
+        document.addEventListener('touchmove', resetTimeout);
+
+      
+
+
+},
+            
 }
 </script>
 <template>
