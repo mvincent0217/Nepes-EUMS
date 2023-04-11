@@ -55,8 +55,8 @@ export default {
       <div class="alignNavbarBtn">
         <button class="LogoutBtn" @click="logout">Logout</button>
       </div>
-      <a href="/#/dashboard">Dashboard</a>
-      <a href="/#/settings">Settings</a>
+      <a href="/#/dashboard" @click="DeleteSession">Dashboard</a>
+      <a href="/#/settings" @click="DeleteSession">Settings</a>
       <button class="LogoutBtn" @click="logout">Logout</button>
     </div>
     <div id="main1" :style="{ '--bgcolorNav': bgColor }" class="ClassNavbarcolor1">
