@@ -40,11 +40,12 @@ export default {
 </script>
 
 <template>
-     <div v-bind:class="{ 'main-menu': !localStorage.getItem('isEditing') }">
-        <ul class="menu-list">
+     <!-- <div v-bind:class="{ 'main-menu': ! localStorage.getItem('isEditing') }"> -->
+    <div>
+        <ul class="main-menu">
             <div v-if="userCanAddEquipment">
             <li v-if="Equipment_ID == 'EMPTY'"><a href="#">Add ▼</a>
-                <ul class="menu-list">
+                <ul class="main-menu">
                     <li @click="EmitPopUpModal()"><a class ="OptionColor" href="#">Add Item</a></li>
                 </ul>
             </li>
@@ -52,4 +53,5 @@ export default {
             <li class ="OptionColor" v-if="Classification == 'Component' && userCanDeleteEquipment" v-on:click="emitDeleteEquipment(Equipment_ID,ParentEquipment_ID)"><a href="#">Delete</a></li> 
         </ul>
     </div>
+    <!-- </div> -->
 </template>

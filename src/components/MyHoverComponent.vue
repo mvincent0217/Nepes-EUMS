@@ -56,6 +56,16 @@ export default {
         }
     },
     created(){
+        this.TempUsage_Last_Repair_Timestamp = this.EquipmentUsage['AMP-MIN']?.Last_Repair_TimeStamp;
+        if(this.TempUsage_Last_Repair_Timestamp === undefined){
+            this.TempUsage_Last_Repair_Timestamp = 'None';
+        } else if(this.TempUsage_Last_Repair_Timestamp === null){
+            this.TempUsage_Last_Repair_Timestamp = 'None';
+        } else if(this.TempUsage_Last_Repair_Timestamp == ''){
+            this.TempUsage_Last_Repair_Timestamp = 'None';
+        } else {
+            this.TempUsage_Last_Repair_Timestamp = moment(this.TempUsage_Last_Repair_Timestamp).format('MMM DD YYYY hh:mmA');
+        }
     }
 }
 </script>
@@ -93,7 +103,7 @@ export default {
             </tr>
             <tr>
                 <td>Last Repair Timestamp</td>
-                <td>{{ (null ?? moment(EquipmentUsage['AMP-MIN']?.Last_Repair_TimeStamp).format('MMM DD YYYY hh:mmA')) || 'None'}}</td>
+                <td>{{ this.TempUsage_Last_Repair_Timestamp }}</td>
             </tr>
         </table>
 </template>
