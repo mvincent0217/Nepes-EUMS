@@ -62,13 +62,12 @@ export default {
         },
         async AddEquipment(ParentEquipmentId, ChildEquipmentId){
             this.tempUserID = localStorage.getItem('userID')
-            console.log(this.tempUserID)
             this.GetTempEquipmentResult = await RestAPI.AddEquipment(ParentEquipmentId, ChildEquipmentId, this.tempUserID);
             var x = document.getElementById("snackbar");
             x.className = "show";
             setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
             this.ModalStyle = "none";
-            this.$router.push('/hierarchy');
+            // location.reload();
         },
         CancelEquipment(){
             this.ModalStyle = 'none'

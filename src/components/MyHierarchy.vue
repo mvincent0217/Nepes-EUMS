@@ -44,7 +44,7 @@ export default {
             var arLevelTemp = [];
             arLevelTemp.push(this.GetTempEquipmentResult);
             this.GroupObjectPerLevel['Level_0'] = arLevelTemp;
-            var object = await this.ReSummarizeEquipmentObject(this.GetTempEquipmentResult)
+            var object = await this.ReSummarizeEquipmentObject(this.GetTempEquipmentResult, 0)
             var obj = await this.ReSummarizeEquipmentChildObject();
             var tempobj = await this.buildHierarchy(this.arrAllEquipments)
             //console.log(tempobj)
@@ -148,6 +148,8 @@ export default {
                 object["MyEquipmentWidth"] = 200;
                 object["MyEquipmentLeftPosition"] = 50;
                 object["MyModalTrigger"] = 'MyModal';
+                object["MyScreenWidthSize"] = screen.width;
+                object["MyScreenHeightSize"] = screen.height;
         },
         async ReSummarizeEquipmentObject(object) {
             //Push to Array
@@ -191,6 +193,15 @@ export default {
                 {
                 }
                 object.ChildrenEquipment[Childkey]["LastEquipment"] = bLastEquipment;
+
+                if(object.ChildrenEquipment[Childkey]["level"] == 0){
+                    var arrPositionTemp = [];
+                    object.ChildEquipment["MyEquipmentLeftPosition"] = screen.width/iChildCount;
+                    arrPositionTemp = object["MyEquipmentLeftPosition"];
+                    // arrPositionTemp.push(object.ChildEquipment[Childkey]);
+                    console.log(arrPositionTemp)
+                }
+
                 //call itself to check the next children equipment
                 await this.ReSummarizeEquipmentObject(object.ChildrenEquipment[Childkey]);
             }
