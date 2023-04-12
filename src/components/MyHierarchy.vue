@@ -241,10 +241,7 @@ export default {
         const parsedData = JSON.parse(this.GetAllActiveSessionsResult.data);
         // console.log(parsedData);
         // Check if parsedData is empty
-        if (Object.keys(parsedData).length === 0) {
-            console.log("No Active Session");
-        } else {
-            console.log("Active Users");
+            // console.log("Active Users");
             // Iterate over parsedData object
             for (const key in parsedData) {
                 if (parsedData.hasOwnProperty(key)) {
@@ -264,7 +261,7 @@ export default {
                        
                 }
             }
-        }
+        
     },
 
         

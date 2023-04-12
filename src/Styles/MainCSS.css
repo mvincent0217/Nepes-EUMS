@@ -391,71 +391,12 @@ svg {
 /* Loadig---------------- */
 
 /* Notification ------------- */
-
-.notification {
-  position: unset;
-  display:inline-block;
-  font-size: large;
-  width: 5px;
-  height: 5px;
-
-}
-
-.notification-header {
-  background-color: transparent;
-  cursor: pointer;
-}
-
-.notification-dropdown {
-  position: absolute;
-  /* top: 100%; */
-  right: 0px;
-  z-index: 1;
-  display: none;
-  background-color: white;
-  border-radius: 5px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  font-size:medium;
-}
-
-.notification-dropdown ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 10px;
-}
-
-.notification-dropdown li {
-  padding: 5px;
-  cursor: pointer;
-}
-
-.notification:hover .notification-dropdown {
-  display: block;
-}
-
 .notification-position {
   position: absolute;
   top: 30px;
   right: 70px;
 }
 
-.notification .badge {
-  position: absolute;
-  top: -4px;
-  right: -30px;
-  padding: 5px 10px;
-  border-radius: 50%;
-  background: red;
-  color: white;
-  font-size: small;
-}
-
-.notifBtn{
-  background-color: transparent;
-  border: transparent;
-  height: 50px;
-  right: 40px;
-}
 /* Notification ------------- */
 
 /* Settings ----------------- */

@@ -1,52 +1,82 @@
 <script>
 import * as RestAPI from '@/JS/RestAPI.js';
 export default {
-    data() {
-        return {
-          UserID:  localStorage.getItem('userID'),
-          EquipmentID: localStorage.getItem('equipmentId')
+  data() {
+    return {
+      showModal: false,
+      activeUsers: []
+    };
+  },
+  methods: {
+    async callGetAllActiveSessions() {
+      this.userID = localStorage.getItem('userID');
+      this.GetAllActiveSessionsResult = await RestAPI.GetAllActiveSessions();
+      const parsedData = JSON.parse(this.GetAllActiveSessionsResult.data);
+      // Check if parsedData is empty
+        // Iterate over parsedData object
+        const users = [];
+        for (const key in parsedData) {
+          const sessionID = parsedData[key].Session_ID;
+          const index = sessionID.indexOf('_');
+          const substring = index === -1 ? sessionID : sessionID.substring(index + 1);
+          users.push({
+            userID: parsedData[key].User_ID,
+            sessionID: substring
+          });
         }
+        this.activeUsers = users;
     },
-    methods:{
-      async callGetAllActiveSessions() {
-        this.userID = localStorage.getItem('userID');
-        this.GetAllActiveSessionsResult = await RestAPI.GetAllActiveSessions();
-        const parsedData = JSON.parse(this.GetAllActiveSessionsResult.data);
-        // console.log(parsedData);
-        // Check if parsedData is empty
-        if (Object.keys(parsedData).length === 0) {
-            console.log("No Active Session");
-        } else {
-            console.log("Active Users");
-            // Iterate over parsedData object
-            for (const key in parsedData) {
-                    console.log("User_ID: " + parsedData[key].User_ID);
-
-                    const sessionID = parsedData[key].Session_ID;
-                    const index = sessionID.indexOf('_');
-                    const substring = index === -1 ? sessionID : sessionID.substring(index + 1);
-                    console.log(substring);
-            }
-        }
-    },
-    },
-    created(){
-
-      this.callGetAllActiveSessions()
-    }
-}
+  },
+  created() {
+    this.callGetAllActiveSessions();
+  },
+};
 </script>
+
 <template>
-    <div class="notification">
-  <div class="notification-header">
-    <button class="notifBtn">🔔</button>
-     <span class="badge">3</span>
-    <span class="arrow"></span>
+  <div>
+    <button @click="showModal = true">View Active Sessions</button>
+    <div v-if="showModal" class="modal">
+      <div class="modal-content">
+        <span @click="showModal = false" class="close">&times;</span>
+        <ul>
+          <li v-for="(user, index) in activeUsers" :key="index">
+            {{ user.userID }}, is using {{ user.sessionID }}
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
-  <div class="notification-dropdown">
-    <ul>
-      <li>{{ UserID }} is editing {{ EquipmentID }}</li>
-    </ul>
-  </div>
-</div>
 </template>
+
+<style>
+.modal {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  position: fixed;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 4px;
+  position: relative;
+  width: 400px;
+  bottom: 300px;
+  left: 450px;
+
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+}
+</style>
