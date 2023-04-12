@@ -35,7 +35,7 @@ export default {
 
 <template>
   <div>
-    <button @click="showModal = true">View Active Sessions</button>
+    <button class="NotificationBtn" @click="showModal = true">View Active Sessions</button>
     <div v-if="showModal" class="modal">
       <div class="modal-content">
         <span @click="showModal = false" class="close">&times;</span>
@@ -66,7 +66,7 @@ export default {
   border-radius: 4px;
   position: relative;
   width: 400px;
-  bottom: 300px;
+  bottom: 335px;
   left: 450px;
 
 }

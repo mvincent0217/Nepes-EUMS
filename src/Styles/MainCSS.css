@@ -397,6 +397,16 @@ svg {
   right: 70px;
 }
 
+.NotificationBtn{
+  height: 30px;
+  background-color: #0077ff;
+  box-shadow: none;
+  border: transparent;
+  border-radius: 7px;
+  color: white;
+}
+
+
 /* Notification ------------- */
 
 /* Settings ----------------- */
