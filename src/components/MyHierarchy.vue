@@ -48,7 +48,7 @@ export default {
             var obj = await this.ReSummarizeEquipmentChildObject();
             var tempobj = await this.buildHierarchy(this.arrAllEquipments)
             //console.log(tempobj)
-            console.log(this.GroupObjectPerLevel);
+            // console.log(this.GroupObjectPerLevel);
             this.BoolLoad = true
 
             // Get the sessionId value from the localStorage
@@ -250,16 +250,16 @@ export default {
                 if (parsedData.hasOwnProperty(key)) {
                     console.log("User_ID: " + parsedData[key].User_ID);
                     console.log("Session_ID: " + parsedData[key].Session_ID);
+                    // console.log(parsedData[key].Session_ID + ' and ' + localStorage.getItem('sessionID'))
                     // Check if Session_ID contains localStorage.getItem('equipmentId')
-                    if (parsedData[key].Session_ID.includes(localStorage.getItem('equipmentId'))) {
-                        
-                        if(parsedData[key].Session_ID == localStorage.getItem('sessionID')){
-                        localStorage.setItem('isEditing', 'false');
-                        }
-                        else{
-                            localStorage.setItem('isEditing', 'true');
+                    if (parsedData[key].Session_ID.includes(localStorage.getItem('equipmentId')) && localStorage.getItem('userID') !== parsedData[key].User_ID) {
+                            localStorage.setItem('isEditing', 'false');
                             alert("Someone is Editing " + localStorage.getItem('equipmentId'));
-                        }
+                            console.log('false')
+                    }
+                    else if (!parsedData[key].Session_ID.includes(localStorage.getItem('equipmentId'))){
+                        localStorage.setItem('isEditing', 'true');
+                        console.log('true')
                     }
                        
                 }
@@ -276,7 +276,7 @@ export default {
 
         let timeoutId; // Variable to store the timeout ID
 
-        this.userID = 'crsc'; // Define userID before event listeners
+        this.userID = ''; // Define userID before event listeners
         this.GetAllActiveSessionsResult = null; // Initialize GetAllActiveSessionsResult
 
         // Function to reset the timeout when the mouse is moved
