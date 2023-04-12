@@ -412,7 +412,7 @@ svg {
 /* Settings ----------------- */
 .Formcard {
   width: 350px;
-  height: 120px;
+  height: 160px;
   border-radius: 20px;
   background: whitesmoke;
   position: relative;
@@ -425,13 +425,13 @@ svg {
  align-items: center;
  text-align: center;
  position: fixed;
- top: 50%;
+ top: 55%;
  left: 50%;
  transform: translate(-50%, -50%);
  }
  .Settingsdropdown{
   width: 150px;
-  height: 27px;
+  height: 30px;
   border-radius: 20px;
  }
  .Settingsdropdown-dropdown {
