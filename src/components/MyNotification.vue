@@ -27,7 +27,14 @@ export default {
         this.activeUsers = users;
     },
 
-    Toast() {
+    async Toast() {
+  // If activeUsers array is empty, show loading and call API to get active sessions
+  if (this.activeUsers.length === 0) {
+    this.$refs.loading.showLoading(); // Show loading
+    await this.callGetAllActiveSessions(); // Call API to get active sessions
+    this.$refs.loading.hideLoading(); // Hide loading
+  }
+
   const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -40,28 +47,36 @@ export default {
     }
   })
 
-  // Create the HTML content for the table
-  let tableHtml = `
-    <div style="width:100%">
-    <table style="width:100%; table-layout:fixed;">
-      <thead>
-        <tr>
-        </tr>
-      </thead>
-      <tbody>
-  `
-  for (const user of this.activeUsers) {
-    tableHtml += `
-      <tr>
-        <td style="font-size: 14px; width:50%">${user.userID} is using ${user.sessionID}</td>
-      </tr>
+  let tableHtml = '';
+
+  if (this.activeUsers.length > 0) {
+    tableHtml = `
+      <div style="width:100%">
+        <table style="width:100%; table-layout:fixed;">
+          <thead>
+            <tr>
+            </tr>
+          </thead>
+          <tbody>
     `
+
+    for (const user of this.activeUsers) {
+      tableHtml += `
+        <tr>
+          <td style="font-size: 14px; width:50%">${user.userID} is using ${user.sessionID}</td>
+        </tr>
+      `
+    }
+    
+    tableHtml += `
+          </tbody>
+        </table>
+      </div>
+    `
+  } else {
+    // Show message when no active users found
+    tableHtml = '<div>No active sessions found</div>';
   }
-  tableHtml += `
-      </tbody>
-    </table>
-    </div>
-  `
 
   Toast.fire({
     title: 'Active Users',
