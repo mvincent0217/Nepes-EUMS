@@ -1,19 +1,19 @@
 <script>
+import Swal from 'sweetalert2'
 import * as RestAPI from '@/JS/RestAPI.js';
 export default {
   data() {
     return {
       showModal: false,
-      activeUsers: []
+      activeUsers: [],
+      TempuserID: '',
+      TempEquipmentID: '',
     };
   },
   methods: {
     async callGetAllActiveSessions() {
-      this.userID = localStorage.getItem('userID');
       this.GetAllActiveSessionsResult = await RestAPI.GetAllActiveSessions();
       const parsedData = JSON.parse(this.GetAllActiveSessionsResult.data);
-      // Check if parsedData is empty
-        // Iterate over parsedData object
         const users = [];
         for (const key in parsedData) {
           const sessionID = parsedData[key].Session_ID;
@@ -26,6 +26,52 @@ export default {
         }
         this.activeUsers = users;
     },
+
+    Toast() {
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+  })
+
+  // Create the HTML content for the table
+  let tableHtml = `
+    <div style="width:100%">
+    <table style="width:100%; table-layout:fixed;">
+      <thead>
+        <tr>
+        </tr>
+      </thead>
+      <tbody>
+  `
+  for (const user of this.activeUsers) {
+    tableHtml += `
+      <tr>
+        <td style="font-size: 14px; width:50%">${user.userID} is using ${user.sessionID}</td>
+      </tr>
+    `
+  }
+  tableHtml += `
+      </tbody>
+    </table>
+    </div>
+  `
+
+  Toast.fire({
+    title: 'Active Users',
+    html: tableHtml,
+    customClass: {
+      table: 'table-class',
+      container: 'container-class'
+    }
+  })
+},
   },
   created() {
     this.callGetAllActiveSessions();
@@ -35,48 +81,6 @@ export default {
 
 <template>
   <div>
-    <button class="NotificationBtn" @click="showModal = true">View Active Sessions</button>
-    <div v-if="showModal" class="modal">
-      <div class="modal-content">
-        <span @click="showModal = false" class="close">&times;</span>
-        <ul>
-          <li v-for="(user, index) in activeUsers" :key="index">
-            {{ user.userID }}, is using {{ user.sessionID }}
-          </li>
-        </ul>
-      </div>
-    </div>
+    <button class="NotificationBtn" @click="Toast">View Active Sessions</button>
   </div>
 </template>
-
-<style>
-.modal {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  position: fixed;
-}
-
-.modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 4px;
-  position: relative;
-  width: 400px;
-  bottom: 335px;
-  left: 450px;
-
-}
-
-.close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 30px;
-  font-weight: bold;
-  cursor: pointer;
-}
-</style>

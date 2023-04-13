@@ -1,5 +1,6 @@
 <script>
 /* eslint-disable */
+import Swal from 'sweetalert2'
 import  Navbar from './MyNavigationBar.vue';
 import MyGroupEquipmentComponent from './MyGroupEquipmentComponent.vue';
 import MyEquipmentComponent from './MyEquipmentComponent.vue';
@@ -251,7 +252,7 @@ export default {
                     // Check if Session_ID contains localStorage.getItem('equipmentId')
                     if (parsedData[key].Session_ID.includes(localStorage.getItem('equipmentId')) && localStorage.getItem('userID') !== parsedData[key].User_ID) {
                             localStorage.setItem('isEditing', 'false');
-                            alert("Someone is Editing " + localStorage.getItem('equipmentId'));
+                            Swal.fire('Someone is Editing ' +  localStorage.getItem('equipmentId'))
                             console.log('false')
                     }
                     else if (!parsedData[key].Session_ID.includes(localStorage.getItem('equipmentId'))){
