@@ -47,7 +47,11 @@
 
 
 /* NavbarColor ------------------------------- */
-.ClassNavbarcolor1 {background-color: var(--bgcolorNav);}
+.ClassNavbarcolor1 {
+  background-color: var(--bgcolorNav);
+  width: 108%
+}
+
 /* NavbarColor ------------------------------- */
 
 
