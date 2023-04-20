@@ -17,6 +17,7 @@ export default {
             tempEquipHeight: null,
             tempEquipWidth: null,
             tempEquipLeftPosition: null,
+            tempEquipTopPosition: null,
 
             tempEquipMES_State: '',
             iCount: 0,
@@ -44,6 +45,8 @@ export default {
         MyEquipWidth: Number,
         MyEquipLeftPosition: Number,
         MyEquipColor: String,
+        MyEquipTopPosition: Number,
+        MyEquipOpacity: Number,
     },
     components:{
         MyEquipmentModal,
@@ -109,11 +112,18 @@ export default {
             this.tempEquipWidth = '100px';
         }
         if(!isNaN(this.MyEquipLeftPosition)){
-            this.tempEquipLeftPosition = this.MyEquipLeftPosition + 'px';
-        }else{
+            this.tempEquipLeftPosition = this.MyEquipLeftPosition;// + 'px';
+        } else{
             //default Value
             // this.tempEquipLeftPosition = '300px';
         }
+        if(!isNaN(this.MyEquipTopPosition)){
+            this.tempEquipTopPosition = this.MyEquipTopPosition;// + 'px';
+        }else{
+            
+        }
+        //console.log('qwe')
+        //console.log(this.tempEquipTopPosition)
         this.TempEquipment_ID = localStorage.getItem('equipmentId')
     },
     mounted(){
@@ -121,18 +131,20 @@ export default {
 }
 </script>
 <template>
-    <div>
+    <span>
         <div class="Equipment tooltip"
         :style="{
                 '--heightEquipment':this.tempEquipHeight,
                 '--widthEquipment': this.tempEquipWidth,
-                '--leftPositionEquipment': this.tempEquipLeftPosition,
+                '--leftPositionEquipment': this.tempEquipLeftPosition+'px',
                 '--bgColorEquipment': this.MyEquipColor || 'white',
+                '--topPositionEquipment': this.MyEquipTopPosition +'px',
+                '--opacityEquipment': this.MyEquipOpacity,
                 }">
              <!-- <span v-if="this.Classification == 'Component'" @click.prevent="DeleteEquip(Equipment_ID,ParentEquipment_ID)" class="close">&times;</span> -->
-             <a v-if="ParentEquipment_ID" @click="toggle" class="equipmentMenu tooltip">&#9776;</a>
+             <a v-if="Equipment_ID != ''" @click="toggle" class="equipmentMenu tooltip">&#9776;</a>
                 <label class="EquipTitle"><b><center>{{ Equipment_ID }}</center></b></label>
-                <span class="tooltiptext" v-if="Equipment_ID != 'EMPTY'">
+                <span class="tooltiptext" v-if="Equipment_ID != '' && Equipment_ID != 'EMPTY'">
                     <MyHoverComponent
                         :Equipment_Model="Equipment_Model"
                         :MES_State="MES_State"
@@ -159,5 +171,5 @@ export default {
             :LoadModal="ShowModal"
             :ApplicableIds="getApplicableIds.data"
             />
-    </div>
+    </span>
 </template>

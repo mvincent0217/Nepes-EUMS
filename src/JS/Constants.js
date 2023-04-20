@@ -7,3 +7,7 @@ export const States = {
     _Ongoing_Repair: "ONGOING-REPAIR",
     _Scrapped:  "SCRAPPED"
 }
+export const EquipmentObject = {
+    _Equipment_Id: "Equipment_ID",
+    _Equipment_States: "EquipmentState"
+}

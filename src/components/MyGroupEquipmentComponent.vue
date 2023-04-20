@@ -29,7 +29,9 @@ export default {
         MyGrpEquipHeight: Number,
         MyGrpEquipWidth: Number,
         MyGrpEquipLeftPosition: Number,
+        MyGrpEquipTopPosition: Number,
         MyGrpEquipColor: String,
+        MyGrpEquipOpacity: Number,
     },
     watch: {
     },
@@ -44,8 +46,6 @@ export default {
 }
 </script>
 <template>
-    <div>
-        <div>
             <MyEquipmentComponent 
                 v-on="$listeners"
                 :Equipment_ID="Equipment_ID"
@@ -61,11 +61,11 @@ export default {
                 :MyEquipHeight="MyGrpEquipHeight"
                 :MyEquipWidth="MyGrpEquipWidth"
                 :MyEquipLeftPosition="MyGrpEquipLeftPosition"
+                :MyEquipTopPosition="MyGrpEquipTopPosition"
                 :MyEquipColor="MyGrpEquipColor"
+                :MyEquipOpacity="MyGrpEquipOpacity"
                 :MyModalId="MyModalTrigger"
                 :ParentEquipment_ID="ParentEquip_ID"
                 :EquipmentLevel="EquipmentLevel"
             />
-        </div>
-    </div>
 </template>
