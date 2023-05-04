@@ -43,37 +43,15 @@
     padding: 1.8rem;
     padding: 20px 5px 0 5px;
     transition: 0.5s ease-out;
-    overflow: visible;
+    overflow-y: visible;
     display: flex;
+    float: left;
+
   
-    /* display: inline-block;
-    clear: left; */
+    /* display: inline-block; */
+    clear: both;
     /* flex-wrap: wrap;
     flex-direction: row; */
-    /* float: left; */
-}
-.MainDiv{
-  width: auto;
-  height: auto;
-  border-radius: 20px;
-  background: white;
-  left: var(--leftPositionEquipment);
-  top: var(--topPositionEquipment);
-  border: var(--bgColorEquipment);
-
-  margin: 10px 10px 10px 10px;
-  position: absolute;    
-  padding: 1.8rem;
-  padding: 20px 5px 0 5px;
-  transition: 0.5s ease-out;
-  overflow: visible;
-  display: flex;
-
-  /* display: inline-block;
-  clear: left; */
-  /* flex-wrap: wrap;
-  flex-direction: row; */
-  /* float: left; */
 }
 /* .Equipment::before,.Equipment::after{
   content: '';
@@ -324,7 +302,7 @@
       display: block;
       color: #ddd;
       text-decoration: none;
-      background: #21263E;
+      background: black;
     }
     
     .main-menu ul li ul {

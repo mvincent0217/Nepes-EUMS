@@ -144,7 +144,7 @@ export default {
              <!-- <span v-if="this.Classification == 'Component'" @click.prevent="DeleteEquip(Equipment_ID,ParentEquipment_ID)" class="close">&times;</span> -->
              <a v-if="Equipment_ID != ''" @click="toggle" class="equipmentMenu tooltip">&#9776;</a>
                 <label class="EquipTitle"><b><center>{{ Equipment_ID }}</center></b></label>
-                <span class="tooltiptext" v-if="Equipment_ID != '' && Equipment_ID != 'EMPTY'">
+                <span class="tooltiptext" v-if="Equipment_ID != '' && Equipment_ID != 'Empty'">
                     <MyHoverComponent
                         :Equipment_Model="Equipment_Model"
                         :MES_State="MES_State"

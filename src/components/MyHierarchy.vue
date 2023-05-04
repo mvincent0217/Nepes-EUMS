@@ -6,6 +6,9 @@ import MyEquipmentComponent from './MyEquipmentComponent.vue';
 import Loading from './MyLoading.vue';
 import * as RestAPI from '@/JS/RestAPI.js';
 import { States } from '@/JS/Constants.js';
+import { Equipment } from '@/classes/Equipment.js';
+import { EquipmentConfig } from '@/classes/EquipmentConfig.js';
+import { EquipmentUsage } from '@/classes/EquipmentUsage.js';
 
 export default {
     data() {
@@ -30,6 +33,15 @@ export default {
             GroupObjectPerLevel: {},
             ParentIndex: {},
             oParentPosition:{},
+            maximumRow: 0,
+            maximumColumn: 0,
+            minimumColumn: 0,
+            arr: [],
+            Dictionary: [],
+            dataReady: false,
+            EmptyChild: {},
+            EmptyCount: 0,
+            EmptyKey:{},
         }
     },
     
@@ -46,11 +58,20 @@ export default {
             this.GetTempEquipmentID = equipmentId;
             this.GetTempEquipmentResult = await RestAPI.GetEquipmentID(this.GetTempEquipmentID);
             this.GetTempEquipmentResult = JSON.parse(this.GetTempEquipmentResult.data);
+
+            // console.log(this.GetTempEquipmentResult)
+            // this.dictionary = this.GetTempEquipmentResult.Equipment_ID
+            // console.log(this.dictionary)
+
+            await this.testFunction(this.GetTempEquipmentResult);
+
+
             this.GetTempEquipmentResult['level'] = this.level;
             var object = await this.ReSummarizeEquipmentObject(this.GetTempEquipmentResult)
-
-            //#region 
+            console.log(object);
             var oParent = {};
+
+            console.log(this.arrAllEquipments);
             this.GroupObjectPerLevel = {};
             for (var iEq = 0; iEq<this.arrAllEquipments.length; iEq++){
                 var oEq = {};
@@ -59,15 +80,111 @@ export default {
                 var iLevel = oEq['level'];
 
                     //PLT TO M
+                    // if(null==this.GroupObjectPerLevel[iLevel]){
+                    //     var arEq = [];
+                    //     arEq.push(oEq);
+                    //     this.GroupObjectPerLevel[iLevel] = arEq;
+                    // }else{
+                    //     var arEq = [];
+                    //     arEq = this.GroupObjectPerLevel[iLevel];
+                    //     arEq.push(oEq);
+                    // }
+                    //level * heightbox + fixedposition
+                    
+                    if(this.EmptyChild[oEq.Equipment_ID] != undefined)
+                            {
+                                var tempEmpty = {};
+                                if(null != this.GroupObjectPerLevel[iLevel+1])
+                                {
+                                    tempEmpty = this.GroupObjectPerLevel[iLevel+1];
+                                }
+                                var emptyCount = this.EmptyChild[oEq.Equipment_ID];
+                                for(var i = 1; i <= emptyCount; i++ )
+                                {
+                                    this.EmptyCount++;
+                                    var EmptyEqpID = 'Empty_'+ oEq.Equipment_ID + '_' + i;
+                                    var EmptyEquipment2 = new Equipment();
+                                    EmptyEquipment2.Equipment_ID = 'Empty';
+                                    EmptyEquipment2.Productivity_State = '';
+                                    EmptyEquipment2.level = iLevel + 1;
+                                    EmptyEquipment2.ParentEquipmentID = oEq.Equipment_ID;
+                                    var tempEq = EmptyEquipment2.toJSON();
+                                    this.AddStyles(tempEq);
+                                    tempEmpty[EmptyEqpID] = EmptyEquipment2.toJSON(tempEq);
+                                    this.GroupObjectPerLevel[iLevel + 1] = tempEmpty;
+                                }
+                            }
+
                     if(null==this.GroupObjectPerLevel[iLevel]){
-                        var arEq = [];
-                        arEq.push(oEq);
-                        this.GroupObjectPerLevel[iLevel] = arEq;
+                            //PLT
+                            var arEq = {};
+                            arEq[oEq.Equipment_ID] = oEq; 
+                            
+                            //EMPTY
+                            // var EmptyEquipment = new Equipment();
+                            // EmptyEquipment.Equipment_ID = 'Empty';
+                            // EmptyEquipment.Productivity_State = '';
+                            // EmptyEquipment.level = iLevel;
+                            // EmptyEquipment.ParentEquipment_ID = oEq.Equipment_ID;
+                            // var tempEq = EmptyEquipment.toJSON();
+                            // this.AddStyles(tempEq);
+                            // arEq['Empty'] = EmptyEquipment.toJSON(tempEq);
+                            // var count = Object.keys(this.EmptyChild).length
+                            // for(var key in this.EmptyChild){
+                            //     if(oEq.Equipment_ID == key){
+                            //         console.log(oEq.Equipment_ID)
+                            //         for(var x = 0; x < count; x++){
+                            //             console.log('qwe')
+                            //             var EmptyEquipment2 = new Equipment();
+                            //             EmptyEquipment2.Equipment_ID = 'Empty';
+                            //             EmptyEquipment2.Productivity_State = '';
+                            //             EmptyEquipment2.level = iLevel;
+                            //             EmptyEquipment2.ParentEquipment_ID = key;
+                            //             var tempEq = EmptyEquipment2.toJSON();
+                            //             this.AddStyles(tempEq);
+                            //             arEq['Empty'] = EmptyEquipment2.toJSON(tempEq);
+
+                            //         }  
+                            //     }
+                            // }
+                            
+                            
+                            
+                            //INVISIBLE
+  
+                            var InvisibleEquipment = new Equipment();
+                            InvisibleEquipment.Equipment_ID = 'invisible';
+                            InvisibleEquipment.Productivity_State = '';
+                            tempEq = {};
+                            tempEq = InvisibleEquipment.toJSON();
+                            this.AddStyles(tempEq);
+                            // if(tempEq['ParentEquipmentID'] == '' && tempEq['ParentEquipmentID'] == undefined){
+                            //     tempEq['ParentEquipmentID'] = oEq.Equipment_ID;
+                            // } 
+                            arEq['invisible'] = InvisibleEquipment.toJSON(tempEq);
+                            this.GroupObjectPerLevel[iLevel] = arEq;
+
                     }else{
-                        var arEq = [];
-                        arEq = this.GroupObjectPerLevel[iLevel];
-                        arEq.push(oEq);
+                            var arEq = {};
+                            arEq = this.GroupObjectPerLevel[iLevel];
+                            arEq[oEq.Equipment_ID] = oEq;
+                            
+                            if(null==arEq['invisible'])
+                            {
+                                var InvisibleEquipment = new Equipment();
+                                InvisibleEquipment.Equipment_ID = 'invisible';
+                                InvisibleEquipment.Productivity_State = '';
+                                tempEq = {};
+                                tempEq = InvisibleEquipment.toJSON();
+                                this.AddStyles(tempEq);
+                                // if(tempEq['ParentEquipmentID'] == '' && tempEq['ParentEquipmentID'] == undefined){
+                                //     tempEq['ParentEquipmentID'] = oEq.Equipment_ID;
+                                // } 
+                                arEq['invisible'] = InvisibleEquipment.toJSON(tempEq);
+                                this.GroupObjectPerLevel[iLevel] = arEq;
+                            }
                     }
+
                     //PLT TO M
                     //Get Index
                     for(var i=0;i < this.GroupObjectPerLevel[iLevel].length;i++){
@@ -76,249 +193,75 @@ export default {
                             this.ParentIndex[oEq.Equipment_ID] = i+1;
                         }
                     }
-                
                 //MAKE EMPTY BOXES
-                var iTempConfigCount = 0;
-                var ctr = 0; 
-                var childCount = Object.keys(oEq.ChildrenEquipment).length;
-                for(var key in oEq.ChildEquipmentConfig){
-                    iTempConfigCount = oEq.ChildEquipmentConfig[key].Child_Equipment_Count
-                    if(childCount < iTempConfigCount){
-                            for(var i = childCount; i < iTempConfigCount; i++){
-                                var PlaceholderEquipment = {};
-                                PlaceholderEquipment['Equipment_ID'] = 'EMPTY'; 
-                                PlaceholderEquipment['ParentEquipmentID'] = oEq.Equipment_ID;
-                                PlaceholderEquipment['ChildEquipmentConfig'] = {};
-                                PlaceholderEquipment['Equipment_Model'] = key;
-                                var iParentLevel = oEq['level'];
-                                iParentLevel++;
-                                PlaceholderEquipment["level"] = iParentLevel;
-                                PlaceholderEquipment["counter"] = ctr;
-                                this.AddStyles(PlaceholderEquipment)
-                                if(null==this.GroupObjectPerLevel[iParentLevel]){
-                                    var arEq = [];
-                                    arEq.push(PlaceholderEquipment);
-                                    this.GroupObjectPerLevel[iParentLevel] = arEq;
-                                }else{
-                                    var arEq = [];
-                                    arEq = this.GroupObjectPerLevel[iParentLevel];
-                                    arEq.push(PlaceholderEquipment);
-                                }
-                            }
-                    }
-                    var iChildCount = oEq.ChildCount;
-                    if(iChildCount != 0 && iTempConfigCount > 0){
-                        //#region 
-                        // console.log(oEq);
-
-                        /////INSERT EMPTY
-                        // var oTempChildEquipmentConfig = oEq.ChildEquipmentConfig;
-                        // var iTempConfigCount = Object.keys(oTempChildEquipmentConfig).length;
-                        // // console.log(iTempConfigCount)
-                        // var oConfig = {};
-                        // for(var key in oTempChildEquipmentConfig){
-                        //     oConfig[key] = oTempChildEquipmentConfig[key].Child_Equipment_Count;
-                        //     // console.log(oEq.Equipment_ID + ' : ' + oConfig[key]);
-                        //     // console.log(key)
-                        // }
-                        
-                        // console.log(oConfig);
-                        // for(var key in oConfig){
-                        //     // console.log(key) // Equipment Model
-                        //     var bFound = true;
-                        //     var iCount = 0;
-                        //     //console.log(key)
-                        //     iTempConfigCount = oConfig[key];
-                        //     for(var child in oEq.ChildrenEquipment)
-                        //     {
-                        //         if(oEq.ChildrenEquipment[child].Equipment_Model == key)
-                        //         {
-                        //             //console.log(oTemp.ChildrenEquipment[child].Equipment_Model);
-                        //             iCount++;
-                        //         }
-                        //     }
-                        //     if(iCount != iTempConfigCount)
-                        //     {
-                        //         bFound= false;
-                        //     }
-                        //     else
-                        //     {
-                                
-                        //     }
-                        //     if(!bFound)
-                        //     {
-                        //         // console.log('EquipmentModel:'+key);
-                        //         // console.log('ParentEquipmentID:'+oEq.ChildrenEquipment[child].ParentEquipmentID);
-                        //         // console.log('iCount:'+iCount);
-                        //         // console.log('iTempConfigCount:'+iTempConfigCount);
-                        //         //console.log('Not Found ' + key + ':'+oTemp.ChildrenEquipment[child].ParentEquipmentID);
-                        //         var PlaceholderEquipment = {};
-                        //         PlaceholderEquipment['Equipment_ID'] = 'EMPTY'; 
-                        //         PlaceholderEquipment['ParentEquipmentID'] = oEq.ChildrenEquipment[child].ParentEquipmentID;
-                        //         PlaceholderEquipment['ChildEquipmentConfig'] = {};
-                        //         //PlaceholderEquipment['Equipment_Model'] = key;
-                        //         //oTempChildrens[key+'_EMPTY_'+iEmpty] = PlaceholderEquipment;
-                        //         var iParentLevel = oEq['level'];
-                        //         iParentLevel++;
-                        //         PlaceholderEquipment["level"] = iParentLevel;
-                        //         var EquipmentPrefix =  oEq.ChildrenEquipment[child].Equipment_Model.split("-")[0];
-                        //         var ParentEquipmentPrefix = oEq.ChildrenEquipment[child].ParentEquipmentID.split("-")[0]; 
-                        //         this.AddStyles(PlaceholderEquipment)
-                        //         if(null==this.GroupObjectPerLevel[iParentLevel])
-                        //         {
-                        //             var arEq = [];
-                        //             arEq.push(PlaceholderEquipment);
-                        //             this.GroupObjectPerLevel[iParentLevel] = arEq;
-                        //         }else{
-                        //             var arEq = [];
-                        //             arEq = this.GroupObjectPerLevel[iParentLevel];
-                        //             arEq.push(PlaceholderEquipment);
-                        //         }
-                        //     }
-                        // }
-                        //#endregion
-                        //Invisible Boxes
-                        for (var i = 1; i < iTempConfigCount; i++)
-                        {
-                            var arEq = [];
-                            var PlaceholderEquipment = {};
-                                PlaceholderEquipment['Equipment_ID'] = ''; 
-                                if(oEq.ParentEquipmentID != undefined){
-                                    PlaceholderEquipment['ParentEquipmentID'] = oEq.ParentEquipmentID;
-                                }
-                                PlaceholderEquipment['ChildEquipmentConfig'] = {};
-                                var iParentLevel = oEq['level'];
-                                iParentLevel++;
-                                PlaceholderEquipment["level"] = iParentLevel;
-                                var EquipmentPrefix =  oEq.Equipment_Model.split("-")[0];
-                                this.AddStyles(PlaceholderEquipment)
-                                if(null==this.GroupObjectPerLevel[iLevel]){
-                                    var arEq = [];
-                                    arEq.push(PlaceholderEquipment);
-                                    this.GroupObjectPerLevel[iLevel] = arEq;
-                                }else{
-                                    var arEq = [];
-                                    arEq = this.GroupObjectPerLevel[iLevel];
-                                    arEq.push(PlaceholderEquipment);
-                            }
-                        }
+                // var iTempConfigCount = 0;
+                // var childCount = Object.keys(oEq.ChildrenEquipment).length;
+                // for(var key in oEq.ChildEquipmentConfig){
+                //     iTempConfigCount = oEq.ChildEquipmentConfig[key].Child_Equipment_Count
+                //     if(childCount < iTempConfigCount){
+                //             for(var i = childCount; i < iTempConfigCount; i++){
+                //                 var PlaceholderEquipment = {};
+                //                 PlaceholderEquipment['ChildCount'] = 0;
+                //                 PlaceholderEquipment['Equipment_ID'] = 'EMPTY'; 
+                //                 PlaceholderEquipment['ParentEquipmentID'] = oEq.Equipment_ID;
+                //                 PlaceholderEquipment['ChildEquipmentConfig'] = {};
+                //                 PlaceholderEquipment['Equipment_Model'] = key;
+                //                 var iParentLevel = oEq['level'];
+                //                 iParentLevel++;
+                //                 PlaceholderEquipment["level"] = iParentLevel;
+                //                 this.AddStyles(PlaceholderEquipment)
+                //                 // if(null==this.GroupObjectPerLevel[iParentLevel]){
+                //                 //     var arEq = [];
+                //                 //     arEq.push(PlaceholderEquipment);
+                //                 //     this.GroupObjectPerLevel[iParentLevel] = arEq;
+                //                 // }else{
+                //                 //     var arEq = [];
+                //                 //     arEq = this.GroupObjectPerLevel[iParentLevel];
+                //                 //     arEq.push(PlaceholderEquipment);
+                //                 //     //console.log(arEq)
+                //                 // }
+                //             }
+                //     }
+                //     var iChildCount = oEq.ChildCount;
+                //     //if(iChildCount != 0 && iTempConfigCount > 0){
+                //     //iTempConfigCount = iTempConfigCount-1;
+                //     if(iTempConfigCount > 0){
+                //         //Invisible Boxes
+                //         // iTempConfigCount = iTempConfigCount - 1;
+                //         for (var i = 0; i < iTempConfigCount; i++)
+                //         {
+                //             //console.log(oEq.Equipment_ID +':'+iTempConfigCount);
+                //             var arEq = [];
+                //             var PlaceholderEquipment = {};
+                //                 PlaceholderEquipment['ChildCount'] = 0;
+                //                 PlaceholderEquipment['Equipment_ID'] = ''; 
+                //                 if(oEq.ParentEquipmentID != undefined){
+                //                     PlaceholderEquipment['ParentEquipmentID'] = oEq.ParentEquipmentID;
+                //                 }
+                //                 PlaceholderEquipment['ChildEquipmentConfig'] = {};
+                //                 var iParentLevel = oEq['level'];
+                //                 iParentLevel++;
+                //                 PlaceholderEquipment["level"] = iParentLevel;
+                //                 var EquipmentPrefix =  oEq.Equipment_Model.split("-")[0];
+                //                 this.AddStyles(PlaceholderEquipment)
+                //                 // if(null==this.GroupObjectPerLevel[iLevel]){
+                //                 //     var arEq = [];
+                //                 //     arEq.push(PlaceholderEquipment);
+                //                 //     this.GroupObjectPerLevel[iLevel] = arEq;
+                //                 // }else{
+                //                 //     var arEq = [];
+                //                 //     arEq = this.GroupObjectPerLevel[iLevel];
+                //                 //     arEq.push(PlaceholderEquipment);
+                //             //}
+                //         }
                             
-                    } 
-                } 
+                //     } 
+                // } 
             }
 
-                
-            //#endregion
+            console.log(this.GroupObjectPerLevel);
 
 
-            //#region 
-            // this.GroupObjectPerLevel = {};
-            // var level;
-
-            // //LEVEL 0
-            // var arEq = [];
-            // level = 0;
-            // var PlaceholderEquipment = {};
-            // PlaceholderEquipment['Equipment_ID'] = 'PLT-003-03';
-            // PlaceholderEquipment["level"] = level;
-            // PlaceholderEquipment['ChildEquipmentConfig'] = {};
-            // PlaceholderEquipment['ParentEquipmentID'] = '';
-            // this.AddStyles(PlaceholderEquipment)
-            // arEq.push(PlaceholderEquipment);
-            // var PlaceholderEquipment = {};
-            // PlaceholderEquipment['Equipment_ID'] = 'EMPTY';
-            // PlaceholderEquipment["level"] = level;
-            // PlaceholderEquipment['ChildEquipmentConfig'] = {};
-            // PlaceholderEquipment['ParentEquipmentID'] = '';
-            // this.AddStyles(PlaceholderEquipment)
-            // arEq.push(PlaceholderEquipment);
-            // var PlaceholderEquipment = {};
-            // PlaceholderEquipment['Equipment_ID'] = '';
-            // PlaceholderEquipment["level"] = level;
-            // PlaceholderEquipment['ChildEquipmentConfig'] = {};
-            // PlaceholderEquipment['ParentEquipmentID'] = '';
-            // this.AddStyles(PlaceholderEquipment)
-            // arEq.push(PlaceholderEquipment);
-            // var PlaceholderEquipment = {};
-            // PlaceholderEquipment['Equipment_ID'] = 'PNP-001-01';
-            // PlaceholderEquipment["level"] = level;
-            // PlaceholderEquipment['ChildEquipmentConfig'] = {};
-            // PlaceholderEquipment['ParentEquipmentID'] = '';
-            // this.AddStyles(PlaceholderEquipment)
-            // arEq.push(PlaceholderEquipment);
-            // this.GroupObjectPerLevel[0] = arEq;
-
-            // //LEVEL 1
-            // var arEq = [];
-            // level = 1;
-            // var PlaceholderEquipment = {};
-            // PlaceholderEquipment['Equipment_ID'] = '';
-            // PlaceholderEquipment["level"] = level;
-            // PlaceholderEquipment['ParentEquipmentID'] = 'PLT-003-03';
-            // PlaceholderEquipment['ChildEquipmentConfig'] = {};
-            // this.AddStyles(PlaceholderEquipment)
-            // arEq.push(PlaceholderEquipment);
-            // var PlaceholderEquipment = {};
-            // PlaceholderEquipment['Equipment_ID'] = 'PLC-001-01';
-            // PlaceholderEquipment["level"] = level;
-            // PlaceholderEquipment['ParentEquipmentID'] = 'PLT-003-03';
-            // PlaceholderEquipment['ChildEquipmentConfig'] = {};
-            // this.AddStyles(PlaceholderEquipment)
-            // arEq.push(PlaceholderEquipment);
-            // var PlaceholderEquipment = {};
-            // PlaceholderEquipment['Equipment_ID'] = 'EMPTY';
-            // PlaceholderEquipment["level"] = level;
-            // PlaceholderEquipment['ParentEquipmentID'] = 'PLT-003-03';
-            // PlaceholderEquipment['ChildEquipmentConfig'] = {};
-            // this.AddStyles(PlaceholderEquipment)
-            // arEq.push(PlaceholderEquipment);
-            // var PlaceholderEquipment = {};
-            // PlaceholderEquipment['Equipment_ID'] = 'POP-001-01';
-            // PlaceholderEquipment["level"] = level;
-            // PlaceholderEquipment['ParentEquipmentID'] = 'PLT-003-03';
-            // PlaceholderEquipment['ChildEquipmentConfig'] = {};
-            // this.AddStyles(PlaceholderEquipment)
-            // arEq.push(PlaceholderEquipment);
-            // this.GroupObjectPerLevel[1] = arEq;
-
-
-            // //LEVEL 1
-            // var arEq = [];
-            // level = 2;
-            // var PlaceholderEquipment = {};
-            // PlaceholderEquipment['Equipment_ID'] = 'SAM-010-101';
-            // PlaceholderEquipment["level"] = level;
-            // PlaceholderEquipment['ParentEquipmentID'] = 'PLC-001-01';
-            // PlaceholderEquipment['ChildEquipmentConfig'] = {};
-            // this.AddStyles(PlaceholderEquipment)
-            // arEq.push(PlaceholderEquipment);
-            // var PlaceholderEquipment = {};
-            // PlaceholderEquipment['Equipment_ID'] = 'PLE-001-01';
-            // PlaceholderEquipment["level"] = level;
-            // PlaceholderEquipment['ParentEquipmentID'] = 'PLC-001-01';
-            // PlaceholderEquipment['ChildEquipmentConfig'] = {};
-            // this.AddStyles(PlaceholderEquipment)
-            // arEq.push(PlaceholderEquipment);
-            // var PlaceholderEquipment = {};
-            // PlaceholderEquipment['Equipment_ID'] = 'EMPTY';
-            // PlaceholderEquipment["level"] = level;
-            // PlaceholderEquipment['ParentEquipmentID'] = 'PLC-001-01';
-            // PlaceholderEquipment['ChildEquipmentConfig'] = {};
-            // this.AddStyles(PlaceholderEquipment)
-            // arEq.push(PlaceholderEquipment);
-            // var PlaceholderEquipment = {};
-            // PlaceholderEquipment['Equipment_ID'] = 'EMPTY';
-            // PlaceholderEquipment["level"] = level;
-            // PlaceholderEquipment['ParentEquipmentID'] = 'PLC-001-01';
-            // PlaceholderEquipment['ChildEquipmentConfig'] = {};
-            // this.AddStyles(PlaceholderEquipment)
-            // arEq.push(PlaceholderEquipment);
-            // this.GroupObjectPerLevel[2] = arEq;
-            
-
-            
-            // console.log(this.GroupObjectPerLevel);
-            //#endregion
 
             this.BoolLoad = true
             const sessionId = localStorage.getItem('sessionId');
@@ -331,6 +274,271 @@ export default {
             // alert(this.GetTempEquipmentID + ' is already open in another browser');
             }
         },
+
+        async testFunction(object){
+            var eums = String;
+            const EquipmentObj = new Equipment();
+            var eqp = EquipmentObj.toJSON(this.GetTempEquipmentResult);
+            
+            var row = Number;
+            var column = Number;
+            this.maximumColumn = 0;
+            this.maximumRow = 0;
+            this.minimumColumn = 0;
+            try{
+                row = 0;
+                column = 0;
+                await this.GetArraySize(eqp, 0, 0);
+                // console.log(this.minimumColumn);
+                this.arr = Array.from(Array(this.maximumRow), () => new Array(this.maximumColumn));
+                for(row = 0; row <= this.maximumRow - 1; row++){
+                    for(column = 0; column < this.maximumColumn; column++){
+                        this.arr[row][column] = 'invisible';
+                    }
+                    // console.log(arr);
+                }
+                
+                
+                // console.log("maximum row : " + this.maximumRow);
+                // console.log("maximum column : " + this.maximumColumn);
+                this.minimumColumn = 0;
+                await this.PositionArray(eqp, 0, 0,'');
+
+                
+                // for(var i = 0; i < this.arr.length; i++){
+                //     for(var e = 0; e < this.arr[i].length; e++){ 
+                //         var tester = [];
+                //         tester = this.arr[i][e];
+                //         this.Dictionary.push(tester);
+                //         // console.log(tester)
+                //     }
+                // }
+                // console.log(this.Dictionary)
+
+                // this.Dictionary = {...this.arr}
+                // console.log('___')
+                // console.log(this.Dictionary)
+                // console.log('___')
+
+
+                // console.log(this.arr)
+                // this.arr = this.arr.map((str, index) => ({value: str, id: index + 1}))
+                // console.log(this.arr);
+
+                console.log(this.EmptyChild);
+                console.log(this.arr);
+            }
+            catch(e){
+                alert(e)
+            }
+        },
+
+        // async GetArraySize(eqp, row, column, maximumRow, maximumColumn, minimumColumn){
+        //     const childEquip = new Equipment();
+        //     var childRow = Number;
+        //     var childColumn = Number;
+        //     var index = Number;
+        //     var childCount = Number;
+        //     const equipConfig = new EquipmentConfig();
+        //     //var equipmentConfig = equipConfig.toJSON(this.GetTempEquipmentResult);
+
+        //     try{
+        //         childRow = row + 1;
+        //         childColumn = maximumColumn;
+        //         childCount = 0;
+
+        //         if(eqp != undefined && eqp != null){
+        //             if(eqp.ChildrenEquipment != undefined && eqp.ChildrenEquipment != null){
+        //                 var ChildEquipmentConfigCount =  Object.keys(eqp.ChildEquipmentConfig).length;
+        //                 for(index = 0; index <= ChildEquipmentConfigCount - 1; index++){
+        //                     // console.log(index);
+        //                     var key = Object.keys(eqp.ChildEquipmentConfig)[index];
+        //                     var equipmentConfig = equipConfig.toJSON(eqp.ChildEquipmentConfig[key]);
+        //                     console.log(JSON.stringify(equipmentConfig));
+        //                     childCount += equipmentConfig.Child_Equipment_Count;
+        //                 }
+        //                 var ChildrenEquipmentCount =  Object.keys(eqp.ChildrenEquipment).length;
+        //                 for(index = 0; index <= childCount - 1; index++){
+        //                     if(index < ChildrenEquipmentCount){
+        //                         var key = Object.keys(eqp.ChildrenEquipment)[index];
+        //                         var childEqp = childEquip.toJSON(eqp.ChildrenEquipment[key]);
+        //                         await this.GetArraySize(childEqp, childRow, childColumn, this.maximumRow, this.maximumColumn, minimumColumn)
+        //                     }
+        //                     else{
+        //                         await this.GetArraySize(null, childRow, childColumn, this.maximumRow, this.maximumColumn, minimumColumn)
+        //                     }
+        //                     childColumn = childColumn + 1;
+        //                     if(minimumColumn > childColumn){
+        //                         childColumn = minimumColumn;
+        //                     }
+        //                 }
+        //                 if(ChildrenEquipmentCount == 0){
+        //                     if(maximumColumn + 1 > minimumColumn){
+        //                         minimumColumn = maximumColumn + 1;
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //         else{
+        //             if(maximumColumn + 1 > minimumColumn){
+        //                 minimumColumn = maximumColumn + 1;
+        //             }
+        //         }
+
+        //         if(childRow > maximumRow){
+        //             this.maximumRow = childRow;
+        //         }
+        //         if(childColumn > maximumColumn){
+        //             this.maximumColumn = childColumn
+        //         }
+        //     }
+        //     catch(e){
+        //         alert(e)
+        //     }
+        // },
+
+        async GetArraySize(eqp, row, column){
+            const childEquip = new Equipment();
+            var childRow = Number;
+            var childColumn = Number;
+            var index = Number;
+            var childCount = Number;
+            const equipConfig = new EquipmentConfig();
+            //var equipmentConfig = equipConfig.toJSON(this.GetTempEquipmentResult);
+
+            try{
+                childRow = row + 1;
+                childColumn = this.maximumColumn;
+                childCount = 0;
+
+                if(eqp != undefined && eqp != null){
+                    if(eqp.ChildrenEquipment != undefined && eqp.ChildrenEquipment != null){
+                        var ChildEquipmentConfigCount =  Object.keys(eqp.ChildEquipmentConfig).length;
+                        for(index = 0; index <= ChildEquipmentConfigCount - 1; index++){
+                            // console.log(index);
+                            var key = Object.keys(eqp.ChildEquipmentConfig)[index];
+                            var equipmentConfig = equipConfig.toJSON(eqp.ChildEquipmentConfig[key]);
+                            // console.log(JSON.stringify(equipmentConfig));
+                            childCount += equipmentConfig.Child_Equipment_Count;
+                        }
+                        var ChildrenEquipmentCount =  Object.keys(eqp.ChildrenEquipment).length;
+                        for(index = 0; index <= childCount - 1; index++){
+                            if(index < ChildrenEquipmentCount){
+                                var key = Object.keys(eqp.ChildrenEquipment)[index];
+                                var childEqp = childEquip.toJSON(eqp.ChildrenEquipment[key]);
+                                //childEqp['ParentEquipmentIDxxxx'] = eqp.Equipment_ID;
+                                await this.GetArraySize(childEqp, childRow, childColumn)
+                            }
+                            else{
+                                await this.GetArraySize(null, childRow, childColumn)
+                            }
+                            childColumn = childColumn + 1;
+                            if(this.minimumColumn > childColumn){
+                                childColumn = this.minimumColumn;
+                            }
+                        }
+                        if(ChildrenEquipmentCount == 0){
+                            if(this.maximumColumn + 1 > this.minimumColumn){
+                                this.minimumColumn = this.maximumColumn + 1;
+                            }
+                        }
+                    }
+                }
+                else{
+                    if(this.maximumColumn + 1 > this.minimumColumn){
+                        this.minimumColumn = this.maximumColumn + 1;
+                    }
+                }
+
+                if(childRow > this.maximumRow){
+                    this.maximumRow = childRow;
+                }
+                if(childColumn > this.maximumColumn){
+                    this.maximumColumn = childColumn
+                }
+            }
+            catch(e){
+                alert(e)
+            }
+        },
+
+        async PositionArray(eqp, row, column, parentEqp){
+            const childEquip = new Equipment();
+            var childRow = Number;
+            var childColumn = Number;
+            var index = Number;
+            var childCount = 0;
+            const equipConfig = new EquipmentConfig();
+
+            try{
+                if(eqp != null && eqp != undefined){
+                    this.arr[row][column] = eqp.Equipment_ID;
+                }
+                else{
+                    if(null==this.EmptyChild[parentEqp])
+                    {
+                        var iCount = 1;
+                        this.EmptyChild[parentEqp] = iCount;
+                        this.arr[row][column] = 'Empty_'+parentEqp+'_'+iCount;
+                    }
+                    else{
+                        var iCount = this.EmptyChild[parentEqp];
+                        iCount++;
+                        this.EmptyChild[parentEqp] = iCount;
+                        this.arr[row][column] = 'Empty_'+parentEqp+'_'+iCount;
+                    }
+                }
+                
+                childRow = row + 1;
+                childColumn = column;
+                if(eqp != null && eqp != undefined){
+                    if(eqp.ChildrenEquipment != null && eqp.ChildrenEquipment != undefined){
+                        var ChildEquipmentConfigCount =  Object.keys(eqp.ChildEquipmentConfig).length;
+                        for(index = 0; index <= ChildEquipmentConfigCount - 1; index++){
+                            var key = Object.keys(eqp.ChildEquipmentConfig)[index];
+                            var equipmentConfig = equipConfig.toJSON(eqp.ChildEquipmentConfig[key]);
+                            childCount += equipmentConfig.Child_Equipment_Count;
+                        }
+                        var ChildrenEquipmentCount =  Object.keys(eqp.ChildrenEquipment).length;
+                        for(index = 0; index <= childCount - 1; index++){
+                            if(index < ChildrenEquipmentCount){
+                                var key = Object.keys(eqp.ChildrenEquipment)[index];
+                                var childEqp = childEquip.toJSON(eqp.ChildrenEquipment[key]);
+                                await this.PositionArray(childEqp, childRow, childColumn,'');
+                            }
+                            else{
+                                var tempParent = '';
+                                if(null!=eqp || undefined != eqp)
+                                {
+                                    tempParent = eqp.Equipment_ID;
+                                }
+                                await this.PositionArray(null, childRow, childColumn,tempParent);
+                            }
+                            childColumn = childColumn + 1;
+                            if(this.minimumColumn > childColumn){
+                                childColumn = this.minimumColumn;
+                            }
+                        }
+                        if(ChildrenEquipmentCount == 0){
+                            if(column + 1 > this.minimumColumn){
+                                this.minimumColumn = column + 1;
+                            }
+                        }
+                    }
+                }
+                else{
+                    if(column + 1 > this.minimumColumn){
+                        this.minimumColumn = column + 1
+                    }
+                }
+            }
+            catch(e){
+                console.log(e)
+            }
+
+
+        },
+
         async AddStyles(object){
             if(object.Productivity_State == States._Productive ){
                     object["MyEquipmentColor"] = '2px solid green';
@@ -359,14 +567,14 @@ export default {
                 else if(object.Productivity_State == States._Scrapped){
                     object["MyEquipmentColor"] = '2px solid violet';
                     object["MyEquipmentOpacity"] = 1;
-                }else{
+                }else if(object.Productivity_State == '' && object.Equipment_ID.includes('Empty')){
                     object["MyEquipmentColor"] = '2px dashed black';
                     object["MyEquipmentOpacity"] = 1;
-                }
-                if(object.Equipment_ID == ''){
-                    object["MyEquipmentColor"] = '2px solid black';
+                }else if(object.Productivity_State == '' && object.Equipment_ID == 'invisible'){
+                    object["MyEquipmentColor"] = '2px dashed black';
                     object["MyEquipmentOpacity"] = 0;
                 }
+                
                 object["MyEquipmentHeight"] = 150;
                 object["MyEquipmentWidth"] = 200;
                 // object["MyEquipmentLeftPosition"] = 50;
@@ -402,79 +610,67 @@ export default {
                 }        
 
         },
+
         async ReSummarizeEquipmentObject(object) {
             //Push to Array
             this.arrAllEquipments.push(object);
             var iConfigCount = Object.keys(object.ChildEquipmentConfig).length;
-            
             //#region
-            //console.log(object['Equipment_ID']+':'+iConfigCount)
-            //console.log(object.ChildEquipmentConfig);
-            // console.log(object.ParentEquipmentID)
-
-            // if(object.ParentEquipmentID != undefined){
-            //         var EquipmentPrefix =  object.ParentEquipmentID.split("-")[0];
-            //         // console.log(EquipmentPrefix);
-            //         if(null==this.oParentPos[EquipmentPrefix])
-            //         {
-            //             // console.log(this.oParentPosition[EquipmentPrefix]);
-            //             // console.log(EquipmentPrefix)
-
-            //                 //DI Napasok sa IF
-            //             if(null!=this.oParentPosition[EquipmentPrefix])
-            //             {
-            //                 this.ParentTopPosition = this.oParentPosition[EquipmentPrefix];
-            //                 // console.log(EquipmentPrefix+':'+this.ParentTopPosition);
-            //             }
-            //             else
-            //             {
-            //                     //DITO NABABAGO YUNG TOP POSITION NG LAHAT NG BOX NG PLC AND M
-            //                 this.ParentTopPosition = this.ParentTopPosition + 400;
-            //                 console.log(EquipmentPrefix+':'+this.ParentTopPosition);
-            //             }
-            //             var oTempParent = {};
-            //             oTempParent['Top'] = this.ParentTopPosition;
-            //             oTempParent['Left'] = 0;
-            //             this.oParentPos[EquipmentPrefix] = oTempParent;
-            //             object["MyEquipmentLeftPosition"] = oTempParent['Left'];
-            //                 //NABABAGO YUNG 1st PLC AND M
-            //             object["MyEquipmentTopPosition"] = oTempParent['Top'];
-            //                 //NABABAGO YUNG TOP POSITION NG EMPTY
-            //             this.oParentPosition[EquipmentPrefix] = this.ParentTopPosition;
-            //         }
-            //         else{ 
-            //             var oTempParent = this.oParentPos[EquipmentPrefix];
-            //             object["MyEquipmentLeftPosition"] = oTempParent['Left'];
-            //             //NAANGAT YUNG 1st PLC SA PLB Level at M sa PLC Level
-            //             object["MyEquipmentTopPosition"] = oTempParent['Top'];
-            //         }
-            // }
-            // else
-            // {
-            //     var EquipmentPrefix =  object.Equipment_ID.split("-")[0];
-            //     //console.log(EquipmentPrefix);
-            //     if(null==this.oParentPos[EquipmentPrefix])
-            //     {
-            //         var oTempParent = {};
-            //         oTempParent['Top'] = this.ParentTopPosition;
-            //         oTempParent['Left'] = 0;
-            //         this.oParentPos[EquipmentPrefix] = oTempParent;
-            //         object["MyEquipmentLeftPosition"] = oTempParent['Left'];
-            //         // NABABAGO YUNG TOP POSITION NI PLT
-            //         object["MyEquipmentTopPosition"] = oTempParent['Top'] + 200;
-            //         // NABABAGO POSITION NG PLC AND M
-            //         this.ParentTopPosition = this.ParentTopPosition;
-            //         this.oParentPosition[EquipmentPrefix] = this.ParentTopPosition + 200;
-            //         // console.log(this.oParentPosition[EquipmentPrefix])
-            //     }
-            //     //DI NAPASOK SA ELSE
-            //     else{ 
-            //         console.log('qwe')
-            //         var oTempParent = this.oParentPos[EquipmentPrefix];
-            //         object["MyEquipmentLeftPosition"] = oTempParent['Left'];
-            //         object["MyEquipmentTopPosition"] = oTempParent['Top'] + 200;
-            //     }
-            // }
+            if(object.ParentEquipmentID != undefined){
+                    var EquipmentPrefix =  object.ParentEquipmentID.split("-")[0];
+                    // console.log(EquipmentPrefix);
+                    if(null==this.oParentPos[EquipmentPrefix])
+                    {
+                        // console.log(this.oParentPosition[EquipmentPrefix]);
+                        // console.log(EquipmentPrefix)
+                        if(null!=this.oParentPosition[EquipmentPrefix])
+                        {
+                            this.ParentTopPosition = this.oParentPosition[EquipmentPrefix];
+                            // console.log(EquipmentPrefix+':'+this.ParentTopPosition);
+                        }
+                        else
+                        {
+                            this.ParentTopPosition = this.ParentTopPosition + 400;
+                            // console.log(EquipmentPrefix+':'+this.ParentTopPosition);
+                        }
+                        var oTempParent = {};
+                        oTempParent['Top'] = this.ParentTopPosition;
+                        oTempParent['Left'] = 0;
+                        this.oParentPos[EquipmentPrefix] = oTempParent;
+                        object["MyEquipmentLeftPosition"] = oTempParent['Left'];
+                        object["MyEquipmentTopPosition"] = oTempParent['Top'];
+                        this.oParentPosition[EquipmentPrefix] = this.ParentTopPosition;
+                    }
+                    else{ 
+                        var oTempParent = this.oParentPos[EquipmentPrefix];
+                        object["MyEquipmentLeftPosition"] = oTempParent['Left'];
+                        object["MyEquipmentTopPosition"] = oTempParent['Top'];
+                    }
+            }
+            else
+            {
+                var EquipmentPrefix =  object.Equipment_ID.split("-")[0];
+                //console.log(EquipmentPrefix);
+                if(null==this.oParentPos[EquipmentPrefix])
+                {
+                    var oTempParent = {};
+                    oTempParent['Top'] = this.ParentTopPosition;
+                    oTempParent['Left'] = 0;
+                    this.oParentPos[EquipmentPrefix] = oTempParent;
+                    object["MyEquipmentLeftPosition"] = oTempParent['Left'];
+                    // NABABAGO YUNG TOP POSITION NI PLT
+                    object["MyEquipmentTopPosition"] = oTempParent['Top'] + 200;
+                    // NABABAGO POSITION NG PLC AND M
+                    this.ParentTopPosition = this.ParentTopPosition;
+                    this.oParentPosition[EquipmentPrefix] = this.ParentTopPosition + 200;
+                    // console.log(this.oParentPosition[EquipmentPrefix])
+                }
+                else{ 
+                    var oTempParent = this.oParentPos[EquipmentPrefix];
+                    object["MyEquipmentLeftPosition"] = oTempParent['Left'];
+                    object["MyEquipmentTopPosition"] = oTempParent['Top'] + 200;
+                }
+            }
             //#endregion
 
             //Add Style Properties
@@ -491,18 +687,37 @@ export default {
                 var iParentLevel = object['level'];
                 iParentLevel++;
                 object.ChildrenEquipment[Childkey]["level"] = iParentLevel; 
-                // var iConfigCount = Object.keys(object.ChildrenEquipment[Childkey].ChildEquipmentConfig).length;
-                // console.log(object['Equipment_ID']+':'+iConfigCount)
+                //#region 
+                // var iConfigCount = Object.keys(object.ChildEquipmentConfig).length;
+                // for(var configKey in object.ChildEquipmentConfig)
+                // {
+                //     console.log(Childkey+':'+object.ChildEquipmentConfig[configKey].Child_Equipment_Count)
+                // }
+                //var iConfigCount = object.ChildrenEquipment[Childkey].Child_Equipment_Count;
+                //console.log(object)
+                // if(null!=this.GroupObjectPerLevel['Level_'+iParentLevel])
+                // {
+                //     var arLevelTemp = [];
+                //     arLevelTemp = this.GroupObjectPerLevel['Level_'+iParentLevel];
+                //     arLevelTemp.push(object.ChildrenEquipment[Childkey]);
+                // }
+                // else
+                // {
+                //     var arLevelTemp = [];
+                //     arLevelTemp.push(object.ChildrenEquipment[Childkey]);
+                //     this.GroupObjectPerLevel['Level_'+iParentLevel] = arLevelTemp;
+                // }
+                //#endregion
                 if(null!=this.GroupObjectPerLevel['Level_'+iParentLevel])
                 {
-                    var arLevelTemp = [];
+                    var arLevelTemp = {};
                     arLevelTemp = this.GroupObjectPerLevel['Level_'+iParentLevel];
-                    arLevelTemp.push(object.ChildrenEquipment[Childkey]);
+                    arLevelTemp[object.ChildrenEquipment[Childkey].Equipment_ID] = object.ChildrenEquipment[Childkey];
                 }
                 else
                 {
-                    var arLevelTemp = [];
-                    arLevelTemp.push(object.ChildrenEquipment[Childkey]);
+                    var arLevelTemp = {};
+                    arLevelTemp[object.ChildrenEquipment[Childkey].Equipment_ID] = object.ChildrenEquipment[Childkey]
                     this.GroupObjectPerLevel['Level_'+iParentLevel] = arLevelTemp;
                 }
 
@@ -514,51 +729,14 @@ export default {
                 if (iChildCount === 0) {
                     bLastEquipment = true;
                 }
-                else
-                {
-                }
                 object.ChildrenEquipment[Childkey]["LastEquipment"] = bLastEquipment;
-
-
-                // if(object.ChildrenEquipment[Childkey]["level"] == 3){
-                //     // var arrPositionTemp = [];
-                //     object.ChildEquipment[Childkey]["MyEquipmentLeftPosition"] = screen.width/iChildCount;
-                //     // arrPositionTemp = object["MyEquipmentLeftPosition"];
-                //     // arrPositionTemp.push(object.ChildEquipment[Childkey]);
-                //     console.log(arrPositionTemp)
-                // }
-
-                //call itself to check the next children equipment
                 await this.ReSummarizeEquipmentObject(object.ChildrenEquipment[Childkey]);
 
             }
                 return object;
         },
-        async buildHierarchy(object){
-            var roots = [], children = {};
-            //find the top level nodes and hash the children based on parent
-            for(var i = 0, len = object.length; i < len; i++){
-                var tEquipment = object[i],
-                    p = object[i].ParentEquipmentID,
-                    target = !p ? roots : (children[p] || (children[p] = []));
-                    target.push({ value: tEquipment});
-            }
-            // function to recursively build the tree
-            var findChildren = function(parent){
-                if(children[parent.value.Equipment_ID]){
-                    parent.children = children[parent.value.Equipment_ID];
-                    for(var i = 0, len = parent.children.length; i < len; i++){
-                        findChildren(parent.children[i]);
-                    }
-                }
-            };
-            // enumerate through to handle the case where there are multiple roots
-            for(var i = 0, len = roots.length; i < len; i++){
-                findChildren(roots[i]);
-            }
-            return roots
-        },
-         mounted() {
+        
+        mounted() {
  
         },
         async DeleteSession() {
@@ -607,8 +785,12 @@ export default {
         
 
     },
+    async mounted(){
+        await this.GetEquipmentID();
+        this.dataReady = true;
+    },
         created() {
-        this.GetEquipmentID();
+        // this.GetEquipmentID();
         this.callGetAllActiveSessions();
 
         let timeoutId; // Variable to store the timeout ID
@@ -647,7 +829,65 @@ export default {
                     </div>
                 
         </div>
-        <div id="mainDiv" v-for="(main,index) in this.GroupObjectPerLevel" :key="index" class="Equipment">
+        <br>
+        <div v-if="this.dataReady == true">
+            <div id="mainDiv" class="Equipment" v-for="(equipments,index) in this.arr" :key="index" >
+                <div id="itemDiv" v-for="(item,itemIndex) in equipments" :key="itemIndex" >
+                    <MyGroupEquipmentComponent v-on="$listeners" 
+                        :Equipment_ID="GroupObjectPerLevel[index][item].Equipment_ID"
+                        :MES_State="GroupObjectPerLevel[index][item].MES_State"
+                        :EUMS_State="GroupObjectPerLevel[index][item].EUMS_State" 
+                        :Productivity_State="GroupObjectPerLevel[index][item].Productivity_State"
+                        :Equipment_Model="GroupObjectPerLevel[index][item].Equipment_Model"
+                        :PartType="GroupObjectPerLevel[index][item].Part_Type"
+                        :Classification="GroupObjectPerLevel[index][item].Classification"
+                        :ChildrenEquipment="GroupObjectPerLevel[index][item].ChildrenEquipment"
+                        :ChildrenEquipmentConfig="GroupObjectPerLevel[index][item].ChildEquipmentConfig"
+                        :EquipmentUsage="GroupObjectPerLevel[index][item].EquipmentUsage"
+                        :MyGrpEquipHeight="GroupObjectPerLevel[index][item].MyEquipmentHeight"
+                        :MyGrpEquipWidth="GroupObjectPerLevel[index][item].MyEquipmentWidth"
+                        :MyGrpEquipLeftPosition="GroupObjectPerLevel[index][item].MyEquipmentLeftPosition"
+                        :MyGrpEquipTopPosition="GroupObjectPerLevel[index][item].MyEquipmentTopPosition"
+                        :MyGrpEquipColor="GroupObjectPerLevel[index][item].MyEquipmentColor"
+                        :MyGrpEquipBorderStyle="GroupObjectPerLevel[index][item].MyEquipmentBorderStyle"
+                        :MyModalTrigger="GroupObjectPerLevel[index][item].MyModalTrigger"
+                        :ParentEquip_ID="GroupObjectPerLevel[index][item].ParentEquipmentID"
+                        :MyGrpEquipOpacity="GroupObjectPerLevel[index][item].MyEquipmentOpacity"
+                    />
+                    
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="mainDiv" v-for="(obj,index) in this.GroupObjectPerLevelv2" :key="index">
+            <div v-for="(item,itemIndex) in obj" :key="itemIndex">
+                <MyGroupEquipmentComponent v-on="$listeners"
+                    :Equipment_ID="item.Equipment_ID"
+                    :MES_State="item.MES_State"
+                    :EUMS_State="item.EUMS_State" 
+                    :Productivity_State="item.Productivity_State"
+                    :Equipment_Model="item.Equipment_Model"
+                    :PartType="item.Part_Type"
+                    :Classification="item.Classification"
+                    :ChildrenEquipment="item.ChildrenEquipment"
+                    :ChildrenEquipmentConfig="item.ChildEquipmentConfig"
+                    :EquipmentUsage="item.EquipmentUsage"
+                    :MyGrpEquipHeight="item.MyEquipmentHeight"
+                    :MyGrpEquipWidth="item.MyEquipmentWidth"
+                    :MyGrpEquipLeftPosition="item.MyEquipmentLeftPosition"
+                    :MyGrpEquipTopPosition="item.MyEquipmentTopPosition"
+                    :MyGrpEquipColor="item.MyEquipmentColor"
+                    :MyGrpEquipBorderStyle="item.MyEquipmentBorderStyle"
+                    :MyModalTrigger="item.MyModalTrigger"
+                    :ParentEquip_ID="item.ParentEquipmentID"
+                    :EquipmentLevel="item.level"
+                    :MyGrpEquipOpacity="item.MyEquipmentOpacity"
+                />
+            </div>
+        </div> -->
+        
+        
+        <!-- <div  v-for="(main,index) in this.GroupObjectPerLevel" :key="index" id="mainDiv" class="Equipment">
             <div id = "itemDiv" v-for="(item,val) in main" :key="val" >
                 <MyGroupEquipmentComponent v-on="$listeners" 
                     :Equipment_ID="item.Equipment_ID"
@@ -672,7 +912,9 @@ export default {
                     :MyGrpEquipOpacity="item.MyEquipmentOpacity"
                 />
             </div>
-        </div>
+        </div> -->
+
+        
         <!-- <div class="row">
             <MyGroupEquipmentComponent v-on="$listeners"
                  v-for="(iChildEquip, index) in arrAllEquipments" :key="index"
