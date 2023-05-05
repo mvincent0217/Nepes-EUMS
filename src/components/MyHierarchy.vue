@@ -1,5 +1,6 @@
 <script>
 /* eslint-disable */
+import Swal from 'sweetalert2'
 import  Navbar from './MyNavigationBar.vue';
 import MyGroupEquipmentComponent from './MyGroupEquipmentComponent.vue';
 import MyEquipmentComponent from './MyEquipmentComponent.vue';
@@ -756,30 +757,27 @@ export default {
         const parsedData = JSON.parse(this.GetAllActiveSessionsResult.data);
         // console.log(parsedData);
         // Check if parsedData is empty
-        if (Object.keys(parsedData).length === 0) {
-            // console.log("No Active Session");
-        } else {
             // console.log("Active Users");
             // Iterate over parsedData object
             for (const key in parsedData) {
                 if (parsedData.hasOwnProperty(key)) {
-                    // console.log("User_ID: " + parsedData[key].User_ID);
-                    // console.log("Session_ID: " + parsedData[key].Session_ID);
+                    console.log("User_ID: " + parsedData[key].User_ID);
+                    console.log("Session_ID: " + parsedData[key].Session_ID);
+                    // console.log(parsedData[key].Session_ID + ' and ' + localStorage.getItem('sessionID'))
                     // Check if Session_ID contains localStorage.getItem('equipmentId')
-                    if (parsedData[key].Session_ID.includes(localStorage.getItem('equipmentId'))) {
-                        
-                        if(parsedData[key].Session_ID == localStorage.getItem('sessionID')){
-                        localStorage.setItem('isEditing', 'false');
-                        }
-                        else{
-                            localStorage.setItem('isEditing', 'true');
-                            alert("Someone is Editing " + localStorage.getItem('equipmentId'));
-                        }
+                    if (parsedData[key].Session_ID.includes(localStorage.getItem('equipmentId')) && localStorage.getItem('userID') !== parsedData[key].User_ID) {
+                            localStorage.setItem('isEditing', 'false');
+                            Swal.fire('Someone is Editing ' +  localStorage.getItem('equipmentId'))
+                            console.log('false')
+                    }
+                    else if (!parsedData[key].Session_ID.includes(localStorage.getItem('equipmentId'))){
+                        localStorage.setItem('isEditing', 'true');
+                        console.log('true')
                     }
                        
                 }
             }
-        }
+        
     },
 
         

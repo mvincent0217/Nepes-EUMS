@@ -77,13 +77,15 @@ export default {
         },
 
         async AddSession() {
-            this.userID = localStorage.getItem('userID');
-            localStorage.setItem('sessionID',(Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '_' + localStorage.getItem('equipmentId')) );
-            this.sessionID = localStorage.getItem('sessionID')
-            this.expiryDate = '04/04/2023';
-            this.AddSessionResult = await RestAPI.AddSession(this.userID, this.sessionID, this.expiryDate)
-            console.log(this.AddSessionResult);
-         }
+        this.userID = localStorage.getItem('userID');
+        localStorage.setItem('sessionID', (Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '_' + localStorage.getItem('equipmentId')));
+        this.sessionID = localStorage.getItem('sessionID');
+        const currentDate = new Date();
+        const expiryDate = `${currentDate.getMonth() + 1}/${currentDate.getDate()}/${currentDate.getFullYear()} ${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
+        this.AddSessionResult = await RestAPI.AddSession(this.userID, this.sessionID, expiryDate);
+        console.log(this.AddSessionResult);
+    }
+
 
 
     },

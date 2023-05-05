@@ -9,7 +9,8 @@ export default {
     data() {
         return {
             userCanAddEquipment: false,
-            userCanDeleteEquipment: false
+            userCanDeleteEquipment: false,
+            isEditing: localStorage.getItem('isEditing')
         }
     },
     methods:{
@@ -35,12 +36,14 @@ export default {
         if (userRights.includes(`${equipmentId}_DELETE-EQUIPMENT`)) {
             this.userCanDeleteEquipment = true;
         }
+
+        console.log(localStorage.getItem('isEditing'))
     }
 }
 </script>
 
 <template>
-     <!-- <div v-bind:class="{ 'main-menu': ! localStorage.getItem('isEditing') }"> -->
+    <div v-if="isEditing === 'true'">
     <div>
         <ul class="main-menu">
             <div v-if="userCanAddEquipment">
@@ -53,5 +56,5 @@ export default {
             <li class ="OptionColor" v-if="Classification == 'Component' && userCanDeleteEquipment" v-on:click="emitDeleteEquipment(Equipment_ID,ParentEquipment_ID)"><a href="#">Delete</a></li> 
         </ul>
     </div>
-    <!-- </div> -->
+</div>
 </template>
