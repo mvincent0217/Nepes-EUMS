@@ -9,8 +9,7 @@ export default {
     data() {
         return {
             userCanAddEquipment: false,
-            userCanDeleteEquipment: false,
-            isEditing: localStorage.getItem('isEditing')
+            userCanDeleteEquipment: false
         }
     },
     methods:{
@@ -36,25 +35,21 @@ export default {
         if (userRights.includes(`${equipmentId}_DELETE-EQUIPMENT`)) {
             this.userCanDeleteEquipment = true;
         }
-
-        console.log(localStorage.getItem('isEditing'))
     }
 }
 </script>
 
 <template>
-    <div v-if="isEditing === 'true'">
     <div>
         <ul class="main-menu">
             <div v-if="userCanAddEquipment">
-            <li v-if="Equipment_ID == 'Empty'"><a href="#">Add ▼</a>
-                <ul class="main-menu">
-                    <li @click="EmitPopUpModal()"><a class ="OptionColor" href="#">Add Item</a></li>
-                </ul>
-            </li>
+                <li @click="EmitPopUpModal()" class="main-menu-add-delete" v-if="Equipment_ID == 'Empty'">
+                    <a href="#">Add Item</a>
+                </li>
             </div>
-            <li class ="OptionColor" v-if="Classification == 'Component' && userCanDeleteEquipment" v-on:click="emitDeleteEquipment(Equipment_ID,ParentEquipment_ID)"><a href="#">Delete</a></li> 
+            <li class="main-menu-add-delete" v-if="Classification == 'Component' && userCanDeleteEquipment" v-on:click="emitDeleteEquipment(Equipment_ID,ParentEquipment_ID)">
+                <a href="#">Delete</a>
+            </li> 
         </ul>
     </div>
-</div>
 </template>

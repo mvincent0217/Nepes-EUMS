@@ -290,34 +290,15 @@
     /* --TOAST MESSAGE-- */
 
     /* --MENU-- */
-    .main-menu ul {
-      margin: 0;
-      padding: 0;
-      list-style-type: none;
-      display: inline-block;
-    }
-    
-    .main-menu ul li a {
-      padding: 20px;
+    .main-menu-add-delete{
+      font-size: medium;
+      left: 5px;
+      top: 5px;
+      padding: 10px;
       display: block;
-      color: #ddd;
+      color: white;
       text-decoration: none;
-      background: black;
-    }
-    
-    .main-menu ul li ul {
-      display: none;
-    }
-    
-    .main-menu ul li:hover ul {
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .main-menu ul li:hover a {
-      color: #fff;
-    }
-    .OptionColor{
-      color:black
+      background-color: gray;
+      list-style-type: none;
     }
     /* --MENU-- */

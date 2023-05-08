@@ -76,7 +76,8 @@ export default {
                     'Your file has been deleted.',
                     'success'
                     )
-                    this.$router.push('/hierarchy');
+                    location.assign(window.location.origin + '#/hierarchy');
+                    location.reload();
                 }
             })
         },

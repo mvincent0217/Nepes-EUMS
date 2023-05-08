@@ -12,6 +12,7 @@ export default {
             ModalStyle: '',
             tempApplicableIds: '',
             tempUserID: '',
+            bool: true,
         }
     },
     props: {
@@ -61,13 +62,15 @@ export default {
             this.$emit('BoolModal', e);
         },
         async AddEquipment(ParentEquipmentId, ChildEquipmentId){
+            this.bool = false;
             this.tempUserID = localStorage.getItem('userID')
             this.GetTempEquipmentResult = await RestAPI.AddEquipment(ParentEquipmentId, ChildEquipmentId, this.tempUserID);
             var x = document.getElementById("snackbar");
             x.className = "show";
-            setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+            setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
             this.ModalStyle = "none";
-            // location.reload();
+            location.assign(window.location.origin + '#/hierarchy');
+            location.reload();
         },
         CancelEquipment(){
             this.ModalStyle = 'none'
@@ -96,7 +99,7 @@ export default {
                     </select>
                     <!-- <input type="text"  name="ChildEquipmentId" v-model="ChildEquipmentId" required> -->
 
-                    <button class="AddEquipmentbtn" @click="AddEquipment(ParentEquipmentId, ChildEquipmentId)">Submit</button>
+                    <button v-if="this.bool" class="AddEquipmentbtn" @click="AddEquipment(ParentEquipmentId, ChildEquipmentId)">Submit</button>
                     <button class="CancelEquipmentbtn" @click="CancelEquipment()">Cancel</button>
                 </div>
             </div>
